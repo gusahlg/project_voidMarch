@@ -7,8 +7,8 @@
       "request": "launch",
       "program": "${workspaceFolder}/game_index/voidmarch.exe",
       "cwd": "${workspaceFolder}/game_index",
-      "preLaunchTask": "build-raylib",   // <-- calls your good task
-      "miDebuggerPath": "gdb",
+      "preLaunchTask": "build-raylib",
+      "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
       "stopAtEntry": false,
       "externalConsole": false
     }
