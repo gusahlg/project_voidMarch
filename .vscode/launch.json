@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run voidmarch.exe",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/game_index/voidmarch.exe",
+      "cwd": "${workspaceFolder}/game_index",
+      "preLaunchTask": "build-raylib",   // <-- calls your good task
+      "miDebuggerPath": "gdb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    }
+  ]
+}
