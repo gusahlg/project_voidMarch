@@ -6,11 +6,11 @@
       "type": "shell",
       "command": "g++",
       "args": [
-        "${workspaceFolder}/game_index/*.cpp",
-        "-IC:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include",
-        "-LC:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/lib",
-        "-lraylib", "-lopengl32", "-lgdi32", "-lwinmm",
-        "-o", "${fileDirname}/${fileBasenameNoExtension}.exe"
+          "${workspaceFolder}/game_index/*.cpp",
+          "-IC:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include",
+          "-LC:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/lib",
+          "-lraylib", "-lopengl32", "-lgdi32", "-lwinmm",
+          "-o", "${workspaceFolder}/game_index/voidmarch.exe"
       ],
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": ["$gcc"]
