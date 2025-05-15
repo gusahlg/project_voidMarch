@@ -42,12 +42,13 @@ int main(){
     CloseWindow();
     return 0;
 }
+float btnroundness = 0.65f;
+int segs = 20;
 void updateHome(){
     Vector2 mousePos = GetMousePosition();
     bool hover  = CheckCollisionPointRec(mousePos, button);
     bool pressed = hover && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
     bool clicked = hover && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
-    Coolhet();
     if(clicked){
         Hclicked = true;
     }
@@ -57,7 +58,8 @@ void updateHome(){
     DrawText("PROJECT VOIDMARCH", 20, 20, 75, BLACK);
     DrawText("FPS:", 1100, 20, 20, gRed);
     DrawFPS(1150, 20);
-    DrawRectangleRec(button, Cstate);
+    DrawRectangleRounded(button, btnroundness, segs, Cstate);
+    DrawRectangleRoundedLines(button, btnroundness, segs, PINK);
     DrawText("SETUP GAME", 545, 320, 28, gRed);
     EndDrawing();
 }

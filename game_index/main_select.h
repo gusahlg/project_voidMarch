@@ -16,5 +16,6 @@ extern screen game;
 extern bool Hclicked;
 
 //From select.cpp
-void Coolhet();
-
+class selectScr;
+void selectScrUpdate();
+class Sbuttons;
