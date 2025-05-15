@@ -6,13 +6,14 @@ void updateHome();
 void updateSelect();
 void updateGame();
 class screen {
-public:
-    int screenIdentifier;
+    public:
+        int screenIdentifier = 0;
     void update();
 };
-screen home; 
-screen select;
-screen game;
+extern screen home; 
+extern screen select;
+extern screen game;
+extern bool Hclicked;
 
 //From select.cpp
 void Coolhet();

@@ -3,14 +3,14 @@
   "configurations": [
     {
       // Appears in the VS Code debug-configuration picker
-      "name": "Run voidmarch.exe",
+      "name": "Run main.exe",
 
       // Use the C/C++ extension’s GDB/LLDB adapter
       "type": "cppdbg",
       "request": "launch",
 
       // Path to the executable produced by your build task
-      "program": "${workspaceFolder}/game_index/voidmarch.exe",
+      "program": "${workspaceFolder}/game_index/main.exe",
 
       // Run the program from the project root so Windows finds raylib.dll there
       "cwd": "${workspaceFolder}",

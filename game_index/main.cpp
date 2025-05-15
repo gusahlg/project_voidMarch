@@ -11,23 +11,19 @@ Rectangle button = {540, 300, 200, 75};
 void updateHome();
 void updateSelect();
 void updateGame();
-class screen{
-    public:
-        int screenIdentifier;
-    void update(){
-        switch(screenIdentifier){
-            case(1):
-                updateHome();
-                break;
-            case(2):
-                updateSelect(); 
-                break;
-            case(3):
-                updateGame();
-                break;
-        }
+void screen::update(){
+    switch(screenIdentifier){
+        case(1):
+            updateHome();
+            break;
+        case(2):
+            updateSelect(); 
+            break;
+        case(3):
+            updateGame();
+            break;
     }
-};
+}
 bool Hclicked = false;
 int main(){
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");

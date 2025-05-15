@@ -11,7 +11,7 @@
         "-I", "C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include",
         "-L", "C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/lib",
         "-lraylib", "-lopengl32", "-lgdi32", "-lwinmm",
-        "-o", "${workspaceFolder}/game_index/voidmarch.exe"
+        "-o", "${workspaceFolder}/game_index/main.exe"
       ],
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": ["$gcc"]
