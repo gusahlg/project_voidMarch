@@ -16,6 +16,8 @@ extern screen game;
 extern bool Hclicked;
 
 //From select.cpp
-class selectScr;
-void selectScrUpdate();
-class Sbuttons;
+class selectScr{
+    public:
+    void selectScrUpdate();
+    class Sbuttons;
+};
