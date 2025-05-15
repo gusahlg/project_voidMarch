@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include <iostream>
+#include "main_select.h"
 Color gRed = {255, 20, 10, 255};
 Color spaceBlue = {25, 70, 240, 255};
 Color selectC = {5, 2, 33, 255};
@@ -10,15 +11,6 @@ Rectangle button = {540, 300, 200, 75};
 void updateHome();
 void updateSelect();
 void updateGame();
-struct ButtonStyle{
-    Color bg[4];
-    Color fg[4];
-    Font  font;
-    float radius = 8; 
-    float padding = 12;
-    Texture2D image = {0};
-    Rectangle srcRect = {0}; 
-};
 class screen{
     public:
         int screenIdentifier;
@@ -32,6 +24,7 @@ class screen{
                 break;
             case(3):
                 updateGame();
+                break;
         }
     }
 };
@@ -58,6 +51,7 @@ void updateHome(){
     bool hover  = CheckCollisionPointRec(mousePos, button);
     bool pressed = hover && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
     bool clicked = hover && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
+    Coolhet();
     if(clicked){
         Hclicked = true;
     }
@@ -74,7 +68,7 @@ void updateHome(){
 void updateSelect(){
     BeginDrawing();
     ClearBackground(selectC);
-    DrawText("PROJECT VOIDMARCH", 20, 20, 75, BLACK);
+    DrawText("GAME SETUP", 540, 20, 75, BLACK);
     DrawText("FPS:", 1100, 20, 20, gRed);
     DrawFPS(1150, 20);
     EndDrawing();
