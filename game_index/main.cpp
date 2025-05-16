@@ -37,6 +37,7 @@ int main(){
         }
         else if(Hclicked){
             select.update();
+            panel.selectScrUpdate();
         }
     }
     CloseWindow();

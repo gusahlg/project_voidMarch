@@ -1,17 +1,15 @@
 #include "raylib.h"
 #include <iostream>
 #include "main_select.h"
-class selectScr{
+void selectScr::selectScrUpdate(){
+   Rectangle selectPanel{128, 36, 1024, 648};
+   BeginDrawing();
+   DrawRectangleRounded(selectPanel, 0.3, 20, DARKGRAY);
+   ClearBackground(selectC);
+   EndDrawing();
+}
+class Sbuttons{
    public:
-   void selectScrUpdate(){
-        BeginDrawing();
-        ClearBackground(WHITE);
-        DrawText("GAME SETUP", 540, 20, 75, BLACK);
-        DrawText("FPS:", 1100, 20, 20, BLACK);
-        DrawFPS(1150, 20);
-        EndDrawing();
-   }
-   class Sbuttons{
-       
-   };
+      Rectangle button;    
 };
+selectScr panel;

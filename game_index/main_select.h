@@ -14,10 +14,11 @@ extern screen home;
 extern screen select;
 extern screen game;
 extern bool Hclicked;
-
+extern Color selectC;
 //From select.cpp
+class Sbuttons;
 class selectScr{
     public:
-    void selectScrUpdate();
-    class Sbuttons;
+    void selectScrUpdate(); 
 };
+extern selectScr panel;
