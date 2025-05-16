@@ -31,6 +31,9 @@ int main(){
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
     while(!WindowShouldClose()){
+        if(IsKeyPressed(KEY_F11)){
+            ToggleFullscreen();
+        }
         BeginDrawing();
         if(!Hclicked){
             ClearBackground(spaceBlue);
@@ -57,19 +60,15 @@ void updateHome(){
         Hclicked = true;
     }
     Color Cstate = pressed ? btnP : hover ? btnH : btnC;
-    BeginDrawing();
     DrawText("PROJECT VOIDMARCH", 20, 20, 75, BLACK);
     DrawText("FPS:", 1100, 20, 20, gRed);
     DrawFPS(1150, 20);
     DrawRectangleRounded(button, btnroundness, segs, Cstate);
     DrawRectangleRoundedLines(button, btnroundness, segs, PINK);
     DrawText("SETUP GAME", 545, 320, 28, gRed);
-    EndDrawing();
 }
 void updateSelect(){
-    BeginDrawing();
     DrawText("GAME SETUP", 540, 20, 75, PINK);
-    EndDrawing();
 }
 void updateGame(){
     BeginDrawing();
