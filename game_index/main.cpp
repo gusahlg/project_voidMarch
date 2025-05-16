@@ -27,18 +27,21 @@ void screen::update(){
 bool Hclicked = false;
 int main(){
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");
-    SetTargetFPS(100);
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
     while(!WindowShouldClose()){
+        BeginDrawing();
         if(!Hclicked){
+            ClearBackground(spaceBlue);
             home.update();
         }
         else if(Hclicked){
+            ClearBackground(selectC);
             select.update();
             panel.selectScrUpdate();
         }
+        EndDrawing();
     }
     CloseWindow();
     return 0;
@@ -55,7 +58,6 @@ void updateHome(){
     }
     Color Cstate = pressed ? btnP : hover ? btnH : btnC;
     BeginDrawing();
-    ClearBackground(spaceBlue);
     DrawText("PROJECT VOIDMARCH", 20, 20, 75, BLACK);
     DrawText("FPS:", 1100, 20, 20, gRed);
     DrawFPS(1150, 20);
@@ -66,10 +68,7 @@ void updateHome(){
 }
 void updateSelect(){
     BeginDrawing();
-    ClearBackground(selectC);
-    DrawText("GAME SETUP", 540, 20, 75, BLACK);
-    DrawText("FPS:", 1100, 20, 20, gRed);
-    DrawFPS(1150, 20);
+    DrawText("GAME SETUP", 540, 20, 75, PINK);
     EndDrawing();
 }
 void updateGame(){
