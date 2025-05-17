@@ -31,9 +31,9 @@ int main(){
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
-    Sbuttons Btn1(1, {128, 80, 1024, 600});
-    Sbuttons Btn2(2, {128, 80, 1024, 600});
-    Sbuttons Btn3(3, {128, 80, 1024, 600});
+    Sbuttons Btn1(1, { 565, 260, 150, 50 });
+    Sbuttons Btn2(2, { 565, 340, 150, 50 });
+    Sbuttons Btn3(3, { 565, 420, 150, 50 });
     while(!WindowShouldClose()){
         if(IsKeyPressed(KEY_F11)){
             ToggleFullscreen();
