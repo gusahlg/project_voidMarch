@@ -1,6 +1,5 @@
 #pragma once
 // Bellow is a list of functions, classes and variables that all .cpp files may use.
-
 //From main.cpp
 void updateHome();
 void updateSelect();
@@ -16,7 +15,6 @@ extern screen game;
 extern bool Hclicked;
 extern Color selectC;
 //From select.cpp
-class Sbuttons;
 class selectScr{
     public:
     void selectScrUpdate(); 

@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <iostream>
 #include "main_select.h"
+#include "Sbuttons.h"
 Color gRed = {255, 20, 10, 255};
 Color spaceBlue = {25, 70, 240, 255};
 Color selectC = {5, 2, 33, 255};
@@ -30,6 +31,9 @@ int main(){
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
+    Sbuttons Btn1(1, {128, 80, 1024, 600});
+    Sbuttons Btn2(2, {128, 80, 1024, 600});
+    Sbuttons Btn3(3, {128, 80, 1024, 600});
     while(!WindowShouldClose()){
         if(IsKeyPressed(KEY_F11)){
             ToggleFullscreen();
@@ -43,6 +47,9 @@ int main(){
             ClearBackground(selectC);
             select.update();
             panel.selectScrUpdate();
+            Btn1.update();
+            Btn2.update();
+            Btn3.update();
         }
         EndDrawing();
     }
