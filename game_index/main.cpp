@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <iostream>
 #include "main_select.h"
-#include "Sbuttons.h"
+#include "Sbuttons.hpp"
 Color gRed = {255, 20, 10, 255};
 Color spaceBlue = {25, 70, 240, 255};
 Color selectC = {5, 2, 33, 255};
@@ -9,6 +9,9 @@ Color btnP = {3, 8, 54, 255};
 Color btnH = {14, 6, 92, 255};
 Color btnC = {27, 6, 107, 255};
 Rectangle button = {540, 300, 200, 75};
+Sbuttons Btn1{1, { 565, 260, 150, 50 }};
+Sbuttons Btn2{2, { 565, 340, 150, 50 }};
+Sbuttons Btn3{3, { 565, 420, 150, 50 }};
 void updateHome();
 void updateSelect();
 void updateGame();
@@ -31,10 +34,9 @@ int main(){
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
-    Sbuttons Btn1(1, { 565, 260, 150, 50 });
-    Sbuttons Btn2(2, { 565, 340, 150, 50 });
-    Sbuttons Btn3(3, { 565, 420, 150, 50 });
     while(!WindowShouldClose()){
+        mousePos = GetMousePosition();
+        checkForBtnState();
         if(IsKeyPressed(KEY_F11)){
             ToggleFullscreen();
         }
@@ -58,8 +60,8 @@ int main(){
 }
 float btnroundness = 0.65f;
 int segs = 20;
+Vector2 mousePos = GetMousePosition();
 void updateHome(){
-    Vector2 mousePos = GetMousePosition();
     bool hover  = CheckCollisionPointRec(mousePos, button);
     bool pressed = hover && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
     bool clicked = hover && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
@@ -78,10 +80,8 @@ void updateSelect(){
     DrawText("GAME SETUP", 540, 20, 75, PINK);
 }
 void updateGame(){
-    BeginDrawing();
     ClearBackground(YELLOW);
     DrawText("PROJECT VOIDMARCH", 20, 20, 75, BLACK);
     DrawText("FPS:", 1100, 20, 20, gRed);
     DrawFPS(1150, 20);
-    EndDrawing();
 }
