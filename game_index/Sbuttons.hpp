@@ -17,8 +17,14 @@ extern bool Sbtn1Click;
 extern bool Sbtn2Click;
 extern bool Sbtn3Click;
 extern Vector2 mousePos;
+extern bool optHover1;
+extern bool optHover2;
+extern bool optHover3;
 void checkForBtnState();
 void setupChoiceEventHandler();
+void Drace();
+void Ddifficulties();
+void Dprofession();
 class Sbuttons{
 public:
     int BtnID; 
@@ -28,44 +34,47 @@ public:
     void update(){
         int btnX = 300;
         int btnY = 275;
-        if(hover1 || hover2 || hover3){
-            if(hover1 && BtnID == 1){
+        if(BtnID == 1 && hover1 || hover2 || hover3 || optHover1 || optHover2 || optHover3){
+            if(hover1 || optHover1 || optHover2 || optHover3){
                 if(pressed1){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);
-                }
-                else if(clicked1){
-
+                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
+                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
                 }
                 else{
                     DrawRectangleRounded(button, 0.2, 100, Chover);
-                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);                
+                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
+                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);   
+                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);           
                 }
             }
-            if(hover2 && BtnID == 2){
+            else if(hover2 || optHover1 || optHover2 || optHover3){
                 if(pressed2){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
-                }
-                else if(clicked2){
-
+                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
+                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                 }
                 else{
                     DrawRectangleRounded(button, 0.2, 100, Chover);  
-                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);                  
+                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);     
+                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);    
+                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);           
                 }
             }
-            if(hover3 && BtnID == 3){
+            else if(hover3 || optHover1 || optHover2 || optHover3){
                 if(pressed3){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
-                }
-                else if(clicked3){
-
+                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
+                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
                 }
                 else{
                     DrawRectangleRounded(button, 0.2, 100, Chover);  
-                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);                  
+                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);    
+                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK); 
+                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);               
                 }
             }
         }

@@ -6,6 +6,9 @@ void selectScr::selectScrUpdate(){
    Rectangle selectPanel{128, 80, 1024, 600};
    DrawRectangleRounded(selectPanel, 0.2, 100, DARKGRAY);
 }
+bool optHover1;
+bool optHover2;
+bool optHover3;
 bool hover1 = CheckCollisionPointRec(mousePos, Btn1.button);
 bool hover2 = CheckCollisionPointRec(mousePos, Btn2.button);
 bool hover3 = CheckCollisionPointRec(mousePos, Btn3.button);
@@ -30,21 +33,16 @@ void checkForBtnState(){
 Color Chover = {143, 44, 113, 255};
 Color Cpressed = {92, 21, 70, 255};
 Color CB = {156, 44, 142, 255};
-// Adding so that stuff happens on click
-bool Sbtn1Click = false;
-bool Sbtn2Click = false;
-bool Sbtn3Click = false;
-// Making the options for the game setup, will be triggered if something is clicked.
 void Ddifficulties(){
-   // Local variables for handling interface size (a rectangle that's around the options).
    Color optBackground = {15, 15, 15, 175};
-   Rectangle options {128, 80, 1024, 600};
+   Rectangle options {450, 260, 150, 200};
    DrawRectangleRounded(options, 0.1, 10, optBackground);
-   // The different options, add in so that the choices can be clicked on.
-   Rectangle EASY {};
-   Rectangle MEDIUM {};
-   Rectangle HARD {};
-   Rectangle PRO_GAMER {};
+   optHover1 = CheckCollisionPointRec(mousePos, options);
+   Rectangle EASY {450, 260, 150, 50};
+   Rectangle MEDIUM {450, 310, 150, 50};
+   Rectangle HARD {450, 360, 150, 50};
+   Rectangle PRO_GAMER {450, 410, 150, 50};
+   
    DrawText("EASY", 1, 1, 1, BLACK);
    DrawText("MEDIUM", 1, 1, 1, BLACK);
    DrawText("HARD", 1, 1, 1, BLACK);
@@ -52,25 +50,35 @@ void Ddifficulties(){
 }
 void Drace(){
    Color optBackground = {15, 15, 15, 175};
-   Rectangle options{128, 80, 1024, 600};
+   Rectangle options{450, 340, 150, 200};
    DrawRectangleRounded(options, 0.1, 10, optBackground);
-   Rectangle HUMAN {};
-   Rectangle SPACELIZARD {};
-   Rectangle VOIDCRAWLER {};
-   Rectangle MECHA_SAPIEN {};
-   DrawText("Human", 1, 1, 1, BLACK);
-   DrawText("Spacelizard", 1, 1, 1, BLACK);
-   DrawText("Voidcrawler", 1, 1, 1, BLACK);
-   DrawText("Mecha-Sapien", 1, 1, 1, BLACK);
+   Rectangle HUMAN {450, 340, 150, 50};
+   Rectangle SPACELIZARD {450, 390, 150, 50};
+   Rectangle VOIDCRAWLER {450, 440, 150, 50};
+   Rectangle MECHA_SAPIEN {450, 490, 150, 50};
+
+   DrawRectangleRounded(HUMAN, 0.1, 10, PINK);
+   DrawRectangleRounded(SPACELIZARD, 0.1, 10, RED);
+   DrawRectangleRounded(VOIDCRAWLER, 0.1, 10, BLUE);
+   DrawRectangleRounded(MECHA_SAPIEN, 0.1, 10, YELLOW);
+   DrawText("Human", 450, 340, 40, BLACK);
+   DrawText("Spacelizard", 450, 390, 40, BLACK);
+   DrawText("Voidcrawler", 450, 440, 40, BLACK);
+   DrawText("Mecha-Sapien", 450, 490, 40, BLACK);
 }
 void Dprofession(){
    Color optBackground = {15, 15, 15, 175};
-   Rectangle options{128, 80, 1024, 600};
+   Rectangle options{450, 420, 150, 200};
    DrawRectangleRounded(options, 0.1, 10, optBackground);
-   Rectangle NECROMANCER {};
-   Rectangle CRAFTSMAN {};
-   Rectangle WIZARD {};
-   Rectangle DUALIST {};
+   Rectangle NECROMANCER {450, 420, 150, 50};
+   Rectangle CRAFTSMAN {450, 470, 150, 50};
+   Rectangle WIZARD {450, 520, 150, 50};
+   Rectangle DUALIST {450, 570, 150, 50};
+
+   DrawRectangleRounded(NECROMANCER, 0.1, 10, PINK);
+   DrawRectangleRounded(CRAFTSMAN, 0.1, 10, RED);
+   DrawRectangleRounded(WIZARD, 0.1, 10, BLUE);
+   DrawRectangleRounded(DUALIST, 0.1, 10, YELLOW);
    DrawText("Necromancer", 1, 1, 1, BLACK);
    DrawText("Craftsman", 1, 1, 1, BLACK);
    DrawText("Wizard", 1, 1, 1, BLACK);
@@ -78,13 +86,13 @@ void Dprofession(){
 }
 void setupChoiceEventHandler(){
    // Trying to get it so that the UI is easily toggled on/off.
-   if(Sbtn1Click){
+   if(hover1){
       Ddifficulties();
    }
-   if(Sbtn2Click){
+   if(hover2){
       Drace();
    }
-   if(Sbtn3Click){
+   if(hover3){
       Dprofession();
    }
 }
