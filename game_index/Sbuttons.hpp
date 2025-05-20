@@ -4,6 +4,7 @@
 extern Color Chover;
 extern Color Cpressed;
 extern Color CB;
+extern Color HNON;
 extern bool hover1;
 extern bool hover2;
 extern bool hover3;
@@ -32,6 +33,9 @@ extern bool NECROMANCERhov;
 extern bool CRAFTSMANhov;
 extern bool WIZARDhov;
 extern bool DUALISThov;
+extern Rectangle Ubutton1;
+extern Rectangle Ubutton2;
+extern Rectangle Ubutton3;
 void checkForBtnState();
 void setupChoiceEventHandler();
 void Drace();
@@ -46,46 +50,58 @@ public:
     void update(){
         int btnX = 300;
         int btnY = 275;
-        if(BtnID == 1 && hover1 || hover2 || hover3 || optHover1 || optHover2 || optHover3){
-            if(hover1 || optHover1 || optHover2 || optHover3){
+        if(hover1 || hover2 || hover3 || optHover1 || optHover2 || optHover3){
+            if(BtnID == 1 && hover1 || optHover1){
                 if(pressed1){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
+                    DrawRectangleRounded(Ubutton2, 0.2, 100, HNON);
+                    DrawRectangleRounded(Ubutton3, 0.2, 100, HNON);
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
                 }
                 else{
                     DrawRectangleRounded(button, 0.2, 100, Chover);
+                    DrawRectangleRounded(Ubutton2, 0.2, 100, HNON);
+                    DrawRectangleRounded(Ubutton3, 0.2, 100, HNON);
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);   
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK); 
                     setupChoiceEventHandler();          
                 }
             }
-            else if(hover2 || optHover1 || optHover2 || optHover3){
+            else if(BtnID == 2 && hover2 || optHover2){
                 if(pressed2){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
+                    DrawRectangleRounded(Ubutton1, 0.2, 100, HNON);
+                    DrawRectangleRounded(Ubutton3, 0.2, 100, HNON);
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                 }
                 else{
                     DrawRectangleRounded(button, 0.2, 100, Chover);  
+                    DrawRectangleRounded(Ubutton1, 0.2, 100, HNON);
+                    DrawRectangleRounded(Ubutton3, 0.2, 100, HNON);
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);     
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);    
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                     setupChoiceEventHandler();         
                 }
             }
-            else if(hover3 || optHover3){
+            else if(BtnID == 3 && hover3 || optHover3){
                 if(pressed3){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
+                    DrawRectangleRounded(Ubutton1, 0.2, 100, HNON);
+                    DrawRectangleRounded(Ubutton2, 0.2, 100, HNON);
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
                 }
                 else{
                     DrawRectangleRounded(button, 0.2, 100, Chover);  
+                    DrawRectangleRounded(Ubutton1, 0.2, 100, HNON);
+                    DrawRectangleRounded(Ubutton2, 0.2, 100, HNON);
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);    
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK); 
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);  
@@ -98,17 +114,14 @@ public:
             case 1:
                 DrawRectangleRounded(button, 0.2f, 100, CB);
                 DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);
-                setupChoiceEventHandler();
                 break;       
             case 2:
                 DrawRectangleRounded(button, 0.2f, 100, CB);
                 DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
-                setupChoiceEventHandler();
                 break;
             case 3:
                 DrawRectangleRounded(button, 0.2f, 100, CB);
                 DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
-                setupChoiceEventHandler();
                 break;
             }
         }
