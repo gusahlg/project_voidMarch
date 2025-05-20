@@ -46,7 +46,8 @@ public:
                     DrawRectangleRounded(button, 0.2, 100, Chover);
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);   
-                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);           
+                    DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK); 
+                    setupChoiceEventHandler();          
                 }
             }
             else if(hover2 || optHover1 || optHover2 || optHover3){
@@ -60,10 +61,11 @@ public:
                     DrawRectangleRounded(button, 0.2, 100, Chover);  
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);     
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);    
-                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);           
+                    DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
+                    setupChoiceEventHandler();         
                 }
             }
-            else if(hover3 || optHover1 || optHover2 || optHover3){
+            else if(hover3 || optHover3){
                 if(pressed3){
                     DrawRectangleRounded(button, 0.2, 100, Cpressed);
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
@@ -74,7 +76,8 @@ public:
                     DrawRectangleRounded(button, 0.2, 100, Chover);  
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);    
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK); 
-                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);               
+                    DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);  
+                    setupChoiceEventHandler();             
                 }
             }
         }
@@ -83,14 +86,17 @@ public:
             case 1:
                 DrawRectangleRounded(button, 0.2f, 100, CB);
                 DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);
+                setupChoiceEventHandler();
                 break;       
             case 2:
                 DrawRectangleRounded(button, 0.2f, 100, CB);
                 DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);
+                setupChoiceEventHandler();
                 break;
             case 3:
                 DrawRectangleRounded(button, 0.2f, 100, CB);
                 DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK);
+                setupChoiceEventHandler();
                 break;
             }
         }

@@ -9,7 +9,7 @@ Color btnP = {3, 8, 54, 255};
 Color btnH = {14, 6, 92, 255};
 Color btnC = {27, 6, 107, 255};
 Rectangle button = {540, 300, 200, 75};
-Sbuttons Btn1{1, { 300, 260, 150, 50 }}; //börja på 450 X, at 260 Y
+Sbuttons Btn1{1, { 300, 260, 150, 50 }};
 Sbuttons Btn2{2, { 300, 340, 150, 50 }};
 Sbuttons Btn3{3, { 300, 420, 150, 50 }};
 void updateHome();

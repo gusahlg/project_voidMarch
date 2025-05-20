@@ -42,7 +42,6 @@ void Ddifficulties(){
    Rectangle MEDIUM {450, 310, 150, 50};
    Rectangle HARD {450, 360, 150, 50};
    Rectangle PRO_GAMER {450, 410, 150, 50};
-   
    DrawText("EASY", 1, 1, 1, BLACK);
    DrawText("MEDIUM", 1, 1, 1, BLACK);
    DrawText("HARD", 1, 1, 1, BLACK);
@@ -52,33 +51,27 @@ void Drace(){
    Color optBackground = {15, 15, 15, 175};
    Rectangle options{450, 340, 150, 200};
    DrawRectangleRounded(options, 0.1, 10, optBackground);
+   optHover2 = CheckCollisionPointRec(mousePos, options);
    Rectangle HUMAN {450, 340, 150, 50};
    Rectangle SPACELIZARD {450, 390, 150, 50};
    Rectangle VOIDCRAWLER {450, 440, 150, 50};
    Rectangle MECHA_SAPIEN {450, 490, 150, 50};
 
-   DrawRectangleRounded(HUMAN, 0.1, 10, PINK);
-   DrawRectangleRounded(SPACELIZARD, 0.1, 10, RED);
-   DrawRectangleRounded(VOIDCRAWLER, 0.1, 10, BLUE);
-   DrawRectangleRounded(MECHA_SAPIEN, 0.1, 10, YELLOW);
-   DrawText("Human", 450, 340, 40, BLACK);
-   DrawText("Spacelizard", 450, 390, 40, BLACK);
-   DrawText("Voidcrawler", 450, 440, 40, BLACK);
-   DrawText("Mecha-Sapien", 450, 490, 40, BLACK);
+   DrawText("Human", 450, 340, 30, BLACK);
+   DrawText("Spacelizard", 450, 390, 30, BLACK);
+   DrawText("Voidcrawler", 450, 440, 30, BLACK);
+   DrawText("Mecha-Sapien", 450, 490, 30, BLACK);
 }
 void Dprofession(){
    Color optBackground = {15, 15, 15, 175};
    Rectangle options{450, 420, 150, 200};
    DrawRectangleRounded(options, 0.1, 10, optBackground);
+   optHover3 = CheckCollisionPointRec(mousePos, options);
    Rectangle NECROMANCER {450, 420, 150, 50};
    Rectangle CRAFTSMAN {450, 470, 150, 50};
    Rectangle WIZARD {450, 520, 150, 50};
    Rectangle DUALIST {450, 570, 150, 50};
 
-   DrawRectangleRounded(NECROMANCER, 0.1, 10, PINK);
-   DrawRectangleRounded(CRAFTSMAN, 0.1, 10, RED);
-   DrawRectangleRounded(WIZARD, 0.1, 10, BLUE);
-   DrawRectangleRounded(DUALIST, 0.1, 10, YELLOW);
    DrawText("Necromancer", 1, 1, 1, BLACK);
    DrawText("Craftsman", 1, 1, 1, BLACK);
    DrawText("Wizard", 1, 1, 1, BLACK);
@@ -86,13 +79,13 @@ void Dprofession(){
 }
 void setupChoiceEventHandler(){
    // Trying to get it so that the UI is easily toggled on/off.
-   if(hover1){
+   if(hover1 || optHover1){
       Ddifficulties();
    }
-   if(hover2){
+   if(hover2 || optHover2){
       Drace();
    }
-   if(hover3){
+   if(hover3 || optHover3){
       Dprofession();
    }
 }
