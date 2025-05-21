@@ -41,6 +41,97 @@ bool EASYhov;
 bool MEDIUMhov;
 bool HARDhov;
 bool PRO_GAMERhov;
+bool diffEASY;
+bool diffMEDIUM;
+bool diffHARD;
+bool diffPRO_GAMER;
+void diffiChoiceEventHandler(){
+   if(EASYhov){
+      diffMEDIUM = false;
+      diffHARD = false;
+      diffPRO_GAMER = false;
+      diffEASY = true;
+   }
+   else if(MEDIUMhov){
+      diffEASY = false;
+      diffHARD = false;
+      diffPRO_GAMER = false;
+      diffMEDIUM = true;
+   }
+   else if(HARDhov){
+      diffEASY = false;
+      diffMEDIUM = false;
+      diffPRO_GAMER = false;
+      diffHARD = true;
+   }
+   else if(PRO_GAMERhov){
+      diffEASY = false;
+      diffMEDIUM = false; 
+      diffHARD = false;
+      diffPRO_GAMER = true;
+   }
+}
+bool raceHUMAN;
+bool raceSPACELIZARD;
+bool raceVOIDCRAWLER;
+bool raceMECHA_SAPIEN;
+void raceChoiceEventHandler(){
+   if(HUMANhov){
+      raceSPACELIZARD = false;
+      raceVOIDCRAWLER = false;
+      raceMECHA_SAPIEN = false;
+      raceHUMAN = true;
+   }
+   else if(SPACELIZARDhov){
+      raceHUMAN = false;
+      raceVOIDCRAWLER = false;
+      raceMECHA_SAPIEN = false;
+      raceSPACELIZARD = true;
+   }
+   else if(VOIDCRAWLERhov){
+      raceSPACELIZARD = false;
+      raceHUMAN = false;
+      raceMECHA_SAPIEN = false;
+      raceVOIDCRAWLER = true;
+   }
+   else if(MECHA_SAPIENhov){
+      raceSPACELIZARD = false;
+      raceVOIDCRAWLER = false;
+      raceHUMAN = false;
+      raceMECHA_SAPIEN = true;
+   }
+}
+bool profNECROMANCER;
+bool profCRAFTSMAN;
+bool profWIZARD;
+bool profDUALIST;
+void profChoiceEventHandler(){
+   if(NECROMANCERhov){
+      profCRAFTSMAN = false;
+      profWIZARD = false;
+      profDUALIST = false;
+      profNECROMANCER = true;
+   }
+   else if(CRAFTSMANhov){
+      profCRAFTSMAN = true;
+      profWIZARD = false;
+      profDUALIST = false;
+      profNECROMANCER = false;
+   }
+   else if(WIZARDhov){
+      profCRAFTSMAN = false;
+      profWIZARD = true;
+      profDUALIST = false;
+      profNECROMANCER = false;
+   }
+   else if(DUALISThov){
+      profCRAFTSMAN = false;
+      profWIZARD = false;
+      profDUALIST = true;
+      profNECROMANCER = false;
+   }
+}
+Color CHOSEN = {184, 18, 57};
 void Ddifficulties(){
    Color optBackground = {15, 15, 15, 175};
    Rectangle options {450, 260, 150, 200};
@@ -58,6 +149,18 @@ void Ddifficulties(){
    DrawText("MEDIUM", 482, 323, 24, BLACK);
    DrawText("HARD", 496, 373, 24, BLACK);
    DrawText("PRO GAMER", 460, 423, 24, BLACK);
+   if(diffEASY){
+      DrawRectangleRounded(EASY, 0.1, 10, CHOSEN);
+   }
+   else if(diffMEDIUM){
+      DrawRectangleRounded(MEDIUM, 0.1, 10, CHOSEN);
+   }
+   else if(diffHARD){
+      DrawRectangleRounded(HARD, 0.1, 10, CHOSEN);
+   }
+   else if(diffPRO_GAMER){
+      DrawRectangleRounded(PRO_GAMER, 0.1, 10, CHOSEN);
+   }
 }
 bool HUMANhov;
 bool SPACELIZARDhov;
@@ -80,6 +183,18 @@ void Drace(){
    DrawText("Spacelizard", 466, 406, 18, BLACK);
    DrawText("Voidcrawler", 466, 456, 18, BLACK);
    DrawText("Mecha-Sapien", 460, 506, 18, BLACK);
+   if(raceHUMAN){
+      DrawRectangleRounded(HUMAN, 0.1, 10, CHOSEN);
+   }
+   else if(raceSPACELIZARD){
+      DrawRectangleRounded(SPACELIZARD, 0.1, 10, CHOSEN);
+   }
+   else if(raceVOIDCRAWLER){
+      DrawRectangleRounded(VOIDCRAWLER, 0.1, 10, CHOSEN);
+   }
+   else if(raceMECHA_SAPIEN){
+      DrawRectangleRounded(MECHA_SAPIEN, 0.1, 10, CHOSEN);
+   }
 }
 bool NECROMANCERhov;
 bool CRAFTSMANhov;
@@ -102,39 +217,31 @@ void Dprofession(){
    DrawText("Craftsman", 471, 485, 20, BLACK);
    DrawText("Wizard", 489, 535, 20, BLACK);
    DrawText("Dualist", 483, 585, 20, BLACK);
+   if(profNECROMANCER){
+      DrawRectangleRounded(NECROMANCER, 0.1, 10, CHOSEN);
+   }
+   else if(profCRAFTSMAN){
+      DrawRectangleRounded(CRAFTSMAN, 0.1, 10, CHOSEN);
+   }
+   else if(profWIZARD){
+      DrawRectangleRounded(WIZARD, 0.1, 10, CHOSEN);
+   }
+   else if(profDUALIST){
+      DrawRectangleRounded(DUALIST, 0.1, 10, CHOSEN);
+   }
 }
 void setupChoiceEventHandler(){
    if(hover1 || optHover1){
       Ddifficulties();
+      diffiChoiceEventHandler();
    }
    else if(hover2 || optHover2){
       Drace();
+      raceChoiceEventHandler();
    }
    else if(hover3 || optHover3){
       Dprofession();
+      profChoiceEventHandler();
    }
 }
 //Make it so that the buttons actually do something you morron.
-void diffiChoiceEventHandler(){
-   if(EASYhov){
-
-   }
-   else if(MEDIUMhov){
-
-   }
-   else if(HARDhov){
-
-   }
-   else if(PRO_GAMERhov){
-
-   }
-}
-void raceChoiceEventHandler(){
-
-}
-void profChoiceEventHandler(){
-
-}
-void characterCreationChoiceEventHandler(){
-
-}

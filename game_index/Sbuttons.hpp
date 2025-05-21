@@ -67,7 +67,7 @@ public:
                     DrawText("DIFFICULTY", btnX, btnY, 23, BLACK);  
                     DrawText("RACE", btnX + 45, btnY + 80, 23, BLACK);   
                     DrawText("PROFESSION", btnX, btnY + 160, 23, BLACK); 
-                    setupChoiceEventHandler();          
+                    setupChoiceEventHandler();
                 }
             }
             else if(BtnID == 2 && hover2 || optHover2){
