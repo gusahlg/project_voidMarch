@@ -131,7 +131,7 @@ void profChoiceEventHandler(){
       profNECROMANCER = false;
    }
 }
-Color CHOSEN = {184, 18, 57};
+Color CHOSEN = {184, 18, 57, 255};
 void Ddifficulties(){
    Color optBackground = {15, 15, 15, 175};
    Rectangle options {450, 260, 150, 200};
@@ -232,16 +232,15 @@ void Dprofession(){
 }
 void setupChoiceEventHandler(){
    if(hover1 || optHover1){
-      Ddifficulties();
       diffiChoiceEventHandler();
+      Ddifficulties();
    }
    else if(hover2 || optHover2){
-      Drace();
       raceChoiceEventHandler();
+      Drace();
    }
    else if(hover3 || optHover3){
-      Dprofession();
       profChoiceEventHandler();
+      Dprofession();
    }
 }
-//Make it so that the buttons actually do something you morron.
