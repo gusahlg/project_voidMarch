@@ -33,6 +33,7 @@ extern bool NECROMANCERhov;
 extern bool CRAFTSMANhov;
 extern bool WIZARDhov;
 extern bool DUALISThov;
+extern bool gameRunning;
 extern Rectangle Ubutton1;
 extern Rectangle Ubutton2;
 extern Rectangle Ubutton3;

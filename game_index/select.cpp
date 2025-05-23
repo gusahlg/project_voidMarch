@@ -244,8 +244,26 @@ void setupChoiceEventHandler(){
       Dprofession();
    }
 }
+bool gameRunning = false;
 void loadGameBtn(){
    Rectangle button = {600, 380, 180, 75};
-   DrawRectangleRounded(button, 0.1, 10, GREEN);
-   DrawText("LOAD GAME", 600, 380, 30, BLACK);
+   bool startHov = CheckCollisionPointRec(mousePos, button);
+   bool startPressed = startHov && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+   bool startClick = startHov && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
+   if(startClick && (profNECROMANCER || profCRAFTSMAN || profWIZARD || profDUALIST) && (raceSPACELIZARD || raceHUMAN || raceVOIDCRAWLER || raceMECHA_SAPIEN) && (diffEASY || diffMEDIUM || diffHARD || diffPRO_GAMER)){
+      //THE GAME STARTS!!!!
+      gameRunning = true;
+   }
+   else if(startPressed){
+      DrawRectangleRounded(button, 0.1, 10, GRAY);
+      DrawText("LOAD GAME", 600, 380, 30, BLACK);
+   }
+   else if(startHov){
+      DrawRectangleRounded(button, 0.1, 10, DARKGREEN);
+      DrawText("LOAD GAME", 600, 380, 30, BLACK);
+   }
+   else{
+      DrawRectangleRounded(button, 0.1, 10, GREEN);
+      DrawText("LOAD GAME", 600, 380, 30, BLACK);
+   }
 }

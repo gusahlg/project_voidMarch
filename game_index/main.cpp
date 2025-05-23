@@ -2,6 +2,7 @@
 #include <iostream>
 #include "main_select.h"
 #include "Sbuttons.hpp"
+#include "loadGame.hpp"
 Color gRed = {255, 20, 10, 255};
 Color spaceBlue = {25, 70, 240, 255};
 Color selectC = {5, 2, 33, 255};
@@ -44,7 +45,10 @@ int main(){
             ClearBackground(spaceBlue);
             home.update();
         }
-        //add in so that the game runs here if all buttons are clicked.
+        //The game is running
+        else if(gameRunning){
+            loadLvl1();
+        }
         else if(Hclicked){
             ClearBackground(selectC);
             select.update();
