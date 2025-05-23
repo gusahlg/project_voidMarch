@@ -44,6 +44,7 @@ int main(){
             ClearBackground(spaceBlue);
             home.update();
         }
+        //add in so that the game runs here if all buttons are clicked.
         else if(Hclicked){
             ClearBackground(selectC);
             select.update();

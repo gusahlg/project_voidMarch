@@ -41,6 +41,7 @@ void setupChoiceEventHandler();
 void Drace();
 void Ddifficulties();
 void Dprofession();
+void loadGameBtn();
 class Sbuttons{
 public:
     int BtnID; 
@@ -125,6 +126,7 @@ public:
                 break;
             }
         }
+        loadGameBtn();
     }
 };
 extern Sbuttons Btn1;

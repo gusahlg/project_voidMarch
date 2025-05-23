@@ -145,10 +145,6 @@ void Ddifficulties(){
    HARDhov = CheckCollisionPointRec(mousePos, HARD) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
    Rectangle PRO_GAMER {450, 410, 150, 50};
    PRO_GAMERhov = CheckCollisionPointRec(mousePos, PRO_GAMER) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
-   DrawText("EASY", 496, 273, 24, BLACK);
-   DrawText("MEDIUM", 482, 323, 24, BLACK);
-   DrawText("HARD", 496, 373, 24, BLACK);
-   DrawText("PRO GAMER", 460, 423, 24, BLACK);
    if(diffEASY){
       DrawRectangleRounded(EASY, 0.1, 10, CHOSEN);
    }
@@ -161,6 +157,10 @@ void Ddifficulties(){
    else if(diffPRO_GAMER){
       DrawRectangleRounded(PRO_GAMER, 0.1, 10, CHOSEN);
    }
+   DrawText("EASY", 496, 273, 24, BLACK);
+   DrawText("MEDIUM", 482, 323, 24, BLACK);
+   DrawText("HARD", 496, 373, 24, BLACK);
+   DrawText("PRO GAMER", 460, 423, 24, BLACK);
 }
 bool HUMANhov;
 bool SPACELIZARDhov;
@@ -179,10 +179,6 @@ void Drace(){
    VOIDCRAWLERhov = CheckCollisionPointRec(mousePos, VOIDCRAWLER) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
    Rectangle MECHA_SAPIEN {450, 490, 150, 50};
    MECHA_SAPIENhov = CheckCollisionPointRec(mousePos, MECHA_SAPIEN) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
-   DrawText("Human", 489, 353, 24, BLACK);
-   DrawText("Spacelizard", 466, 406, 18, BLACK);
-   DrawText("Voidcrawler", 466, 456, 18, BLACK);
-   DrawText("Mecha-Sapien", 460, 506, 18, BLACK);
    if(raceHUMAN){
       DrawRectangleRounded(HUMAN, 0.1, 10, CHOSEN);
    }
@@ -195,6 +191,10 @@ void Drace(){
    else if(raceMECHA_SAPIEN){
       DrawRectangleRounded(MECHA_SAPIEN, 0.1, 10, CHOSEN);
    }
+   DrawText("Human", 489, 353, 24, BLACK);
+   DrawText("Spacelizard", 466, 406, 18, BLACK);
+   DrawText("Voidcrawler", 466, 456, 18, BLACK);
+   DrawText("Mecha-Sapien", 460, 506, 18, BLACK);
 }
 bool NECROMANCERhov;
 bool CRAFTSMANhov;
@@ -213,10 +213,6 @@ void Dprofession(){
    WIZARDhov = CheckCollisionPointRec(mousePos, WIZARD) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
    Rectangle DUALIST {450, 570, 150, 50};
    DUALISThov = CheckCollisionPointRec(mousePos, DUALIST) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON);
-   DrawText("Necromancer", 459, 435, 20, BLACK);
-   DrawText("Craftsman", 471, 485, 20, BLACK);
-   DrawText("Wizard", 489, 535, 20, BLACK);
-   DrawText("Dualist", 483, 585, 20, BLACK);
    if(profNECROMANCER){
       DrawRectangleRounded(NECROMANCER, 0.1, 10, CHOSEN);
    }
@@ -229,6 +225,10 @@ void Dprofession(){
    else if(profDUALIST){
       DrawRectangleRounded(DUALIST, 0.1, 10, CHOSEN);
    }
+   DrawText("Necromancer", 459, 435, 20, BLACK);
+   DrawText("Craftsman", 471, 485, 20, BLACK);
+   DrawText("Wizard", 489, 535, 20, BLACK);
+   DrawText("Dualist", 483, 585, 20, BLACK);
 }
 void setupChoiceEventHandler(){
    if(hover1 || optHover1){
@@ -243,4 +243,9 @@ void setupChoiceEventHandler(){
       profChoiceEventHandler();
       Dprofession();
    }
+}
+void loadGameBtn(){
+   Rectangle button = {600, 380, 180, 75};
+   DrawRectangleRounded(button, 0.1, 10, GREEN);
+   DrawText("LOAD GAME", 600, 380, 30, BLACK);
 }
