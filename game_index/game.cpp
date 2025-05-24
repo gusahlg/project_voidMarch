@@ -11,7 +11,6 @@ float scaleY;
 bool movePossible = true;
 Camera2D cam{};
 const int TILE = 16;
-const int SCALE = 4;
 struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
@@ -22,7 +21,6 @@ Level lvl2;
 std::ifstream in("assets/levels/level1.txt");
 bool lvlLoaded = false;
 void readlvlData(){
-    // Loads game levels.
 for(std::string line; std::getline(in, line);){
     lvl1.rows.push_back(line);
 }
@@ -31,6 +29,7 @@ for(size_t y = 0; y < lvl1.rows.size(); ++y){
     for(size_t x = 0; x < lvl1.rows[y].size(); ++x){
         if(lvl1.rows[y][x] == 'p'){
             lvl1.playerPos = {(float)x, (float)y};
+            lvl1.rows[y][x] = '.';
         }
     }
 }
@@ -48,10 +47,7 @@ void drawLevel(const Level& lvl){
             int tileWidth = static_cast<int>(TILE * scaleX);
             if(cell == '#'){
                 DrawRectangle(px, py, tileWidth, tileHeight, DARKGRAY);
-            }
-            else if(cell == 'p'){
-                DrawRectangle(px, py, tileWidth, tileHeight, RED);
-            }
+            }//removed some stuff.
         }
     }
 }
@@ -64,7 +60,6 @@ void loadLvl1(){
         cam.zoom = 1.0f;
         loaded = true;
     }
-    //May need to delete 
     movementEventHandler();
     scaleX = GetScreenWidth() / (float)(lvl1.rows[0].size() * TILE);
     scaleY = GetScreenHeight() / (float)(lvl1.rows.size() * TILE);
@@ -76,6 +71,11 @@ void loadLvl1(){
     ClearBackground(BLACK);
     BeginMode2D(cam);
     drawLevel(lvl1);
+    int pPixX = (int)lvl1.playerPos.x * TILE * scaleX;
+    int pPixY = (int)lvl1.playerPos.y * TILE * scaleY;
+    int pSizeW = (int)(TILE * scaleX);
+    int pSizeH = (int)(TILE * scaleY);
+    DrawRectangle(pPixX, pPixY, pSizeW, pSizeH, RED);
     EndMode2D();
 }
 //Doesn't work properly, might need to actually rewrite the level1 thing all the time.
