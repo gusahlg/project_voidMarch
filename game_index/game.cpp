@@ -5,13 +5,20 @@
 #include "loadGame.hpp"
 #include <vector>
 #include <fstream>
+void movementEventHandler();
+float scaleX;
+float scaleY;
+bool movePossible = true;
+Camera2D cam{};
 const int TILE = 16;
 const int SCALE = 4;
 struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
 };
+// New level objects are put here:
 Level lvl1;
+Level lvl2;
 std::ifstream in("assets/levels/level1.txt");
 bool lvlLoaded = false;
 void readlvlData(){
@@ -28,10 +35,9 @@ for(size_t y = 0; y < lvl1.rows.size(); ++y){
     }
 }
 }
-
 void drawLevel(const Level& lvl){
-    float scaleX = GetScreenWidth() / (float)(lvl.rows[0].size() * TILE);
-    float scaleY = GetScreenHeight() / (float)(lvl.rows.size() * TILE);
+    scaleX = GetScreenWidth() / (float)(lvl.rows[0].size() * TILE);
+    scaleY = GetScreenHeight() / (float)(lvl.rows.size() * TILE);
     for(size_t y = 0; y < lvl.rows.size(); ++y){
         for(size_t x = 0; x < lvl.rows[y].size(); ++x){
             char cell = lvl.rows[y][x];
@@ -40,7 +46,6 @@ void drawLevel(const Level& lvl){
             int py = static_cast<int>(y) * TILE * scaleY;
             int tileHeight = static_cast<int>(TILE * scaleY);
             int tileWidth = static_cast<int>(TILE * scaleX);
-
             if(cell == '#'){
                 DrawRectangle(px, py, tileWidth, tileHeight, DARKGRAY);
             }
@@ -54,8 +59,42 @@ void loadLvl1(){
     static bool loaded = false;
     if(!loaded){
         readlvlData();
+        cam.offset = {GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}; // Screen center
+        cam.rotation = 0.0f;
+        cam.zoom = 1.0f;
         loaded = true;
     }
+    //May need to delete 
+    movementEventHandler();
+    scaleX = GetScreenWidth() / (float)(lvl1.rows[0].size() * TILE);
+    scaleY = GetScreenHeight() / (float)(lvl1.rows.size() * TILE);
+    Vector2 playerCoords = {
+        lvl1.playerPos.x * TILE * scaleX + (TILE * scaleX)/2,
+        lvl1.playerPos.y * TILE * scaleY + (TILE * scaleY)/2
+    };
+    cam.target = playerCoords;
     ClearBackground(BLACK);
+    BeginMode2D(cam);
     drawLevel(lvl1);
+    EndMode2D();
+}
+//Doesn't work properly, might need to actually rewrite the level1 thing all the time.
+void movementEventHandler(){
+    int x = (int)lvl1.playerPos.x;
+    int y = (int)lvl1.playerPos.y;
+    if(movePossible){
+        if(IsKeyPressed(KEY_W)){
+            --y;
+        }
+        if(IsKeyPressed(KEY_S)){
+            ++y;
+        }
+        if(IsKeyPressed(KEY_A)){
+            --x;
+        }
+        if(IsKeyPressed(KEY_D)){
+            ++x;
+        }
+    }
+    lvl1.playerPos = {(float)x, (float)y};
 }
