@@ -17,6 +17,11 @@ struct Level{
 // New level objects are put here:
 Level lvl1;
 Level lvl2;
+bool isWall(int tx, int ty){
+    if(ty < 0 || ty >= (int)lvl1.rows.size())     return true;
+    if(tx < 0 || tx >= (int)lvl1.rows[ty].size()) return true;
+    return lvl1.rows[ty][tx] == '#';
+}
 std::ifstream in("assets/levels/level1.txt");
 bool lvlLoaded = false;
 void readlvlData(){
@@ -46,10 +51,6 @@ void drawLevel(const Level& lvl){
             int tileWidth = static_cast<int>(TILE * scaleX);
             if(cell == '#'){
                 DrawRectangle(px, py, tileWidth, tileHeight, DARKGRAY);
-                //I'd like to check if the playercoords are equal to the current # cell.
-                if(lvl1.rows[y][x] == lvl1.playerPos.y && lvl1.playerPos.x){
-
-                }
             }
         }
     }
@@ -97,6 +98,7 @@ void movementEventHandler(){
         ++x;
     }
     //Using the info from drawLevel, (using a boolean that I've not declared yet) only have the update happen if the data returns that moving wouldn't make a collision.
-    //if
-    lvl1.playerPos = {(float)x, (float)y};
+    if(!isWall(x, y)){
+        lvl1.playerPos = {(float)x, (float)y};
+    }
 }
