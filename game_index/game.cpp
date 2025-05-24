@@ -8,7 +8,6 @@
 void movementEventHandler();
 float scaleX;
 float scaleY;
-bool movePossible = true;
 Camera2D cam{};
 const int TILE = 16;
 struct Level{
@@ -47,7 +46,11 @@ void drawLevel(const Level& lvl){
             int tileWidth = static_cast<int>(TILE * scaleX);
             if(cell == '#'){
                 DrawRectangle(px, py, tileWidth, tileHeight, DARKGRAY);
-            }//removed some stuff.
+                //I'd like to check if the playercoords are equal to the current # cell.
+                if(lvl1.rows[y][x] == lvl1.playerPos.y && lvl1.playerPos.x){
+
+                }
+            }
         }
     }
 }
@@ -78,23 +81,22 @@ void loadLvl1(){
     DrawRectangle(pPixX, pPixY, pSizeW, pSizeH, RED);
     EndMode2D();
 }
-//Doesn't work properly, might need to actually rewrite the level1 thing all the time.
 void movementEventHandler(){
     int x = (int)lvl1.playerPos.x;
     int y = (int)lvl1.playerPos.y;
-    if(movePossible){
-        if(IsKeyPressed(KEY_W)){
-            --y;
-        }
-        if(IsKeyPressed(KEY_S)){
-            ++y;
-        }
-        if(IsKeyPressed(KEY_A)){
-            --x;
-        }
-        if(IsKeyPressed(KEY_D)){
-            ++x;
-        }
+    if(IsKeyPressed(KEY_W)){
+        --y;
     }
+    if(IsKeyPressed(KEY_S)){
+        ++y;
+    }
+    if(IsKeyPressed(KEY_A)){
+        --x;
+    }
+    if(IsKeyPressed(KEY_D)){
+        ++x;
+    }
+    //Using the info from drawLevel, (using a boolean that I've not declared yet) only have the update happen if the data returns that moving wouldn't make a collision.
+    //if
     lvl1.playerPos = {(float)x, (float)y};
 }
