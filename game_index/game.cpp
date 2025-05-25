@@ -5,9 +5,19 @@
 #include "loadGame.hpp"
 #include <vector>
 #include <fstream>
+const float STEP_DELAY = 0.15f;
+float stepTimer = 0.0f;
 void movementEventHandler();
 float scaleX;
 float scaleY;
+float scale = (scaleX + scaleY)/2;
+//Spritesheet animations
+const int PLAYER_FRAMES = 4;
+Texture2D playerTex;
+const float ANIM_SPEED = 0.12f;
+int currentFrame = 0;
+float animTimer = 0.0f;
+
 Camera2D cam{};
 const int TILE = 16;
 struct Level{
@@ -39,7 +49,6 @@ for(size_t y = 0; y < lvl1.rows.size(); ++y){
 void drawLevel(const Level& lvl){
     scaleX = GetScreenWidth() / (float)(lvl.rows[0].size() * TILE);
     scaleY = GetScreenHeight() / (float)(lvl.rows.size() * TILE);
-    float scale = (scaleY + scaleX)/2;
     for(size_t y = 0; y < lvl.rows.size(); ++y){
         for(size_t x = 0; x < lvl.rows[y].size(); ++x){
             char cell = lvl.rows[y][x];
@@ -55,52 +64,71 @@ void drawLevel(const Level& lvl){
     }
 }
 void loadLvl1(){
+    scale = (scaleY + scaleX)/2;
     static bool loaded = false;
+    //System for sprite changing clock:
+    bool playerMoving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
+    if(playerMoving){
+        animTimer += GetFrameTime();
+        if(animTimer >= ANIM_SPEED){
+            animTimer -= ANIM_SPEED;
+            currentFrame = (currentFrame + 1) % PLAYER_FRAMES;
+        }
+    }
+    else{
+        currentFrame = 0;
+        animTimer = 0.0f;
+    }
+    //Below is for loading the level.
     if(!loaded){
         readlvlData();
-        cam.offset = {GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}; // Screen center
+        cam.offset = {scale, scale}; // Screen center
         cam.rotation = 0.0f;
         cam.zoom = 1.0f;
+        playerTex = LoadTexture("assets/graphics/test_sprite.png");
+        SetTextureFilter(playerTex, TEXTURE_FILTER_POINT);
         loaded = true;
     }
     movementEventHandler();
     scaleX = GetScreenWidth() / (float)(lvl1.rows[0].size() * TILE);
     scaleY = GetScreenHeight() / (float)(lvl1.rows.size() * TILE);
-    float scale = (scaleX + scaleY)/2;
+    scale = (scaleX + scaleY)/2;
     Vector2 playerCoords = {
-        lvl1.playerPos.x * TILE * scaleX + (TILE * scale)/2,
-        lvl1.playerPos.y * TILE * scaleY + (TILE * scale)/2
+        lvl1.playerPos.x * TILE * scale + (TILE * scale)/2,
+        lvl1.playerPos.y * TILE * scale + (TILE * scale)/2
     };
     cam.target = playerCoords;
     ClearBackground(BLACK);
     BeginMode2D(cam);
     drawLevel(lvl1);
+    //Below is for sprites drawing.
     int pPixX = (int)lvl1.playerPos.x * TILE * scale;
     int pPixY = (int)lvl1.playerPos.y * TILE * scale;
-    int pSizeW = (int)(TILE * scale);
-    int pSizeH = (int)(TILE * scale);
-    DrawRectangle(pPixX, pPixY, pSizeW, pSizeH, RED);
+    int pSize  = (int)(TILE * scale);
+    Rectangle src = { currentFrame * 16.0f, 0, 16, 16 };
+    Rectangle dst = { (float)pPixX, (float)pPixY, (float)pSize, (float)pSize };
+    DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
 void movementEventHandler(){
+    stepTimer -= GetFrameTime();
+    if(stepTimer > 0.0f) return;
     int x = (int)lvl1.playerPos.x;
     int y = (int)lvl1.playerPos.y;
-    bool checking = false;
-    while(!checking){
-        if(IsKeyDown(KEY_W)){
-            --y;
-        }
-        if(IsKeyDown(KEY_S)){
-            ++y;
-        }
-        if(IsKeyDown(KEY_A)){
-            --x;
-        }
-        if(IsKeyDown(KEY_D)){
-            ++x;
-        }
+    if(IsKeyDown(KEY_W)){
+        --y;
+    }
+    if(IsKeyDown(KEY_S)){
+        ++y;           
+    }
+    if(IsKeyDown(KEY_A)){
+        --x;
+    }
+    if(IsKeyDown(KEY_D)){
+        ++x;
     }
     if(!isWall(x, y)){
         lvl1.playerPos = {(float)x, (float)y};
     }
+    stepTimer = STEP_DELAY;
 }
