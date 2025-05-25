@@ -51,11 +51,11 @@ int main(){
         }
         else if(Hclicked){
             ClearBackground(selectC);
-            select.update();
             panel.selectScrUpdate();
             Btn1.update();
             Btn2.update();
             Btn3.update();
+            select.update();
             checkForBtnState();
             setupChoiceEventHandler();
         }
@@ -83,7 +83,7 @@ void updateHome(){
     DrawText("SETUP GAME", 545, 320, 28, gRed);
 }
 void updateSelect(){
-    DrawText("GAME SETUP", 540, 20, 75, PINK);
+    DrawText("GAME SETUP", 400, 70, 75, PINK);
 }
 void updateGame(){
     ClearBackground(YELLOW);

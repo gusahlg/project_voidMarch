@@ -3,6 +3,7 @@
 #include "main_select.h"
 #include "Sbuttons.hpp"
 #include "loadGame.hpp"
+#include "player_stats.hpp"
 #include <vector>
 #include <fstream>
 const float STEP_DELAY = 0.15f;
@@ -51,17 +52,76 @@ void drawLevel(const Level& lvl,float s){   // ADDED: pass uniform scale
             DrawRectangle(px,py,sz,sz,DARKGRAY);
         }
 }
+//Manages which spritesheets to get used.
+void spriteManager(){
+    if(raceSPACELIZARD){
+        if(profCRAFTSMAN){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profNECROMANCER){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profWIZARD){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else{
+            playerTex = LoadTexture(""); // Add in texture
+        }
+    }
+    else if(raceVOIDCRAWLER){
+        if(profCRAFTSMAN){
+            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler.png"); 
+        }
+        else if(profNECROMANCER){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profWIZARD){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else{
+            playerTex = LoadTexture(""); // Add in texture
+        }
+    }
+    else if(raceMECHA_SAPIEN){
+        if(profCRAFTSMAN){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profNECROMANCER){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profWIZARD){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else{
+            playerTex = LoadTexture(""); // Add in texture
+        }
+    }
+    else{
+        if(profCRAFTSMAN){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profNECROMANCER){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else if(profWIZARD){
+            playerTex = LoadTexture(""); // Add in texture
+        }
+        else{
+            playerTex = LoadTexture(""); // Add in texture
+        }
+    }
+}
 // main per-frame routine for level 1 
 void loadLvl1(){
     static bool loaded=false;
     if(!loaded){
         readlvlData();
-        cam.offset={GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-        cam.rotation=0.0f;
-        cam.zoom=1.0f;
-        playerTex=LoadTexture("assets/graphics/test_sprite.png");
+        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
+        cam.rotation = 0.0f;
+        cam.zoom = 1.0f;
+        spriteManager();
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-        loaded=true;
+        loaded = true;
     }
     // compute scales once per frame
     scaleX = GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
@@ -76,7 +136,10 @@ void loadLvl1(){
             animTimer-=ANIM_SPEED;
             currentFrame=(currentFrame+1)%PLAYER_FRAMES;
         }
-    }else{currentFrame=0;animTimer=0.0f;}
+    }
+    else{
+        currentFrame = 0;animTimer = 0.0f;
+    }
     // update camera to player centre
     Vector2 playerPixCenter={
         lvl1.playerPos.x*TILE*scale+(TILE*scale)/2,
@@ -87,26 +150,30 @@ void loadLvl1(){
     BeginMode2D(cam);
     drawLevel(lvl1, scale);
     // draw player sprite
-    int pPixX=(int)lvl1.playerPos.x*TILE*scale;
-    int pPixY=(int)lvl1.playerPos.y*TILE*scale;
-    int pSize=(int)(TILE*scale);
-    Rectangle src={currentFrame*16.0f,0,16,16};      
-    Rectangle dst={(float)pPixX,(float)pPixY,(float)pSize,(float)pSize};
-    DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);   
+    const int spriteW = 18;
+    const int spriteH = 25;
+    //For scaling
+    int pSizeW = ((int)spriteW * scale);
+    int pSizeH = ((int)spriteH * scale);
+    int pPixX  = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
+    int pPixY=(int)(lvl1.playerPos.y*TILE*scale + (TILE*scale - pSizeW)/2);
+    Rectangle src = {currentFrame*spriteW, 0, spriteW, spriteH};      
+    Rectangle dst = {(float)pPixX,(float)pPixY,(float)pSizeW,(float)pSizeH};
+    DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);   
     EndMode2D();
 }
 // handle tile-step movement with cooldown
 void movementEventHandler(){
-    stepTimer-=GetFrameTime();
-    if(stepTimer>0.0f) return;
-    int x=(int)lvl1.playerPos.x;
-    int y=(int)lvl1.playerPos.y;
+    stepTimer -= GetFrameTime();
+    if(stepTimer > 0.0f) return;
+    int x = (int)lvl1.playerPos.x;
+    int y = (int)lvl1.playerPos.y;
     if(IsKeyDown(KEY_W)) --y;
-    else if(IsKeyDown(KEY_S)) ++y;
-    else if(IsKeyDown(KEY_A)) --x;
-    else if(IsKeyDown(KEY_D)) ++x;
-    if(!isWall(x,y)){
-        lvl1.playerPos={(float)x,(float)y};
+    if(IsKeyDown(KEY_S)) ++y;
+    if(IsKeyDown(KEY_A)) --x;
+    if(IsKeyDown(KEY_D)) ++x;
+    if(!isWall(x, y)){
+        lvl1.playerPos={(float)x, (float)y};
     }
-    stepTimer=STEP_DELAY;
+    stepTimer = STEP_DELAY;
 }
