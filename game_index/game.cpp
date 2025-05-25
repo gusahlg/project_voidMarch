@@ -11,7 +11,7 @@ float stepTimer = 0.0f;
 void movementEventHandler();
 float scaleX, scaleY, scale = 1.0f;
 // sprite sheet data 
-const int PLAYER_FRAMES = 4;
+const int PLAYER_FRAMES = 2;
 Texture2D playerTex;
 const float ANIM_SPEED = 0.12f;
 int   currentFrame = 0;
@@ -120,6 +120,7 @@ void loadLvl1(){
         cam.rotation = 0.0f;
         cam.zoom = 1.0f;
         spriteManager();
+        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded = true;
     }
@@ -156,7 +157,7 @@ void loadLvl1(){
     int pSizeW = ((int)spriteW * scale);
     int pSizeH = ((int)spriteH * scale);
     int pPixX  = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
-    int pPixY=(int)(lvl1.playerPos.y*TILE*scale + (TILE*scale - pSizeW)/2);
+    int pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale - pSizeW)/2);
     Rectangle src = {currentFrame*spriteW, 0, spriteW, spriteH};      
     Rectangle dst = {(float)pPixX,(float)pPixY,(float)pSizeW,(float)pSizeH};
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);   
