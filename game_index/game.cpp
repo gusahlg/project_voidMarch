@@ -10,9 +10,7 @@ void animateMove();
 const float STEP_DELAY = 0.15f;
 float stepTimer = 0.0f;
 void movementEventHandler();
-
 float scaleX, scaleY, scale = 1.0f;
-
 // sprite-sheet data
 const int PLAYER_FRAMES = 2;
 Texture2D playerTex;
@@ -88,6 +86,10 @@ void spriteManager(){
         else                     playerTex=LoadTexture("");
     }
 }
+int pPixX;
+int pPixY;
+int pSizeW;
+int pSizeH;
 // ── level-1 per-frame ───────────────────────────────────────────
 Rectangle src;
 Rectangle dst;
@@ -131,21 +133,15 @@ void loadLvl1(){
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;
-
-    int pSizeW = (int)(spriteW*scale);
-    int pSizeH = (int)(spriteH*scale);
-
-    int pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
-    int pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
-
+    pSizeW = (int)(spriteW*scale);
+    pSizeH = (int)(spriteH*scale);
+    pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
+    pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
+    dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
-    dst = {(float)pPixX,(float)pPixY,(float)pSizeW,(float)pSizeH};
-
-    DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
+    DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
-/*const float STEP_DELAY = 0.15f;
-float stepTimer = 0.0f;*/
 const float ANIMATE_DELAY = 0.01f;
 float animateTimer = 0.0;
 void animateMovePosXAxis(){
@@ -154,8 +150,10 @@ void animateMovePosXAxis(){
         return;
     }
     dst.x += 1;
+    BeginMode2D(cam);
     DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
-    if(dst.x >= lvl1.playerPos.x){
+    EndMode2D();
+    if(dst.x >= pPixX){
         animateTimer = ANIMATE_DELAY;
         return;
     }
@@ -180,7 +178,7 @@ void movementEventHandler(){
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
     }
     if(IsKeyDown(KEY_D)){
-        ++x;
+        animateMovePosXAxis();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
     }
     if(!isWall(x,y)) lvl1.playerPos={(float)x,(float)y};
