@@ -6,7 +6,7 @@
 #include "player_stats.hpp"
 #include <vector>
 #include <fstream>
-
+void animateMove();
 const float STEP_DELAY = 0.15f;
 float stepTimer = 0.0f;
 void movementEventHandler();
@@ -88,10 +88,9 @@ void spriteManager(){
         else                     playerTex=LoadTexture("");
     }
 }
-void animateMove(){
-    
-}
 // ── level-1 per-frame ───────────────────────────────────────────
+Rectangle src;
+Rectangle dst;
 void loadLvl1(){
     static bool loaded=false;
     if(!loaded){
@@ -133,19 +132,35 @@ void loadLvl1(){
     const int spriteW=18;
     const int spriteH=25;
 
-    int pSizeW=(int)(spriteW*scale);
-    int pSizeH=(int)(spriteH*scale);
+    int pSizeW = (int)(spriteW*scale);
+    int pSizeH = (int)(spriteH*scale);
 
-    int pPixX=(int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
-    int pPixY=(int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
+    int pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
+    int pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
 
-    Rectangle src={currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
-    Rectangle dst={(float)pPixX,(float)pPixY,(float)pSizeW,(float)pSizeH};
+    src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
+    dst = {(float)pPixX,(float)pPixY,(float)pSizeW,(float)pSizeH};
 
     DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
     EndMode2D();
 }
+/*const float STEP_DELAY = 0.15f;
+float stepTimer = 0.0f;*/
+const float ANIMATE_DELAY = 0.01f;
+float animateTimer = 0.0;
+void animateMovePosXAxis(){
+    animateTimer -= GetFrameTime();
+    if(animateTimer > 0.0f){
+        return;
+    }
+    dst.x += 1;
+    DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
+    if(dst.x >= lvl1.playerPos.x){
+        animateTimer = ANIMATE_DELAY;
+        return;
+    }
 
+}
 // ── movement ────────────────────────────────────────────────────
 void movementEventHandler(){
     stepTimer-=GetFrameTime();
@@ -154,7 +169,7 @@ void movementEventHandler(){
     int y=(int)lvl1.playerPos.y;
     if(IsKeyDown(KEY_W)){ 
         --y;
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
+        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     }
     if(IsKeyDown(KEY_S)){
         ++y;
@@ -166,7 +181,7 @@ void movementEventHandler(){
     }
     if(IsKeyDown(KEY_D)){
         ++x;
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
+        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
     }
     if(!isWall(x,y)) lvl1.playerPos={(float)x,(float)y};
     stepTimer=STEP_DELAY;
