@@ -1,4 +1,5 @@
 // for game.cpp and sprites.
+#pragma once
 extern bool raceSPACELIZARD;
 extern bool raceVOIDCRAWLER;
 extern bool raceMECHA_SAPIEN;

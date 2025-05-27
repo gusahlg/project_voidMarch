@@ -16,8 +16,8 @@ float scaleX, scaleY, scale = 1.0f;
 const int PLAYER_FRAMES = 3;
 Texture2D playerTex;
 const float ANIM_SPEED = 0.12f;
-int   currentFrame = 0;
-float animTimer    = 0.0f;
+int currentFrame = 0;
+float animTimer = 0.0f;
 Camera2D cam{};
 const int TILE = 16;
 struct Level{
@@ -55,9 +55,9 @@ void drawLevel(const Level& lvl,float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
             if(lvl.rows[y][x]!='#') continue;
-            int px=(int)x*TILE*s;
-            int py=(int)y*TILE*s;
-            int sz=(int)(TILE*s);
+            int px = (int)x * TILE * s;
+            int py = (int)y * TILE * s;
+            int sz = (int)(TILE * s);
             DrawRectangle(px, py, sz, sz, DARKGRAY);
         }
 }
@@ -96,9 +96,9 @@ void loadLvl1(){
     static bool loaded=false;
     if(!loaded){
         readlvlData();
-        cam.offset={GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-        cam.rotation=0.0f;
-        cam.zoom=1.5f;
+        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
+        cam.rotation = 0.0f;
+        cam.zoom = 1.5f;
         spriteManager();
         facingUp.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         facingDown.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
@@ -124,7 +124,7 @@ void loadLvl1(){
         lvl1.playerPos.x*TILE*scale+(TILE*scale)/2,
         lvl1.playerPos.y*TILE*scale+(TILE*scale)/2
     };
-    cam.target=playerPixCenter;
+    cam.target = playerPixCenter;
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
@@ -132,8 +132,8 @@ void loadLvl1(){
     const int spriteH=25;
     pSizeW = (int)(spriteW*scale);
     pSizeH = (int)(spriteH*scale);
-    pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
-    pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
+    pPixX = (int)(lvl1.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
+    pPixY = (int)(lvl1.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     movementEventHandler();
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
@@ -150,19 +150,18 @@ void movementEventHandler(){
     float x=(float)lvl1.playerPos.x;
     float y=(float)lvl1.playerPos.y;
     static int loadID;
-    static bool up;
     if(IsKeyDown(KEY_W)){
         if(IsKeyDown(KEY_A)){
-            y -= 0.05f;
-            x -= 0.05f;
+            y -= 0.035355f;
+            x -= 0.035355f;
             if(loadID != 1){
                 playerTex = facingUpLeft.pos;
                 loadID = 1;
             }
         }
         else if(IsKeyDown(KEY_D)){
-            y -= 0.05f;
-            x += 0.05f;
+            y -= 0.035355f;
+            x += 0.035355f;
             if(loadID != 1){
                 playerTex = facingUpRight.pos;
                 loadID = 1;
@@ -175,20 +174,19 @@ void movementEventHandler(){
                 loadID = 1;
             }
         }
-        up = true;
     }
     else if(IsKeyDown(KEY_S)){
         if(IsKeyDown(KEY_A)){
-            y += 0.05f;
-            x -= 0.05f;
+            y += 0.035355f;
+            x -= 0.035355f;
             if(loadID != 2){
                 playerTex = facingDownLeft.pos;
                 loadID = 2;
             }
         }
         else if(IsKeyDown(KEY_D)){
-            y += 0.05f;
-            x += 0.05f;
+            y += 0.035355f;
+            x += 0.035355f;
             if(loadID != 2){
                 playerTex = facingDownRight.pos;
                 loadID = 2;
@@ -201,32 +199,19 @@ void movementEventHandler(){
                 loadID = 2;
             }
         }
-        up = false;
     }
     else if(IsKeyDown(KEY_A)){
         x -= 0.05f;
         if(loadID != 3){
-            if(up){
-                playerTex = facingUpLeft.pos;
-                loadID = 3;
-            }
-            else{   
-                playerTex = facingDownLeft.pos;
-                loadID = 3;
-            }
+            playerTex = facingDownLeft.pos;
+            loadID = 3;
         }  
     }
     else if(IsKeyDown(KEY_D)){
         x += 0.05f;
         if(loadID != 4){
-            if(up){
-                playerTex = facingUpRight.pos;
-                loadID = 4;
-            }
-            else{
-                playerTex = facingDownRight.pos;
-                loadID = 4;
-            }
+            playerTex = facingDownRight.pos;
+            loadID = 4; 
         }
     }
     int cx = (int)std::floorf(x);

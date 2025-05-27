@@ -6,3 +6,6 @@
 #include <vector>
 #include <fstream>
 // Here things that can happen in game is defined. 
+void rollAbility(){
+    
+}
