@@ -7,7 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
-constexpr float BBOX_HALF_W = 1.0f;
+constexpr float XAxisOffset = 1.0f;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler();
@@ -31,6 +31,14 @@ bool isWall(int cx, int cy){
     if(cx < 0 || cx >= (int)lvl1.rows[cy].size()) return true;
     return lvl1.rows[cy][cx] == '#';
 }
+bool wallAbove(){
+    if(isWall(lvl1.playerPos.x, lvl1.playerPos.y - 1)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 // ── level loading ───────────────────────────────────────────────
 std::ifstream in("assets/levels/level1.txt");
 void readlvlData(){
@@ -50,7 +58,7 @@ void drawLevel(const Level& lvl,float s){
             int px=(int)x*TILE*s;
             int py=(int)y*TILE*s;
             int sz=(int)(TILE*s);
-            DrawRectangle(px,py,sz,sz,DARKGRAY);
+            DrawRectangle(px, py, sz, sz, DARKGRAY);
         }
 }
 // ── spriteManager (your original ladder) ───────────────────────
@@ -119,7 +127,6 @@ void loadLvl1(){
     cam.target=playerPixCenter;
     ClearBackground(BLACK);
     BeginMode2D(cam);
-    drawLevel(lvl1,scale);
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;
@@ -131,6 +138,10 @@ void loadLvl1(){
     movementEventHandler();
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
+    drawLevel(lvl1,scale);
+    if(wallAbove()){
+        DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
+    }
     EndMode2D();
 }
 void movementEventHandler(){
@@ -220,7 +231,7 @@ void movementEventHandler(){
     }
     int cx = (int)std::floorf(x);
     int cy = (int)std::floorf(y);
-    if(!isWall(cx, cy) /*|| !isWall(cx, cx + BBOX_HALF_W*/){
+    if(!isWall(cx, cy) && !isWall(cx + XAxisOffset, cy)){
         lvl1.playerPos={(float)x,(float)y};
     }
     stepTimer=STEP_DELAY;
