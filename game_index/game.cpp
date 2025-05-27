@@ -220,13 +220,8 @@ void movementEventHandler(){
     }
     int cx = (int)std::floorf(x);
     int cy = (int)std::floorf(y);
-    if(!isWall(cx, cy) && !isWall(cx, cx + BBOX_HALF_W)){
+    if(!isWall(cx, cy) /*|| !isWall(cx, cx + BBOX_HALF_W*/){
         lvl1.playerPos={(float)x,(float)y};
     }
     stepTimer=STEP_DELAY;
 }
-/*bool XYCollCheck(int tx){
-    int left = tx;
-    int right = tx + BBOX_HALF_W;
-    return isWall(left, right);
-}*/
