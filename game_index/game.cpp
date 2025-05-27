@@ -6,13 +6,13 @@
 #include "player_stats.hpp"
 #include <vector>
 #include <fstream>
-void animateMove();
+void animateMovePosXAxis();
 const float STEP_DELAY = 0.15f;
 float stepTimer = 0.0f;
 void movementEventHandler();
 float scaleX, scaleY, scale = 1.0f;
 // sprite-sheet data
-const int PLAYER_FRAMES = 2;
+const int PLAYER_FRAMES = 3;
 Texture2D playerTex;
 const float ANIM_SPEED = 0.12f;
 int   currentFrame = 0;
@@ -46,7 +46,6 @@ void readlvlData(){
                 lvl1.rows[y][x]='.';
             }
 }
-
 // ── draw walls ─────────────────────────────────────────────────
 void drawLevel(const Level& lvl,float s){
     for(size_t y=0;y<lvl.rows.size();++y)
@@ -58,7 +57,6 @@ void drawLevel(const Level& lvl,float s){
             DrawRectangle(px,py,sz,sz,DARKGRAY);
         }
 }
-
 // ── spriteManager (your original ladder) ───────────────────────
 void spriteManager(){
     if(raceSPACELIZARD){
@@ -108,9 +106,6 @@ void loadLvl1(){
     scaleX=GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
     scaleY=GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale =(scaleX+scaleY)/2.0f;
-
-    movementEventHandler();
-
     bool moving=IsKeyDown(KEY_W)||IsKeyDown(KEY_A)||IsKeyDown(KEY_S)||IsKeyDown(KEY_D);
     if(moving){
         animTimer+=GetFrameTime();
@@ -137,27 +132,33 @@ void loadLvl1(){
     pSizeH = (int)(spriteH*scale);
     pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
     pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
-    dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
+    movementEventHandler();
+    dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
 const float ANIMATE_DELAY = 0.01f;
 float animateTimer = 0.0;
 void animateMovePosXAxis(){
-    animateTimer -= GetFrameTime();
-    if(animateTimer > 0.0f){
-        return;
-    }
-    dst.x += 1;
-    BeginMode2D(cam);
-    DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
-    EndMode2D();
-    if(dst.x >= pPixX){
-        animateTimer = ANIMATE_DELAY;
-        return;
-    }
+    while(IsKeyDown(KEY_D)){
+        animateTimer -= GetFrameTime();
+        if(animateTimer <= 0.0){
+            lvl1.playerPos.x += 1;
+            pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
+            pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
+            dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
+            src = {currentFrame*(float)18,0.0f,(float)18,(float)25};
+            BeginMode2D(cam);
+            DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
+            EndMode2D();
+        }
 
+        if(dst.x >= pPixX){
+            animateTimer = ANIMATE_DELAY;
+            return;
+        }
+    }
 }
 // ── movement ────────────────────────────────────────────────────
 void movementEventHandler(){
@@ -165,21 +166,34 @@ void movementEventHandler(){
     if(stepTimer>0.0f) return;
     int x=(int)lvl1.playerPos.x;
     int y=(int)lvl1.playerPos.y;
+    static bool up;
     if(IsKeyDown(KEY_W)){ 
         --y;
+        up = true;
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     }
     if(IsKeyDown(KEY_S)){
         ++y;
+        up = false;
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
     }
     if(IsKeyDown(KEY_A)){
         --x; 
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
+        if(up){
+            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
+        }
+        else{
+            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
+        }
     }
     if(IsKeyDown(KEY_D)){
         animateMovePosXAxis();
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
+        if(up){
+            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+        }
+        else{
+            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
+        }
     }
     if(!isWall(x,y)) lvl1.playerPos={(float)x,(float)y};
     stepTimer=STEP_DELAY;
