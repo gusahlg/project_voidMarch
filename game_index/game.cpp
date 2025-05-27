@@ -6,7 +6,7 @@
 #include "player_stats.hpp"
 #include <vector>
 #include <fstream>
-const float STEP_DELAY = 0.000001f;
+const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler();
 float scaleX, scaleY, scale = 1.0f;
@@ -70,6 +70,15 @@ int pPixX;
 int pPixY;
 int pSizeW;
 int pSizeH;
+struct void_crawler{
+    Texture2D pos;
+};
+void_crawler facingUp;
+void_crawler facingDown;
+void_crawler facingUpLeft;
+void_crawler facingUpRight;
+void_crawler facingDownLeft;
+void_crawler facingDownRight;
 // ── level-1 per-frame ───────────────────────────────────────────
 Rectangle src;
 Rectangle dst;
@@ -81,6 +90,12 @@ void loadLvl1(){
         cam.rotation=0.0f;
         cam.zoom=1.5f;
         spriteManager();
+        facingUp.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+        facingDown.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
+        facingUpLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
+        facingUpRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+        facingDownLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
+        facingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
     }
@@ -116,41 +131,93 @@ void loadLvl1(){
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
-
 void movementEventHandler(){
     stepTimer-=GetFrameTime();
     if(stepTimer > 0.0f) return;
     float x=(float)lvl1.playerPos.x;
     float y=(float)lvl1.playerPos.y;
+    static int loadID;
     static bool up;
-    if(IsKeyDown(KEY_W)){ 
-        y -= 0.05;
+    if(IsKeyDown(KEY_W)){
+        if(IsKeyDown(KEY_A)){
+            y -= 0.05f;
+            x -= 0.05f;
+            if(loadID != 1){
+                playerTex = facingUpLeft.pos;
+                loadID = 1;
+            }
+        }
+        else if(IsKeyDown(KEY_D)){
+            y -= 0.05f;
+            x += 0.05f;
+            if(loadID != 1){
+                playerTex = facingUpRight.pos;
+                loadID = 1;
+            }
+        }
+        else{
+            y -= 0.05f;
+            if(loadID != 1){
+                playerTex = facingUp.pos;
+                loadID = 1;
+            }
+        }
         up = true;
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     }
-    if(IsKeyDown(KEY_S)){
-        y += 0.05;
+    else if(IsKeyDown(KEY_S)){
+        if(IsKeyDown(KEY_A)){
+            y += 0.05f;
+            x -= 0.05f;
+            if(loadID != 2){
+                playerTex = facingDownLeft.pos;
+                loadID = 2;
+            }
+        }
+        else if(IsKeyDown(KEY_D)){
+            y += 0.05f;
+            x += 0.05f;
+            if(loadID != 2){
+                playerTex = facingDownRight.pos;
+                loadID = 2;
+            }
+        }
+        else{
+            y += 0.05f;
+            if(loadID != 2){
+                playerTex = facingDown.pos;
+                loadID = 2;
+            }
+        }
         up = false;
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
     }
-    if(IsKeyDown(KEY_A)){
-        x -= 0.05; 
-        if(up){
-            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
-        }
-        else{
-            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
+    else if(IsKeyDown(KEY_A)){
+        x -= 0.05f;
+        if(loadID != 3){
+            if(up){
+                playerTex = facingUpLeft.pos;
+                loadID = 3;
+            }
+            else{   
+                playerTex = facingDownLeft.pos;
+                loadID = 3;
+            }
+        }  
+    }
+    else if(IsKeyDown(KEY_D)){
+        x += 0.05f;
+        if(loadID != 4){
+            if(up){
+                playerTex = facingUpRight.pos;
+                loadID = 4;
+            }
+            else{
+                playerTex = facingDownRight.pos;
+                loadID = 4;
+            }
         }
     }
-    if(IsKeyDown(KEY_D)){
-        x += 0.05;
-        if(up){
-            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-        }
-        else{
-            playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
-        }
+    if(!isWall((int)x,(int)y)){
+        lvl1.playerPos={(float)x,(float)y};
     }
-    if(!isWall(x,y)) lvl1.playerPos={(float)x,(float)y};
     stepTimer=STEP_DELAY;
 }
