@@ -6,6 +6,8 @@
 #include "player_stats.hpp"
 #include <vector>
 #include <fstream>
+#include <cmath>
+constexpr float BBOX_HALF_W = 1.0f;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler();
@@ -24,10 +26,10 @@ struct Level{
 };
 Level lvl1;
 Level lvl2;
-bool isWall(int tx,int ty){
-    if(ty<0||ty>=(int)lvl1.rows.size()) return true;
-    if(tx<0||tx>=(int)lvl1.rows[ty].size()) return true;
-    return lvl1.rows[ty][tx]=='#';
+bool isWall(int cx, int cy){
+    if(cy < 0 || cy >= (int)lvl1.rows.size()) return true;
+    if(cx < 0 || cx >= (int)lvl1.rows[cy].size()) return true;
+    return lvl1.rows[cy][cx] == '#';
 }
 // ── level loading ───────────────────────────────────────────────
 std::ifstream in("assets/levels/level1.txt");
@@ -216,8 +218,15 @@ void movementEventHandler(){
             }
         }
     }
-    if(!isWall((int)x,(int)y)){
+    int cx = (int)std::floorf(x);
+    int cy = (int)std::floorf(y);
+    if(!isWall(cx, cy) && !isWall(cx, cx + BBOX_HALF_W)){
         lvl1.playerPos={(float)x,(float)y};
     }
     stepTimer=STEP_DELAY;
 }
+/*bool XYCollCheck(int tx){
+    int left = tx;
+    int right = tx + BBOX_HALF_W;
+    return isWall(left, right);
+}*/
