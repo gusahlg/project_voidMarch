@@ -6,8 +6,7 @@
 #include "player_stats.hpp"
 #include <vector>
 #include <fstream>
-void animateMovePosXAxis();
-const float STEP_DELAY = 0.15f;
+const float STEP_DELAY = 0.000001f;
 float stepTimer = 0.0f;
 void movementEventHandler();
 float scaleX, scaleY, scale = 1.0f;
@@ -17,24 +16,19 @@ Texture2D playerTex;
 const float ANIM_SPEED = 0.12f;
 int   currentFrame = 0;
 float animTimer    = 0.0f;
-
 Camera2D cam{};
 const int TILE = 16;
-
 struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
 };
-
 Level lvl1;
 Level lvl2;
-
 bool isWall(int tx,int ty){
     if(ty<0||ty>=(int)lvl1.rows.size()) return true;
     if(tx<0||tx>=(int)lvl1.rows[ty].size()) return true;
     return lvl1.rows[ty][tx]=='#';
 }
-
 // ── level loading ───────────────────────────────────────────────
 std::ifstream in("assets/levels/level1.txt");
 void readlvlData(){
@@ -60,28 +54,16 @@ void drawLevel(const Level& lvl,float s){
 // ── spriteManager (your original ladder) ───────────────────────
 void spriteManager(){
     if(raceSPACELIZARD){
-        if(profCRAFTSMAN)   playerTex=LoadTexture("");                                   // add texture
-        else if(profNECROMANCER) playerTex=LoadTexture("");
-        else if(profWIZARD)      playerTex=LoadTexture("");
-        else                     playerTex=LoadTexture("");
+
     }
     else if(raceVOIDCRAWLER){
-        if(profCRAFTSMAN)   playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
-        else if(profNECROMANCER) playerTex=LoadTexture("");
-        else if(profWIZARD)      playerTex=LoadTexture("");
-        else                     playerTex=LoadTexture("");
+        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
     }
     else if(raceMECHA_SAPIEN){
-        if(profCRAFTSMAN)   playerTex=LoadTexture("");
-        else if(profNECROMANCER) playerTex=LoadTexture("");
-        else if(profWIZARD)      playerTex=LoadTexture("");
-        else                     playerTex=LoadTexture("");
+
     }
     else{
-        if(profCRAFTSMAN)   playerTex=LoadTexture("");
-        else if(profNECROMANCER) playerTex=LoadTexture("");
-        else if(profWIZARD)      playerTex=LoadTexture("");
-        else                     playerTex=LoadTexture("");
+
     }
 }
 int pPixX;
@@ -102,7 +84,6 @@ void loadLvl1(){
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
     }
-
     scaleX=GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
     scaleY=GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale =(scaleX+scaleY)/2.0f;
@@ -114,17 +95,14 @@ void loadLvl1(){
             currentFrame=(currentFrame+1)%PLAYER_FRAMES;
         }
     }else{currentFrame=0;animTimer=0.0f;}
-
     Vector2 playerPixCenter={
         lvl1.playerPos.x*TILE*scale+(TILE*scale)/2,
         lvl1.playerPos.y*TILE*scale+(TILE*scale)/2
     };
     cam.target=playerPixCenter;
-
     ClearBackground(BLACK);
     BeginMode2D(cam);
     drawLevel(lvl1,scale);
-
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;
@@ -138,47 +116,25 @@ void loadLvl1(){
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
-const float ANIMATE_DELAY = 0.01f;
-float animateTimer = 0.0;
-void animateMovePosXAxis(){
-    while(IsKeyDown(KEY_D)){
-        animateTimer -= GetFrameTime();
-        if(animateTimer <= 0.0){
-            lvl1.playerPos.x += 1;
-            pPixX = (int)(lvl1.playerPos.x*TILE*scale + (TILE*scale - pSizeW)/2);
-            pPixY = (int)(lvl1.playerPos.y*TILE*scale + (TILE*scale) - pSizeH);
-            dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
-            src = {currentFrame*(float)18,0.0f,(float)18,(float)25};
-            BeginMode2D(cam);
-            DrawTexturePro(playerTex,src,dst,{0,0},0.0f,WHITE);
-            EndMode2D();
-        }
 
-        if(dst.x >= pPixX){
-            animateTimer = ANIMATE_DELAY;
-            return;
-        }
-    }
-}
-// ── movement ────────────────────────────────────────────────────
 void movementEventHandler(){
     stepTimer-=GetFrameTime();
-    if(stepTimer>0.0f) return;
-    int x=(int)lvl1.playerPos.x;
-    int y=(int)lvl1.playerPos.y;
+    if(stepTimer > 0.0f) return;
+    float x=(float)lvl1.playerPos.x;
+    float y=(float)lvl1.playerPos.y;
     static bool up;
     if(IsKeyDown(KEY_W)){ 
-        --y;
+        y -= 0.05;
         up = true;
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     }
     if(IsKeyDown(KEY_S)){
-        ++y;
+        y += 0.05;
         up = false;
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
     }
     if(IsKeyDown(KEY_A)){
-        --x; 
+        x -= 0.05; 
         if(up){
             playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
         }
@@ -187,7 +143,7 @@ void movementEventHandler(){
         }
     }
     if(IsKeyDown(KEY_D)){
-        animateMovePosXAxis();
+        x += 0.05;
         if(up){
             playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         }
