@@ -2,29 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      // Appears in the VS Code debug-configuration picker
-      "name": "Run main.exe",
-
-      // Use the C/C++ extension’s GDB/LLDB adapter
+      "name": "Run Voidmarch",
       "type": "cppdbg",
       "request": "launch",
 
-      // Path to the executable produced by your build task
+      // where the EXE was built (keep whatever you have now)
       "program": "${workspaceFolder}/game_index/main.exe",
 
-      // Run the program from the project root so Windows finds raylib.dll there
-      "cwd": "${workspaceFolder}",
+      // 👇 make this the folder that contains game_index
+      "cwd": "${workspaceFolder}/game_index",
 
-      // Re-compile before every debug session
-      "preLaunchTask": "build-raylib",
-
-      // Tell the adapter we’re talking to GDB and where it lives
       "MIMode": "gdb",
       "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
-
-      // Usual quality-of-life toggles
-      "stopAtEntry": false,
-      "externalConsole": false
+      "preLaunchTask": "build-raylib"
     }
   ]
 }
