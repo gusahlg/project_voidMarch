@@ -1,8 +1,8 @@
 #include <raylib.h>
 #include <iostream>
-#include "../include/Sbuttons.hpp"
+#include "../include/select/Sbuttons.hpp"
 #include "loadGame.hpp"
-#include "../include/player_stats.hpp"
+#include "../include/game/player_stats.hpp"
 #include <vector>
 #include <fstream>
 #include <cmath>

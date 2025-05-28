@@ -1,9 +1,9 @@
 //paths work
-#include "raylib.h"
+#include <raylib.h>
 #include <iostream>
-#include "select_logic/main_select.h"
-#include "select_logic/Sbuttons.hpp"
-#include "game_logic/loadGame.hpp"
+#include "include/select/main_select.h"
+#include "include/select/Sbuttons.hpp"
+#include "include/game/loadGame.hpp"
 Color gRed = {255, 20, 10, 255};
 Color spaceBlue = {25, 70, 240, 255};
 Color selectC = {5, 2, 33, 255};

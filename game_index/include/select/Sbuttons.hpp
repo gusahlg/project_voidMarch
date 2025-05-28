@@ -1,5 +1,5 @@
 #pragma once
-#include "raylib.h"
+#include <raylib.h>
 #include <iostream>
 extern Color Chover;
 extern Color Cpressed;

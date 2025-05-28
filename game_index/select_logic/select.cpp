@@ -1,9 +1,9 @@
 //paths work
-#include "raylib.h"
+#include <raylib.h>
 #include <iostream>
-#include "main_select.h"
-#include "Sbuttons.hpp"
-#include "../player_stats.hpp"
+#include "../include/select/main_select.h"
+#include "../include/select/Sbuttons.hpp"
+#include "../include/game/player_stats.hpp"
 void selectScr::selectScrUpdate(){
    Rectangle selectPanel{128, 80, 1024, 600};
    DrawRectangleRounded(selectPanel, 0.2, 100, DARKGRAY);
