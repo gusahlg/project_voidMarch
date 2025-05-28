@@ -37,7 +37,7 @@ void rollAbility(Level& lvl){
     timer = animateDelay;     
 }
 void abilityInputHandler(Level& lvl){
-    if(IsKeyDown(KEY_Q)){
+    if(IsKeyPressed(KEY_Q)){
         rollAbility(lvl);
     }
 }
