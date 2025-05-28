@@ -1,8 +1,8 @@
-#include "raylib.h"
+#include <raylib.h>
 #include <iostream>
-#include "../select_logic/Sbuttons.hpp"
+#include "../include/Sbuttons.hpp"
 #include "loadGame.hpp"
-#include "../player_stats.hpp"
+#include "../include/player_stats.hpp"
 #include <vector>
 #include <fstream>
 #include <cmath>
@@ -39,7 +39,7 @@ bool wallAbove(Level& lvl){
     }
 }
 // ── level loading ───────────────────────────────────────────────
-std::ifstream in("assets/levels/level1.txt");
+std::ifstream in("../assets/levels/level1.txt");
 void readlvlData(Level& lvl){
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
@@ -80,20 +80,20 @@ Space_lizard SfacingUpRight;
 Space_lizard SfacingDownLeft;
 Space_lizard SfacingDownRight;
 void loadVoid_crawler(){
-    VfacingUp.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-    VfacingDown.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
-    VfacingUpLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
-    VfacingUpRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-    VfacingDownLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
-    VfacingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
+    VfacingUp.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
+    VfacingDown.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler1.png");
+    VfacingUpLeft.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler4.png");
+    VfacingUpRight.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
+    VfacingDownLeft.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler2.png");
+    VfacingDownRight.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler1.png");
 }
 void loadSpaceLizard(){
-    SfacingUp.pos = LoadTexture("assets/graphics/");
-    SfacingDown.pos = LoadTexture("assets/graphics/");
-    SfacingUpLeft.pos = LoadTexture("assets/graphics/");
-    SfacingUpRight.pos = LoadTexture("assets/graphics/");
-    SfacingDownLeft.pos = LoadTexture("assets/graphics/");
-    SfacingDownRight.pos = LoadTexture("assets/graphics/");
+    SfacingUp.pos = LoadTexture("../assets/graphics/");
+    SfacingDown.pos = LoadTexture("../assets/graphics/");
+    SfacingUpLeft.pos = LoadTexture("../assets/graphics/");
+    SfacingUpRight.pos = LoadTexture("../assets/graphics/");
+    SfacingDownLeft.pos = LoadTexture("../assets/graphics/");
+    SfacingDownRight.pos = LoadTexture("../assets/graphics/");
 }
 int playerID;
 void spriteManager(){
