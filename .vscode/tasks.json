@@ -4,31 +4,13 @@
     {
       "label": "build-raylib",
       "type": "shell",
-      "command": "g++",
+      "command": "powershell",
       "args": [
-        "-std=c++17",
-        "-g",
-
-        // ---- every .cpp file in the two source folders ----
-        "${workspaceFolder}/game_index/game_logic/*.cpp",
-        "${workspaceFolder}/game_index/select_logic/*.cpp",
-        "${workspaceFolder}/game_index/*.cpp",
-
-        // ---- include search paths ----
-        "-I", "${workspaceFolder}/include",
-        "-I", "C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include",
-
-        // ---- link search path & libraries ----
-        "-L", "C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/lib",
-        "-lraylib", "-lopengl32", "-lgdi32", "-lwinmm",
-
-        // ---- output ----
-        "-o", "${workspaceFolder}main.exe"
+        "-Command",
+        "g++ -std=c++17 -g (Get-ChildItem '${workspaceFolder}/game_index/*.cpp' | ForEach-Object { $_.FullName }) (Get-ChildItem '${workspaceFolder}/game_index/game_logic/*.cpp' | ForEach-Object { $_.FullName }) (Get-ChildItem '${workspaceFolder}/game_index/select_logic/*.cpp' | ForEach-Object { $_.FullName }) '-I${workspaceFolder}/include' '-IC:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include' '-LC:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/lib' -lraylib -lopengl32 -lgdi32 -lwinmm -o '${workspaceFolder}/main.exe'"
       ],
-      "group": { "kind": "build", "isDefault": true },
-      "problemMatcher": ["$gcc"]
+      "problemMatcher": ["$gcc"],
+      "group": { "kind": "build", "isDefault": true }
     }
   ]
 }
-
-

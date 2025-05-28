@@ -2,20 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Voidmarch",
-      "type": "cppdbg",
+      "name":    "Run Game",
+      "type":    "cppdbg",
       "request": "launch",
 
-      // where the EXE was built (keep whatever you have now)
-      "program": "${workspaceFolder}/game_index/main.exe",
+      "program": "${workspaceFolder}/main.exe",
+      "cwd":     "${workspaceFolder}",
 
-      // 👇 make this the folder that contains game_index
-      "cwd": "${workspaceFolder}/game_index",
+      "preLaunchTask": "build-raylib",  // ← must match the label above
+      "args": [],                       // CLI args for your game
+      "externalConsole": true,
 
       "MIMode": "gdb",
-      "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
-      "preLaunchTask": "build-raylib"
+      "miDebuggerPath": "gdb"
     }
   ]
 }
-
