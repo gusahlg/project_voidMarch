@@ -3,13 +3,10 @@
 #include "../include/select/Sbuttons.hpp"
 #include "../include/game/loadGame.hpp"
 #include "../include/game/player_stats.hpp"
+#include "../include/game/ability_attributes.hpp"
 #include <vector>
 #include <fstream>
 #include <cmath>
-struct Level{
-    std::vector<std::string> rows;
-    Vector2 playerPos;
-};
 Level lvl1;
 Level lvl2;
 constexpr float XAxisOffset = 1.0f;
@@ -32,7 +29,7 @@ bool isWall(int cx, int cy, Level& lvl){
 }
 bool wallAbove(Level& lvl){
     if(isWall(lvl.playerPos.x, lvl.playerPos.y - 1, lvl)){
-        return true;
+        return true;  
     }
     else{
         return false;
@@ -133,19 +130,24 @@ void loadLvl1(){
     scaleX=GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
     scaleY=GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale =(scaleX+scaleY)/2.0f;
-    bool moving=IsKeyDown(KEY_W)||IsKeyDown(KEY_A)||IsKeyDown(KEY_S)||IsKeyDown(KEY_D);
+    bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     if(moving){
-        animTimer+=GetFrameTime();
-        if(animTimer>=ANIM_SPEED){
-            animTimer-=ANIM_SPEED;
-            currentFrame=(currentFrame+1)%PLAYER_FRAMES;
+        animTimer += GetFrameTime();
+        if(animTimer >= ANIM_SPEED){
+            animTimer -= ANIM_SPEED;
+            currentFrame = (currentFrame+1)%PLAYER_FRAMES;
         }
-    }else{currentFrame=0;animTimer=0.0f;}
+        movementEventHandler(lvl1);
+    }
+    else{
+        currentFrame=0;animTimer=0.0f;
+    }
     Vector2 playerPixCenter={
         lvl1.playerPos.x*TILE*scale+(TILE*scale)/2,
         lvl1.playerPos.y*TILE*scale+(TILE*scale)/2
     };
     cam.target = playerPixCenter;
+    abilityInputHandler(lvl1);
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
@@ -156,7 +158,6 @@ void loadLvl1(){
     pPixX = (int)(lvl1.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
     pPixY = (int)(lvl1.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
-    movementEventHandler(lvl1);
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     drawLevel(lvl1,scale);
@@ -165,12 +166,20 @@ void loadLvl1(){
     }
     EndMode2D();
 }
+bool lookingUp;
+bool lookingUpLeft;
+bool lookingUpRight;
+bool lookingLeft;
+bool lookingRight;
+bool lookingDown;
+bool lookingDownLeft;
+bool lookingDownRight;
+int loadID;
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();
     if(stepTimer > 0.0f) return;
     float x=(float)lvl.playerPos.x;
-    float y=(float)lvl.playerPos.y;
-    static int loadID;
+    float y=(float)lvl.playerPos.y;;
     if(IsKeyDown(KEY_W)){
         if(IsKeyDown(KEY_A)){
             y -= 0.035355f;
