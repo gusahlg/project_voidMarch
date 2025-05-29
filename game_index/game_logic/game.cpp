@@ -36,8 +36,8 @@ bool wallAbove(Level& lvl){
     }
 }
 // ── level loading ───────────────────────────────────────────────
-std::ifstream in("../assets/levels/level1.txt");
 void readlvlData(Level& lvl){
+    std::ifstream in("../assets/levels/level1.txt");
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
@@ -124,6 +124,7 @@ void loadLvl1(){
         cam.rotation = 0.0f;
         cam.zoom = 3.0f;
         spriteManager();
+        playerTex = LoadTexture("../assets/graphics/void_crawler/void_crawler2.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
     }
@@ -166,14 +167,6 @@ void loadLvl1(){
     }
     EndMode2D();
 }
-bool lookingUp;
-bool lookingUpLeft;
-bool lookingUpRight;
-bool lookingLeft;
-bool lookingRight;
-bool lookingDown;
-bool lookingDownLeft;
-bool lookingDownRight;
 int loadID;
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();

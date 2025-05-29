@@ -1,7 +1,7 @@
+#pragma once
 #include <raylib.h>
 #include <vector>
 #include <iostream>
-#pragma once
 
 struct Level{
     std::vector<std::string> rows;
