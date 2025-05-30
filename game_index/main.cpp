@@ -48,6 +48,7 @@ int main(){
         }
         //The game is running
         else if(gameRunning){
+/*DEBUG*/   std::cout << "gameRunning phase." << std::endl;
             loadLvl1();
         }
         else if(Hclicked){

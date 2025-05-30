@@ -118,6 +118,7 @@ int pSizeH;
 Rectangle src;
 Rectangle dst;
 void loadLvl1(){
+/*DEBUG*/   std::cout << "Inside loadLvl1, beginning." << std::endl;
     static bool loaded=false;
     if(!loaded){
         readlvlData(lvl1);
