@@ -32,6 +32,7 @@ void screen::update(){
 }
 bool Hclicked = false;
 int main(){
+    std::cout << "game started" << std::endl;
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
