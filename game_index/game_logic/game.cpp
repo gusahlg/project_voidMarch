@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
+int loadID = 0;
 Level lvl1;
 Level lvl2;
 constexpr float XAxisOffset = 1.0f;
@@ -124,7 +125,6 @@ void loadLvl1(){
         cam.rotation = 0.0f;
         cam.zoom = 3.0f;
         spriteManager();
-        playerTex = LoadTexture("../assets/graphics/void_crawler/void_crawler2.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
     }
@@ -167,7 +167,6 @@ void loadLvl1(){
     }
     EndMode2D();
 }
-int loadID;
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();
     if(stepTimer > 0.0f) return;
