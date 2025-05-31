@@ -38,7 +38,8 @@ bool wallAbove(Level& lvl){
 }
 // ── level loading ───────────────────────────────────────────────
 void readlvlData(Level& lvl){
-    std::ifstream in("assets/levels/level1.txt");
+    
+    std::ifstream in("assets/levels/level2.txt");
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
@@ -86,12 +87,12 @@ void loadVoid_crawler(){
     VfacingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
 }
 void loadSpaceLizard(){
-    SfacingUp.pos = LoadTexture("../assets/graphics/");
-    SfacingDown.pos = LoadTexture("../assets/graphics/");
-    SfacingUpLeft.pos = LoadTexture("../assets/graphics/");
-    SfacingUpRight.pos = LoadTexture("../assets/graphics/");
-    SfacingDownLeft.pos = LoadTexture("../assets/graphics/");
-    SfacingDownRight.pos = LoadTexture("../assets/graphics/");
+    SfacingUp.pos = LoadTexture("assets/graphics/");
+    SfacingDown.pos = LoadTexture("assets/graphics/");
+    SfacingUpLeft.pos = LoadTexture("assets/graphics/");
+    SfacingUpRight.pos = LoadTexture("assets/graphics/");
+    SfacingDownLeft.pos = LoadTexture("assets/graphics/");
+    SfacingDownRight.pos = LoadTexture("assets/graphics/");
 }
 int playerID;
 void spriteManager(){
@@ -159,7 +160,7 @@ void loadLvl1(){
         readlvlData(lvl1);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = 1.0f;
+        cam.zoom = scale;
         spriteManager();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
@@ -169,6 +170,23 @@ void loadLvl1(){
     scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale = (scaleX+scaleY)/2.0f;
     gameLoop(lvl1);
+}
+void loadLvl2(){
+    static bool loaded=false;
+    if(!loaded){
+        readlvlData(lvl2);
+        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
+        cam.rotation = 0.0f;
+        cam.zoom = scale;
+        spriteManager();
+        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+        SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
+        loaded=true;
+    }
+    scaleX = GetScreenWidth()/(float)(lvl2.rows[0].size()*TILE);
+    scaleY = GetScreenHeight()/(float)(lvl2.rows.size()*TILE);
+    scale = (scaleX+scaleY)/2.0f;
+    gameLoop(lvl2);
 }
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();

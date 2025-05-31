@@ -33,7 +33,7 @@ void screen::update(){
 bool Hclicked = false;
 int main(){
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");
-    SetTargetFPS(10);
+    SetTargetFPS(100);
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
