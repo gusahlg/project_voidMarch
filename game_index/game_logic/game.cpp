@@ -37,12 +37,8 @@ bool wallAbove(Level& lvl){
     }
 }
 // ── level loading ───────────────────────────────────────────────
-bool ERROR_LOADING = false;
 void readlvlData(Level& lvl){
     std::ifstream in("assets/levels/level1.txt");
-    if(!in.is_open()){
-        ERROR_LOADING = true;
-    }
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
@@ -163,20 +159,16 @@ void loadLvl1(){
         readlvlData(lvl1);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = 3.0f;
+        cam.zoom = 1.0f;
         spriteManager();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
     }
-    if(ERROR_LOADING){
-        DrawRectangle(0, 0, 9999, 9999, PINK);
-    }
-    scaleX = GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
+    scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
     scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale = (scaleX+scaleY)/2.0f;
-    //the code that crashes the program is back now 
-   gameLoop(lvl1);
+    gameLoop(lvl1);
 }
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();
