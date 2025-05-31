@@ -17,7 +17,7 @@ void movementEventHandler(Level& lvl);
 float scaleX, scaleY, scale = 1.0f;
 // sprite-sheet data
 const int PLAYER_FRAMES = 3;
-Texture2D playerTex;
+Texture2D playerTex = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
 const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
 float animTimer = 0.0f;
@@ -114,24 +114,10 @@ int pPixX;
 int pPixY;
 int pSizeW;
 int pSizeH;
-// ── level-1 per-frame ───────────────────────────────────────────
 Rectangle src;
 Rectangle dst;
-void loadLvl1(){
-/*DEBUG*/   std::cout << "Inside loadLvl1, beginning." << std::endl;
-    static bool loaded=false;
-    if(!loaded){
-        readlvlData(lvl1);
-        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-        cam.rotation = 0.0f;
-        cam.zoom = 3.0f;
-        spriteManager();
-        SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-        loaded=true;
-    }
-    scaleX=GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
-    scaleY=GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
-    scale =(scaleX+scaleY)/2.0f;
+void gameLoop(){
+    scale = 50;
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     if(moving){
         animTimer += GetFrameTime();
@@ -161,12 +147,31 @@ void loadLvl1(){
     pPixY = (int)(lvl1.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
+    
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     drawLevel(lvl1,scale);
     if(wallAbove(lvl1)){
         DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     }
+    
     EndMode2D();
+}
+void loadLvl1(){
+    static bool loaded=false;
+    if(!loaded){
+        readlvlData(lvl1);
+        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
+        cam.rotation = 0.0f;
+        cam.zoom = 3.0f;
+        spriteManager();
+        SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
+        loaded=true;
+    }/*
+    scaleX = GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
+    scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
+    scale = (scaleX+scaleY)/2.0f;
+    */
+   gameLoop();
 }
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();

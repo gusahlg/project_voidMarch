@@ -15,13 +15,13 @@ void rollAbility(Level& lvl){
         return;
     }
     switch(loadID){
-        case 1:
+        case(1):
             y -= 0.1;
             break;
-        case 2:
+        case(2):
             y += 0.1;
             break;
-        case 3:
+        case(3):
             x -= 0.1;
             break;
         default:

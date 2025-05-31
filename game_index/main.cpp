@@ -32,8 +32,8 @@ void screen::update(){
 }
 bool Hclicked = false;
 int main(){
-    std::cout << "game started" << std::endl;
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");
+    SetTargetFPS(100);
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
@@ -49,7 +49,6 @@ int main(){
         }
         //The game is running
         else if(gameRunning){
-/*DEBUG*/   std::cout << "gameRunning phase." << std::endl;
             loadLvl1();
         }
         else if(Hclicked){
