@@ -37,8 +37,12 @@ bool wallAbove(Level& lvl){
     }
 }
 // ── level loading ───────────────────────────────────────────────
+bool ERROR_LOADING = false;
 void readlvlData(Level& lvl){
-    std::ifstream in("../assets/levels/level1.txt");
+    std::ifstream in("assets/levels/level1.txt");
+    if(!in.is_open()){
+        ERROR_LOADING = true;
+    }
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
@@ -78,12 +82,12 @@ Space_lizard SfacingUpRight;
 Space_lizard SfacingDownLeft;
 Space_lizard SfacingDownRight;
 void loadVoid_crawler(){
-    VfacingUp.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
-    VfacingDown.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler1.png");
-    VfacingUpLeft.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler4.png");
-    VfacingUpRight.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
-    VfacingDownLeft.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler2.png");
-    VfacingDownRight.pos = LoadTexture("../assets/graphics/void_crawler/void_crawler1.png");
+    VfacingUp.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+    VfacingDown.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
+    VfacingUpLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
+    VfacingUpRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+    VfacingDownLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
+    VfacingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
 }
 void loadSpaceLizard(){
     SfacingUp.pos = LoadTexture("../assets/graphics/");
@@ -117,7 +121,6 @@ int pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    scale = 50;
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     if(moving){
         animTimer += GetFrameTime();
@@ -147,13 +150,11 @@ void gameLoop(Level& lvl){
     pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
-    
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     drawLevel(lvl,scale);
     if(wallAbove(lvl)){
         DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     }
-    
     EndMode2D();
 }
 void loadLvl1(){
@@ -164,19 +165,18 @@ void loadLvl1(){
         cam.rotation = 0.0f;
         cam.zoom = 3.0f;
         spriteManager();
-        playerTex = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
+        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
     }
-    /*
+    if(ERROR_LOADING){
+        DrawRectangle(0, 0, 9999, 9999, PINK);
+    }
     scaleX = GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
     scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale = (scaleX+scaleY)/2.0f;
-    */
+    //the code that crashes the program is back now 
    gameLoop(lvl1);
-   if(lvl1.rows.empty()){
-        DrawRectangle(0, 0, 9999, 9999, YELLOW);
-    }
 }
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();
