@@ -4,28 +4,56 @@
 #include "../include/game/ability_attributes.hpp"
 #include <vector>
 #include <cmath>
+int LAYER_FRAMES = 4;
+
+int urrentFrame = 0;
+
 // Here things that can happen in game is defined. 
-void rollAbility(Level& lvl){
+struct void_crawler_roll{
+    Texture2D pos;
+};
+void_crawler_roll Up;
+void_crawler_roll Down;
+void_crawler_roll Left;
+void_crawler_roll Right;
+void loadRollTex(){
+    Up.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll4");
+    Down.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1");
+    Left.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll2");
+    Right.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll3");
+}
+bool rolling;
+float Ox;
+float Oy;
+void updateRoll(Level& lvl){
+    int rollDistance = 3;
+    rolling = true;
     float x = lvl.playerPos.x;
     float y = lvl.playerPos.y;
-    const float animateDelay = 0.01;
-    static float timer = 0.0f;
-    timer -= GetFrameTime();
-    if(timer >= 0.0f){
-        return;
-    }
     switch(loadID){
         case(1):
-            y -= 0.1;
+            if(y <= Oy - rollDistance){
+                rolling = false;
+            }
+            y -= 0.2f;
             break;
         case(2):
-            y += 0.1;
+            if(y >= Oy + rollDistance){
+                rolling = false;
+            }
+            y += 0.2;
             break;
         case(3):
-            x -= 0.1;
+            if(x <= Ox - rollDistance){
+                rolling = false;
+            }
+            x -= 0.2;
             break;
         default:
-            x += 0.1;
+            if(x >= Ox + rollDistance){
+                rolling = false;
+            }
+            x += 0.2;
             break;
     }
     int rx = (int)std::floorf(x);
@@ -34,10 +62,13 @@ void rollAbility(Level& lvl){
         lvl.playerPos.x = x;
         lvl.playerPos.y = y;
     }
-    timer = animateDelay;     
 }
 void abilityInputHandler(Level& lvl){
-    if(IsKeyPressed(KEY_Q)){
-        rollAbility(lvl);
+    if(IsKeyPressed(KEY_Q) || rolling){
+        updateRoll(lvl);
+    }
+    else if(!rolling){
+        Ox = lvl.playerPos.x;
+        Oy = lvl.playerPos.y;
     }
 }

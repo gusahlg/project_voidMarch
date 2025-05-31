@@ -38,8 +38,7 @@ bool wallAbove(Level& lvl){
 }
 // ── level loading ───────────────────────────────────────────────
 void readlvlData(Level& lvl){
-    
-    std::ifstream in("assets/levels/level2.txt");
+    std::ifstream in("assets/levels/level1.txt");
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
@@ -119,6 +118,7 @@ Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
+    abilityInputHandler(lvl);
     if(moving){
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED){
@@ -135,7 +135,6 @@ void gameLoop(Level& lvl){
         lvl.playerPos.y*TILE*scale+(TILE*scale)/2
     };
     cam.target = playerPixCenter;
-    abilityInputHandler(lvl);
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)

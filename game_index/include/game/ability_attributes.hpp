@@ -10,6 +10,7 @@ struct Level{
 extern bool moving;
 extern int playerID;
 extern int loadID;
+
+extern Texture2D playerTex;
 extern bool isWall(int cx, int cy, Level& lvl);
-void rollAbility(Level& lvl);
 void abilityInputHandler(Level& lvl);
