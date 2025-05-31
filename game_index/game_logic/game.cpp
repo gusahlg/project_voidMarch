@@ -17,7 +17,7 @@ void movementEventHandler(Level& lvl);
 float scaleX, scaleY, scale = 1.0f;
 // sprite-sheet data
 const int PLAYER_FRAMES = 3;
-Texture2D playerTex = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
+Texture2D playerTex;
 const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
 float animTimer = 0.0f;
@@ -48,7 +48,7 @@ void readlvlData(Level& lvl){
             }
 }
 // ── draw walls ─────────────────────────────────────────────────
-void drawLevel(const Level& lvl,float s){
+void drawLevel(Level& lvl,float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
             if(lvl.rows[y][x]!='#') continue;
@@ -116,7 +116,7 @@ int pSizeW;
 int pSizeH;
 Rectangle src;
 Rectangle dst;
-void gameLoop(){
+void gameLoop(Level& lvl){
     scale = 50;
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     if(moving){
@@ -125,17 +125,17 @@ void gameLoop(){
             animTimer -= ANIM_SPEED;
             currentFrame = (currentFrame+1)%PLAYER_FRAMES;
         }
-        movementEventHandler(lvl1);
+        movementEventHandler(lvl);
     }
     else{
         currentFrame=0;animTimer=0.0f;
     }
     Vector2 playerPixCenter={
-        lvl1.playerPos.x*TILE*scale+(TILE*scale)/2,
-        lvl1.playerPos.y*TILE*scale+(TILE*scale)/2
+        lvl.playerPos.x*TILE*scale+(TILE*scale)/2,
+        lvl.playerPos.y*TILE*scale+(TILE*scale)/2
     };
     cam.target = playerPixCenter;
-    abilityInputHandler(lvl1);
+    abilityInputHandler(lvl);
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
@@ -143,14 +143,14 @@ void gameLoop(){
     const int spriteH=25;
     pSizeW = (int)(spriteW*scale);
     pSizeH = (int)(spriteH*scale);
-    pPixX = (int)(lvl1.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
-    pPixY = (int)(lvl1.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
+    pPixX = (int)(lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
+    pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
     
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
-    drawLevel(lvl1,scale);
-    if(wallAbove(lvl1)){
+    drawLevel(lvl,scale);
+    if(wallAbove(lvl)){
         DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     }
     
@@ -164,14 +164,19 @@ void loadLvl1(){
         cam.rotation = 0.0f;
         cam.zoom = 3.0f;
         spriteManager();
+        playerTex = LoadTexture("../assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
-    }/*
+    }
+    /*
     scaleX = GetScreenWidth() /(float)(lvl1.rows[0].size()*TILE);
     scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
     scale = (scaleX+scaleY)/2.0f;
     */
-   gameLoop();
+   gameLoop(lvl1);
+   if(lvl1.rows.empty()){
+        DrawRectangle(0, 0, 9999, 9999, YELLOW);
+    }
 }
 void movementEventHandler(Level& lvl){
     stepTimer-=GetFrameTime();
