@@ -23,42 +23,19 @@ int currentFrame = 0;
 float animTimer = 0.0f;
 Camera2D cam{};
 const int TILE = 16;
-bool isWall(int cx, int cy, Level& lvl){
-    if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
-    if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
-    return lvl.rows[cy][cx] == '#';
+struct tiles{
+    Texture2D load;
+};
+tiles purple;
+tiles squiggly;
+tiles Dot4;
+tiles Dot4Split;
+void loadTileTextures(){
+    purple.load = LoadTexture("assets/graphics/level_graphics/tiles/tile4.png");
+    squiggly.load = LoadTexture("assets/graphics/level_graphics/tiles/tile3.png");
+    Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/tile2.png");
+    Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/tile1.png");
 }
-bool wallAbove(Level& lvl){
-    if(isWall(lvl.playerPos.x, lvl.playerPos.y - 1, lvl)){
-        return true;  
-    }
-    else{
-        return false;
-    }
-}
-// ── level loading ───────────────────────────────────────────────
-void readlvlData(Level& lvl){
-    std::ifstream in("assets/levels/level1.txt");
-    for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
-    for(size_t y=0;y<lvl.rows.size();++y)
-        for(size_t x=0;x<lvl.rows[y].size();++x)
-            if(lvl.rows[y][x]=='p'){
-                lvl.playerPos={(float)x,(float)y};
-                lvl.rows[y][x]='.';
-            }
-}
-// ── draw walls ─────────────────────────────────────────────────
-void drawLevel(Level& lvl, float s){
-    for(size_t y=0;y<lvl.rows.size();++y)
-        for(size_t x=0;x<lvl.rows[y].size();++x){
-            if(lvl.rows[y][x]!='#') continue;
-            int px = (int)x * TILE * s;
-            int py = (int)y * TILE * s;
-            int sz = (int)(TILE * s);
-            DrawRectangle(px, py, sz, sz, DARKGRAY);
-        }
-}
-// ── spriteManager (your original ladder) ───────────────────────
 struct void_crawler{
     Texture2D pos;
 };
@@ -93,6 +70,46 @@ void loadSpaceLizard(){
     SfacingDownLeft.pos = LoadTexture("assets/graphics/");
     SfacingDownRight.pos = LoadTexture("assets/graphics/");
 }
+bool isWall(int cx, int cy, Level& lvl){
+    if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
+    if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
+    return lvl.rows[cy][cx] == '#';
+}
+bool wallAbove(Level& lvl){
+    if(isWall(lvl.playerPos.x, lvl.playerPos.y - 1, lvl)){
+        return true;  
+    }
+    else{
+        return false;
+    }
+}
+// ── level loading ───────────────────────────────────────────────
+void readlvlData(Level& lvl){
+    std::ifstream in("assets/levels/level1.txt");
+    for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
+    for(size_t y=0;y<lvl.rows.size();++y)
+        for(size_t x=0;x<lvl.rows[y].size();++x)
+            if(lvl.rows[y][x]=='p'){
+                lvl.playerPos={(float)x,(float)y};
+                lvl.rows[y][x]='.';
+            }
+}
+// ── draw walls ─────────────────────────────────────────────────
+void drawLevel(Level& lvl, float s){
+    for(size_t y=0;y<lvl.rows.size();++y)
+        for(size_t x=0;x<lvl.rows[y].size();++x){
+            if(lvl.rows[y][x]!='#') continue;
+            int px = (int)x * TILE * s;
+            int py = (int)y * TILE * s;
+            int sz = (int)(TILE * s);
+            //Working on tile textures
+            DrawRectangle(px, py, sz, sz, DARKGRAY);
+            Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+            Rectangle srcTile = {0, 0, 16, 16};
+            DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+        }
+}
+// ── spriteManager (your original ladder) ───────────────────────
 int playerID;
 void spriteManager(){
     if(raceSPACELIZARD){
@@ -131,7 +148,7 @@ void gameLoop(Level& lvl){
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED){
             animTimer -= ANIM_SPEED;
-            currentFrame = (currentFrame+1)%PLAYER_FRAMES;
+            currentFrame = (currentFrame + 1) % PLAYER_FRAMES;
         }
         movementEventHandler(lvl);
     }
@@ -170,6 +187,7 @@ void loadLvl1(){
         cam.rotation = 0.0f;
         cam.zoom = scale + 2;
         spriteManager();
+        loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
@@ -187,6 +205,7 @@ void loadLvl2(){
         cam.rotation = 0.0f;
         cam.zoom = scale;
         spriteManager();
+        loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         loaded=true;
