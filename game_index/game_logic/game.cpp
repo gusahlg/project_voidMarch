@@ -30,13 +30,13 @@ tiles purple;
 tiles squiggly;
 tiles Dot4;
 tiles Dot4Split;
-tiles background;
+tiles background2;
 void loadTileTextures(){
     purple.load = LoadTexture("assets/graphics/level_graphics/tiles/tile4.png");
     squiggly.load = LoadTexture("assets/graphics/level_graphics/tiles/tile3.png");
     Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/floor2.png");
     Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/floor1.png");
-    background.load = LoadTexture("assets/graphics/level_graphics/tiles/background.png");
+    background2.load = LoadTexture("assets/graphics/level_graphics/tiles/background2.png");
 }
 struct void_crawler{
     Texture2D pos;
@@ -114,7 +114,7 @@ void drawLevel(Level& lvl, float s){
                 int sz = (int)(TILE * s);
                 Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
                 Rectangle srcTile = {0, 0, 5000, 5000};
-                DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+                DrawTexturePro(background2.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
         }
 }
