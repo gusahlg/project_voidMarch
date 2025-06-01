@@ -7,10 +7,11 @@ struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
 };
+extern bool rolling;
 extern bool moving;
 extern int playerID;
 extern int loadID;
-
+void loadRollTex();
 extern Texture2D playerTex;
 extern bool isWall(int cx, int cy, Level& lvl);
 void abilityInputHandler(Level& lvl);

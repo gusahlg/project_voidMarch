@@ -16,7 +16,7 @@ float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl);
 float scaleX, scaleY, scale = 1.0f;
 // sprite-sheet data
-const int PLAYER_FRAMES = 3;
+int PLAYER_FRAMES = 3;
 Texture2D playerTex;
 const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
@@ -48,7 +48,7 @@ void readlvlData(Level& lvl){
             }
 }
 // ── draw walls ─────────────────────────────────────────────────
-void drawLevel(Level& lvl,float s){
+void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
             if(lvl.rows[y][x]!='#') continue;
@@ -101,6 +101,7 @@ void spriteManager(){
     }
     else if(raceVOIDCRAWLER){
         loadVoid_crawler();
+        loadRollTex();
         playerID = 2;
     }
     else if(raceMECHA_SAPIEN){
@@ -119,7 +120,14 @@ Rectangle dst;
 void gameLoop(Level& lvl){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     abilityInputHandler(lvl);
-    if(moving){
+    if(rolling){
+        animTimer += GetFrameTime();
+        if(animTimer >= ANIM_SPEED + 0.04){
+            animTimer -= ANIM_SPEED + 0.04;
+            currentFrame = (currentFrame + 2) % (PLAYER_FRAMES);
+        }  
+    }
+    else if(moving){
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED){
             animTimer -= ANIM_SPEED;
@@ -130,6 +138,7 @@ void gameLoop(Level& lvl){
     else{
         currentFrame=0;animTimer=0.0f;
     }
+    
     Vector2 playerPixCenter={
         lvl.playerPos.x*TILE*scale+(TILE*scale)/2,
         lvl.playerPos.y*TILE*scale+(TILE*scale)/2
@@ -159,7 +168,7 @@ void loadLvl1(){
         readlvlData(lvl1);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = scale;
+        cam.zoom = scale + 2;
         spriteManager();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
