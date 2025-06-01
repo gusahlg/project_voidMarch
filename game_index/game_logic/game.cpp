@@ -30,11 +30,13 @@ tiles purple;
 tiles squiggly;
 tiles Dot4;
 tiles Dot4Split;
+tiles background;
 void loadTileTextures(){
     purple.load = LoadTexture("assets/graphics/level_graphics/tiles/tile4.png");
     squiggly.load = LoadTexture("assets/graphics/level_graphics/tiles/tile3.png");
-    Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/tile2.png");
-    Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/tile1.png");
+    Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/floor2.png");
+    Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/floor1.png");
+    background.load = LoadTexture("assets/graphics/level_graphics/tiles/background.png");
 }
 struct void_crawler{
     Texture2D pos;
@@ -98,15 +100,22 @@ void readlvlData(Level& lvl){
 void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
-            if(lvl.rows[y][x]!='#') continue;
-            int px = (int)x * TILE * s;
-            int py = (int)y * TILE * s;
-            int sz = (int)(TILE * s);
-            //Working on tile textures
-            DrawRectangle(px, py, sz, sz, DARKGRAY);
-            Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-            Rectangle srcTile = {0, 0, 16, 16};
-            DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            if(lvl.rows[y][x] == '#'){
+                int px = (int)x * TILE * s;
+                int py = (int)y * TILE * s;
+                int sz = (int)(TILE * s);
+                Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+                Rectangle srcTile = {0, 0, 16, 16};
+                DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            }
+            else if(lvl.rows[y][x] == '.'){
+                int px = (int)x * TILE * s;
+                int py = (int)y * TILE * s;
+                int sz = (int)(TILE * s);
+                Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+                Rectangle srcTile = {0, 0, 5000, 5000};
+                DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            }
         }
 }
 // ── spriteManager (your original ladder) ───────────────────────
@@ -172,11 +181,8 @@ void gameLoop(Level& lvl){
     pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
-    DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     drawLevel(lvl,scale);
-    if(wallAbove(lvl)){
-        DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
-    }
+    DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
 void loadLvl1(){

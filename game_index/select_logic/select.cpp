@@ -3,6 +3,7 @@
 #include "../include/select/main_select.h"
 #include "../include/select/Sbuttons.hpp"
 #include "../include/game/player_stats.hpp"
+#include "../include/standardUI/globalC.hpp"
 void selectScr::selectScrUpdate(){
    Rectangle selectPanel{128, 80, 1024, 600};
    DrawRectangleRounded(selectPanel, 0.2, 100, DARKGRAY);
@@ -158,10 +159,10 @@ void Ddifficulties(){
    else if(diffPRO_GAMER){
       DrawRectangleRounded(PRO_GAMER, 0.1, 10, CHOSEN);
    }
-   DrawText("EASY", 496, 273, 24, BLACK);
-   DrawText("MEDIUM", 482, 323, 24, BLACK);
-   DrawText("HARD", 496, 373, 24, BLACK);
-   DrawText("PRO GAMER", 460, 423, 24, BLACK);
+   DrawText("EASY", 496, 273, 24, Ctext);
+   DrawText("MEDIUM", 482, 323, 24, Ctext);
+   DrawText("HARD", 496, 373, 24, Ctext);
+   DrawText("PRO GAMER", 460, 423, 24, Ctext);
 }
 bool HUMANhov;
 bool SPACELIZARDhov;
@@ -192,10 +193,10 @@ void Drace(){
    else if(raceMECHA_SAPIEN){
       DrawRectangleRounded(MECHA_SAPIEN, 0.1, 10, CHOSEN);
    }
-   DrawText("Human", 489, 353, 24, BLACK);
-   DrawText("Spacelizard", 466, 406, 18, BLACK);
-   DrawText("Voidcrawler", 466, 456, 18, BLACK);
-   DrawText("Mecha-Sapien", 460, 506, 18, BLACK);
+   DrawText("Human", 489, 353, 24, Ctext);
+   DrawText("Spacelizard", 466, 406, 18, Ctext);
+   DrawText("Voidcrawler", 466, 456, 18, Ctext);
+   DrawText("Mecha-Sapien", 460, 506, 18, Ctext);
 }
 bool NECROMANCERhov;
 bool CRAFTSMANhov;
@@ -226,10 +227,10 @@ void Dprofession(){
    else if(profDUALIST){
       DrawRectangleRounded(DUALIST, 0.1, 10, CHOSEN);
    }
-   DrawText("Necromancer", 459, 435, 20, BLACK);
-   DrawText("Craftsman", 471, 485, 20, BLACK);
-   DrawText("Wizard", 489, 535, 20, BLACK);
-   DrawText("Dualist", 483, 585, 20, BLACK);
+   DrawText("Necromancer", 459, 435, 20, Ctext);
+   DrawText("Craftsman", 471, 485, 20, Ctext);
+   DrawText("Wizard", 489, 535, 20, Ctext);
+   DrawText("Dualist", 483, 585, 20, Ctext);
 }
 void setupChoiceEventHandler(){
    if(hover1 || optHover1){

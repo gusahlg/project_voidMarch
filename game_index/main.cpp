@@ -1,9 +1,11 @@
 //paths work
 #include <raylib.h>
 #include <iostream>
+#include "include/standardUI/globalC.hpp"
 #include "include/select/main_select.h"
 #include "include/select/Sbuttons.hpp"
 #include "include/game/loadGame.hpp"
+Color Ctext = {160, 160, 160, 255};
 Color gRed = {255, 20, 10, 255};
 Color spaceBlue = {25, 70, 240, 255};
 Color selectC = {5, 2, 33, 255};
@@ -85,7 +87,7 @@ void updateHome(){
     DrawText("SETUP GAME", 545, 320, 28, gRed);
 }
 void updateSelect(){
-    DrawText("GAME SETUP", 400, 70, 75, PINK);
+    DrawText("GAME SETUP", 400, 90, 75, PINK);
 }
 void updateGame(){
     ClearBackground(YELLOW);
