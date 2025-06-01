@@ -30,13 +30,13 @@ tiles purple;
 tiles squiggly;
 tiles Dot4;
 tiles Dot4Split;
-tiles background2;
+tiles background;
 void loadTileTextures(){
     purple.load = LoadTexture("assets/graphics/level_graphics/tiles/tile4.png");
     squiggly.load = LoadTexture("assets/graphics/level_graphics/tiles/tile3.png");
     Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/floor2.png");
     Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/floor1.png");
-    background2.load = LoadTexture("assets/graphics/level_graphics/tiles/background2.png");
+    background.load = LoadTexture("assets/graphics/level_graphics/tiles/stdbackground.png");
 }
 struct void_crawler{
     Texture2D pos;
@@ -113,8 +113,8 @@ void drawLevel(Level& lvl, float s){
                 int py = (int)y * TILE * s;
                 int sz = (int)(TILE * s);
                 Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-                Rectangle srcTile = {0, 0, 5000, 5000};
-                DrawTexturePro(background2.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+                Rectangle srcTile = {0, 0, 16, 16};
+                DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
         }
 }
@@ -180,7 +180,8 @@ void gameLoop(Level& lvl){
     pPixX = (int)(lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
     pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
-    dst = { (float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH };
+    dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
+    DrawRectangle(0, 0, 2000, 1000, DARKGRAY);
     drawLevel(lvl,scale);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
