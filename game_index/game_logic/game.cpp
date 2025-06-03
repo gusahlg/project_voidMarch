@@ -148,15 +148,15 @@ void gameLoop(Level& lvl){
     abilityInputHandler(lvl);
     if(rolling){
         animTimer += GetFrameTime();
-        if(animTimer >= ANIM_SPEED + 0.04){
-            animTimer -= ANIM_SPEED + 0.04;
-            currentFrame = (currentFrame + 2) % (PLAYER_FRAMES);
+        if(animTimer >= ANIM_SPEED + 0.015f){
+            animTimer = 0.0f;
+            currentFrame = (currentFrame + 1) % (PLAYER_FRAMES + 1);
         }  
     }
     else if(moving){
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED){
-            animTimer -= ANIM_SPEED;
+            animTimer = 0.0f;
             currentFrame = (currentFrame + 1) % PLAYER_FRAMES;
         }
         movementEventHandler(lvl);
