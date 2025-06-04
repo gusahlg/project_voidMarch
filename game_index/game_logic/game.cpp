@@ -138,6 +138,7 @@ void spriteManager(){
     }
 }
 void inputEventHandler(Level& lvl){
+    bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     rollAbilityLogic(lvl);
     if(rolling){
         animTimer += GetFrameTime();
@@ -166,7 +167,6 @@ int pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     inputEventHandler(lvl);
     Vector2 playerPixCenter={
         lvl.playerPos.x*TILE*scale+(TILE*scale)/2,
