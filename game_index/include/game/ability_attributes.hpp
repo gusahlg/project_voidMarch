@@ -14,4 +14,4 @@ extern int loadID;
 void loadRollTex();
 extern Texture2D playerTex;
 extern bool isWall(int cx, int cy, Level& lvl);
-void abilityInputHandler(Level& lvl);
+void rollAbilityLogic(Level& lvl);

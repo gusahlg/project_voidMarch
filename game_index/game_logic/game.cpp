@@ -137,15 +137,8 @@ void spriteManager(){
         playerID = 4;
     }
 }
-int pPixX;
-int pPixY;
-int pSizeW;
-int pSizeH;
-Rectangle src;
-Rectangle dst;
-void gameLoop(Level& lvl){
-    bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
-    abilityInputHandler(lvl);
+void inputEventHandler(Level& lvl){
+    rollAbilityLogic(lvl);
     if(rolling){
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED + 0.015f){
@@ -163,8 +156,18 @@ void gameLoop(Level& lvl){
     }
     else{
         currentFrame=0;animTimer=0.0f;
+        playerTex = VfacingDown.pos;
     }
-    
+}
+int pPixX;
+int pPixY;
+int pSizeW;
+int pSizeH;
+Rectangle src;
+Rectangle dst;
+void gameLoop(Level& lvl){
+    bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
+    inputEventHandler(lvl);
     Vector2 playerPixCenter={
         lvl.playerPos.x*TILE*scale+(TILE*scale)/2,
         lvl.playerPos.y*TILE*scale+(TILE*scale)/2

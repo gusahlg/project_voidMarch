@@ -68,7 +68,7 @@ void updateRoll(Level& lvl){
         rolling = false;
     }
 }
-void abilityInputHandler(Level& lvl){
+void rollAbilityLogic(Level& lvl){
     Wtimer += GetFrameTime();
     if((IsKeyPressed(KEY_SPACE) && Wtimer >= delay) || rolling){
         updateRoll(lvl);
