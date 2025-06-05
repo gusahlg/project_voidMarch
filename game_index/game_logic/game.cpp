@@ -154,8 +154,12 @@ void inputEventHandler(Level& lvl){
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
     rollTimer += GetFrameTime();
+    if(!rolling){
+        Ox = lvl.playerPos.x;
+        Oy = lvl.playerPos.y;
+    }
     if(IsKeyPressed(KEY_SPACE) && rollTimer >= delay || rolling){
-        rollAbilityLogic(lvl);
+        updateRoll(lvl);
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED + 0.015f){
             animTimer = 0.0f;
@@ -173,6 +177,7 @@ void inputEventHandler(Level& lvl){
             currentFrame = (currentFrame + 1) % PLAYER_FRAMES;
         }
         movementEventHandler(lvl);
+        rollWalkSwitch = false;
     }
     else{
         currentFrame=0;animTimer=0.0f;

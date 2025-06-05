@@ -66,10 +66,3 @@ void updateRoll(Level& lvl){
         rolling = false;
     }
 }
-void rollAbilityLogic(Level& lvl){
-    updateRoll(lvl);
-    if(!rolling){
-        Ox = lvl.playerPos.x;
-        Oy = lvl.playerPos.y;
-    }
-}
