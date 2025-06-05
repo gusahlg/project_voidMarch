@@ -100,21 +100,19 @@ void readlvlData(Level& lvl){
 void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
+            int px = (int)x * TILE * s;
+            int py = (int)y * TILE * s;
+            int sz = (int)(TILE * s);
+            Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+            Rectangle srcTile = {0, 0, 16, 16};
             if(lvl.rows[y][x] == '#'){
-                int px = (int)x * TILE * s;
-                int py = (int)y * TILE * s;
-                int sz = (int)(TILE * s);
-                Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-                Rectangle srcTile = {0, 0, 16, 16};
                 DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
             else if(lvl.rows[y][x] == '.'){
-                int px = (int)x * TILE * s;
-                int py = (int)y * TILE * s;
-                int sz = (int)(TILE * s);
-                Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-                Rectangle srcTile = {0, 0, 16, 16};
                 DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            }
+            else if(lvl.rows[y][x] == 'x'){
+                DrawTexturePro(squiggly.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
         }
 }
