@@ -137,10 +137,24 @@ void spriteManager(){
         playerID = 4;
     }
 }
+
+/*    Wtimer += GetFrameTime();
+    if((IsKeyPressed(KEY_SPACE) && Wtimer >= delay) || rolling){
+        updateRoll(lvl);
+        Wtimer = 0.0f;
+    }
+    else if(!rolling){
+        Ox = lvl.playerPos.x;
+        Oy = lvl.playerPos.y;
+    }
+        */
+
 void inputEventHandler(Level& lvl){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
-    rollAbilityLogic(lvl);
-    if(rolling){
+    float const delay = 0.15;
+    float static rollTimer = 0.0;
+    if(IsKeyPressed(KEY_SPACE) && rollTimer >= delay || rolling){
+        rollAbilityLogic(lvl);
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED + 0.015f){
             animTimer = 0.0f;

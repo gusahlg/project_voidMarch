@@ -12,8 +12,6 @@ void_crawler_roll Up;
 void_crawler_roll Down;
 void_crawler_roll Left;
 void_crawler_roll Right;
-float Wtimer = 0.0f;
-const float delay = 0.9f;
 void loadRollTex(){
     Up.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll4.png");
     Down.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
@@ -69,12 +67,8 @@ void updateRoll(Level& lvl){
     }
 }
 void rollAbilityLogic(Level& lvl){
-    Wtimer += GetFrameTime();
-    if((IsKeyPressed(KEY_SPACE) && Wtimer >= delay) || rolling){
-        updateRoll(lvl);
-        Wtimer = 0.0f;
-    }
-    else if(!rolling){
+    updateRoll(lvl);
+    if(!rolling){
         Ox = lvl.playerPos.x;
         Oy = lvl.playerPos.y;
     }
