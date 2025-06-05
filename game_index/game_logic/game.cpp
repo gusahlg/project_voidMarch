@@ -148,18 +148,23 @@ void spriteManager(){
         Oy = lvl.playerPos.y;
     }
         */
-
+bool rollWalkSwitch = false;
 void inputEventHandler(Level& lvl){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
-    float const delay = 0.15;
-    float static rollTimer = 0.0;
+    float const delay = 0.9f;
+    float static rollTimer = 0.0f;
+    rollTimer += GetFrameTime();
     if(IsKeyPressed(KEY_SPACE) && rollTimer >= delay || rolling){
         rollAbilityLogic(lvl);
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED + 0.015f){
             animTimer = 0.0f;
             currentFrame = (currentFrame + 1) % (PLAYER_FRAMES + 1);
+        }
+        if(rollTimer >= delay){
+            rollTimer = 0.0f;
         }  
+        rollWalkSwitch = true;
     }
     else if(moving){
         animTimer += GetFrameTime();
@@ -248,7 +253,7 @@ void movementEventHandler(Level& lvl){
         if(IsKeyDown(KEY_A)){
             y -= 0.035355f;
             x -= 0.035355f;
-            if(loadID != 1){
+            if(loadID != 1 || rollWalkSwitch){
                 if(playerID == 1){
                     playerTex = SfacingUpLeft.pos;
                 }
@@ -267,7 +272,7 @@ void movementEventHandler(Level& lvl){
         else if(IsKeyDown(KEY_D)){
             y -= 0.035355f;
             x += 0.035355f;
-            if(loadID != 1){
+            if(loadID != 1 || rollWalkSwitch){
                 if(playerID == 1){
                     playerTex = SfacingUpRight.pos;
                 }
@@ -285,7 +290,7 @@ void movementEventHandler(Level& lvl){
         }
         else{
             y -= 0.05f;
-            if(loadID != 1){
+            if(loadID != 1 || rollWalkSwitch){
                 if(playerID == 1){
                     playerTex = SfacingUp.pos;
                 }
@@ -306,7 +311,7 @@ void movementEventHandler(Level& lvl){
         if(IsKeyDown(KEY_A)){
             y += 0.035355f;
             x -= 0.035355f;
-            if(loadID != 2){
+            if(loadID != 2 || rollWalkSwitch){
                 if(playerID == 1){
                     playerTex = SfacingDownLeft.pos;
                 }
@@ -325,7 +330,7 @@ void movementEventHandler(Level& lvl){
         else if(IsKeyDown(KEY_D)){
             y += 0.035355f;
             x += 0.035355f;
-            if(loadID != 2){
+            if(loadID != 2 || rollWalkSwitch){
                 if(playerID == 1){
                     playerTex = SfacingDownRight.pos;
                 }
@@ -343,7 +348,7 @@ void movementEventHandler(Level& lvl){
         }
         else{
             y += 0.05f;
-            if(loadID != 2){
+            if(loadID != 2 || rollWalkSwitch){
                 if(playerID == 1){
                     playerTex = SfacingDown.pos;
                 }
@@ -362,7 +367,7 @@ void movementEventHandler(Level& lvl){
     }
     else if(IsKeyDown(KEY_A)){
         x -= 0.05f;
-        if(loadID != 3){
+        if(loadID != 3 || rollWalkSwitch){
             if(playerID == 1){
                 playerTex = SfacingDownLeft.pos;
             }
@@ -380,7 +385,7 @@ void movementEventHandler(Level& lvl){
     }
     else if(IsKeyDown(KEY_D)){
         x += 0.05f;
-        if(loadID != 4){
+        if(loadID != 4 || rollWalkSwitch){
             if(playerID == 1){
                 playerTex = SfacingDownRight.pos;
             }
