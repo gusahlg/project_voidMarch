@@ -10,7 +10,6 @@
 bool V = false;
 bool S = false;
 const float WALK_SPEED = 5.0f;
-const float ROLL_SPEED = 7.0f;
 const float SQRT2 = 0.7071;
 int loadID = 0;
 Level lvl1;
@@ -253,19 +252,23 @@ void movementEventHandler(Level& lvl, float dt){
     bool up = false; bool down = false; bool left = false; bool right = false;
     if(IsKeyDown(KEY_W)){
         y -= 1.0f;
-        up = true; 
+        up = true;
+        loadID = 1;
     }
     if(IsKeyDown(KEY_S)){
         y += 1.0f;
         right = true;
+        loadID = 2;
     }
     if(IsKeyDown(KEY_A)){
         x -= 1.0f;
         left = true;
+        loadID = 3;
     }
     if(IsKeyDown(KEY_D)){
         x += 1.0f;
         right = true;
+        loadID = 4;
     }
     if(x != 0.0f && y != 0.0f){
         x *= SQRT2;

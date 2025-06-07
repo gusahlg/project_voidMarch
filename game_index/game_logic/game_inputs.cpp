@@ -22,47 +22,52 @@ bool rolling;
 float Ox;
 float Oy;
 void updateRoll(Level& lvl, float dt){
-    int rollDistance = 5;
+    const float ROLL_SPEED = 7.0f;
+    const int rollDistance = 5;
     rolling = true;
     float x = lvl.playerPos.x;
     float y = lvl.playerPos.y;
+    float xofset = 0.0f;
+    float yofset = 0.0f;
     switch(loadID){
         case(1):
             if(y <= Oy - rollDistance){
                 rolling = false;
             }
-            y -= 0.12f;
+            yofset -= 1.0f;
             playerTex = Up.pos;
             break;
         case(2):
             if(y >= Oy + rollDistance){
                 rolling = false;
             }
-            y += 0.12f;
+            yofset += 1.0f;
             playerTex = Down.pos;
             break;
         case(3):
             if(x <= Ox - rollDistance){
                 rolling = false;
             }
-            x -= 0.12f;
+            xofset -= 1.0f;
             playerTex = Left.pos;
             break;
         default:
             if(x >= Ox + rollDistance){
                 rolling = false;
             }
-            x += 0.12f;
+            xofset += 1.0f;
             playerTex = Right.pos;
             break;
     }
-    int rx = (int)std::floorf(x);
-    int ry = (int)std::floorf(y);
+    float newX = x + xofset * ROLL_SPEED * dt;
+    float newY = y + yofset * ROLL_SPEED * dt;
+    int rx = (int)std::floorf(newX);
+    int ry = (int)std::floorf(newY);
     if(!isWall(rx, ry, lvl)){
-        lvl.playerPos.x = x;
-        lvl.playerPos.y = y;
+        lvl.playerPos.x = newX;
+        lvl.playerPos.y = newY;
     }
-    else if(isWall){
+    else{
         rolling = false;
     }
 }
