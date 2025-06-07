@@ -16,7 +16,7 @@ Level lvl2;
 constexpr float XAxisOffset = 1.0f;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
-void movementEventHandler(Level& lvl);
+void movementEventHandler(Level& lvl, float);
 float scaleX, scaleY, scale = 1.0f;
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
@@ -249,7 +249,7 @@ void loadLvl2(){
     gameLoop(lvl2);
 }
 void movementEventHandler(Level& lvl, float dt){
-    stepTimer-=GetFrameTime();
+    stepTimer -= GetFrameTime();
     if(stepTimer > 0.0f) return;
     float x=(float)lvl.playerPos.x;
     float y=(float)lvl.playerPos.y;;
