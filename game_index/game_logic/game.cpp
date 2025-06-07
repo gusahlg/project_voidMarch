@@ -7,7 +7,9 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
-const float WALK_SPEED = 3.0f;
+bool V = false;
+bool S = false;
+const float WALK_SPEED = 5.0f;
 const float ROLL_SPEED = 7.0f;
 const float SQRT2 = 0.7071;
 int loadID = 0;
@@ -137,18 +139,15 @@ void spriteManager(){
     else{
         playerID = 4;
     }
+    switch(playerID){
+        case(1):
+            S = true;
+            break;
+        case(2):
+            V = true;
+            break;
+    }
 }
-
-/*    Wtimer += GetFrameTime();
-    if((IsKeyPressed(KEY_SPACE) && Wtimer >= delay) || rolling){
-        updateRoll(lvl);
-        Wtimer = 0.0f;
-    }
-    else if(!rolling){
-        Ox = lvl.playerPos.x;
-        Oy = lvl.playerPos.y;
-    }
-        */
 bool rollWalkSwitch = false;
 void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
@@ -249,166 +248,76 @@ void loadLvl2(){
     gameLoop(lvl2);
 }
 void movementEventHandler(Level& lvl, float dt){
-    stepTimer -= GetFrameTime();
-    if(stepTimer > 0.0f) return;
-    float x=(float)lvl.playerPos.x;
-    float y=(float)lvl.playerPos.y;;
+    float x = 0.0f;
+    float y = 0.0f;
+    bool up = false; bool down = false; bool left = false; bool right = false;
     if(IsKeyDown(KEY_W)){
-        if(IsKeyDown(KEY_A)){
-            y -= 0.035355f;
-            x -= 0.035355f;
-            if(loadID != 1 || rollWalkSwitch){
-                if(playerID == 1){
-                    playerTex = SfacingUpLeft.pos;
-                }
-                else if(playerID == 2){
-                    playerTex = VfacingUpLeft.pos;
-                }
-                else if(playerID == 3){
-
-                }
-                else{
-
-                }
-                loadID = 1;
+        y -= 1.0f;
+        up = true; 
+    }
+    if(IsKeyDown(KEY_S)){
+        y += 1.0f;
+        right = true;
+    }
+    if(IsKeyDown(KEY_A)){
+        x -= 1.0f;
+        left = true;
+    }
+    if(IsKeyDown(KEY_D)){
+        x += 1.0f;
+        right = true;
+    }
+    if(x != 0.0f && y != 0.0f){
+        x *= SQRT2;
+        y *= SQRT2;
+    }
+    if(up){
+        if(left){
+            if(V){
+                playerTex = VfacingUpLeft.pos;
             }
         }
-        else if(IsKeyDown(KEY_D)){
-            y -= 0.035355f;
-            x += 0.035355f;
-            if(loadID != 1 || rollWalkSwitch){
-                if(playerID == 1){
-                    playerTex = SfacingUpRight.pos;
-                }
-                else if(playerID == 2){
-                    playerTex = VfacingUpRight.pos;
-                }
-                else if(playerID == 3){
-
-                }
-                else{
-                    
-                }
-                loadID = 1;
+        else if(right){
+            if(V){
+                playerTex = VfacingUpRight.pos;
             }
         }
         else{
-            y -= 0.05f;
-            if(loadID != 1 || rollWalkSwitch){
-                if(playerID == 1){
-                    playerTex = SfacingUp.pos;
-                }
-                else if(playerID == 2){
-                    playerTex = VfacingUp.pos;
-                }
-                else if(playerID == 3){
-
-                }
-                else{
-                    
-                }                
-                loadID = 1;
+            if(V){
+                playerTex = VfacingUp.pos;
             }
         }
     }
-    else if(IsKeyDown(KEY_S)){
-        if(IsKeyDown(KEY_A)){
-            y += 0.035355f;
-            x -= 0.035355f;
-            if(loadID != 2 || rollWalkSwitch){
-                if(playerID == 1){
-                    playerTex = SfacingDownLeft.pos;
-                }
-                else if(playerID == 2){
-                    playerTex = VfacingDownLeft.pos;
-                }
-                else if(playerID == 3){
-
-                }
-                else{
-                    
-                }
-                loadID = 2;
-            }
-        }
-        else if(IsKeyDown(KEY_D)){
-            y += 0.035355f;
-            x += 0.035355f;
-            if(loadID != 2 || rollWalkSwitch){
-                if(playerID == 1){
-                    playerTex = SfacingDownRight.pos;
-                }
-                else if(playerID == 2){
-                    playerTex = VfacingDownRight.pos;
-                }
-                else if(playerID == 3){
-
-                }
-                else{
-                    
-                }
-                loadID = 2;
-            }
-        }
-        else{
-            y += 0.05f;
-            if(loadID != 2 || rollWalkSwitch){
-                if(playerID == 1){
-                    playerTex = SfacingDown.pos;
-                }
-                else if(playerID == 2){
-                    playerTex = VfacingDown.pos;
-                }
-                else if(playerID == 3){
-
-                }
-                else{
-                    
-                }
-                loadID = 2;
-            }
-        }
-    }
-    else if(IsKeyDown(KEY_A)){
-        x -= 0.05f;
-        if(loadID != 3 || rollWalkSwitch){
-            if(playerID == 1){
-                playerTex = SfacingDownLeft.pos;
-            }
-            else if(playerID == 2){
+    else if(down){
+        if(left){
+            if(V){
                 playerTex = VfacingDownLeft.pos;
             }
-            else if(playerID == 3){
-
-            }
-            else{
-                    
-            }
-            loadID = 3;
-        }  
-    }
-    else if(IsKeyDown(KEY_D)){
-        x += 0.05f;
-        if(loadID != 4 || rollWalkSwitch){
-            if(playerID == 1){
-                playerTex = SfacingDownRight.pos;
-            }
-            else if(playerID == 2){
+        }
+        else if(right){
+            if(V){
                 playerTex = VfacingDownRight.pos;
             }
-            else if(playerID == 3){
-
+        }
+        else{
+            if(V){
+                playerTex = VfacingDown.pos;
             }
-            else{
-                    
-            }
-            loadID = 4; 
         }
     }
-    int cx = (int)std::floorf(x);
-    int cy = (int)std::floorf(y);
-    if(!isWall(cx, cy, lvl) && !isWall(cx + XAxisOffset, cy, lvl)){
-        lvl.playerPos={(float)x,(float)y};
+    else if(left){
+        if(V){
+            playerTex = VfacingDownLeft.pos;
+        }
     }
-    stepTimer = STEP_DELAY;
+    else if(right){
+        playerTex = VfacingDownRight.pos;
+    }
+    float newX = lvl.playerPos.x + x * WALK_SPEED * dt;
+    float newY = lvl.playerPos.y + y * WALK_SPEED * dt;
+    if (!isWall((int)std::floor(newX), (int)std::floor(newY), lvl))
+    {
+        lvl.playerPos.x = newX;
+        lvl.playerPos.y = newY;
+    }
 }
