@@ -22,7 +22,7 @@ bool rolling;
 float Ox;
 float Oy;
 void updateRoll(Level& lvl, float dt){
-    const float ROLL_SPEED = 7.0f;
+    const float ROLL_SPEED = 11.0f;
     const int rollDistance = 5;
     rolling = true;
     float x = lvl.playerPos.x;
