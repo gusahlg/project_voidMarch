@@ -7,6 +7,9 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
+const float WALK_SPEED = 3.0f;
+const float ROLL_SPEED = 7.0f;
+const float SQRT2 = 0.7071;
 int loadID = 0;
 Level lvl1;
 Level lvl2;
@@ -109,7 +112,7 @@ void drawLevel(Level& lvl, float s){
                 DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
             else if(lvl.rows[y][x] == '.'){
-                DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+                DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
             else if(lvl.rows[y][x] == 'x'){
                 DrawTexturePro(squiggly.load, srcTile, mapTile, {0, 0}, 0, WHITE);
@@ -147,7 +150,7 @@ void spriteManager(){
     }
         */
 bool rollWalkSwitch = false;
-void inputEventHandler(Level& lvl){
+void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
@@ -157,7 +160,7 @@ void inputEventHandler(Level& lvl){
         Oy = lvl.playerPos.y;
     }
     if(IsKeyPressed(KEY_SPACE) && rollTimer >= delay || rolling){
-        updateRoll(lvl);
+        updateRoll(lvl, dt);
         animTimer += GetFrameTime();
         if(animTimer >= ANIM_SPEED + 0.015f){
             animTimer = 0.0f;
@@ -174,7 +177,7 @@ void inputEventHandler(Level& lvl){
             animTimer = 0.0f;
             currentFrame = (currentFrame + 1) % PLAYER_FRAMES;
         }
-        movementEventHandler(lvl);
+        movementEventHandler(lvl, dt);
         rollWalkSwitch = false;
     }
     else{
@@ -189,11 +192,9 @@ int pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    inputEventHandler(lvl);
-    Vector2 playerPixCenter={
-        lvl.playerPos.x*TILE*scale+(TILE*scale)/2,
-        lvl.playerPos.y*TILE*scale+(TILE*scale)/2
-    };
+    float dt = GetFrameTime();
+    inputEventHandler(lvl, dt);
+    Vector2 playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2, lvl.playerPos.y*TILE*scale+(TILE*scale)/2};
     cam.target = playerPixCenter;
     ClearBackground(BLACK);
     BeginMode2D(cam);
@@ -207,7 +208,7 @@ void gameLoop(Level& lvl){
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
     DrawRectangle(0, 0, 2000, 1000, DARKGRAY);
-    drawLevel(lvl,scale);
+    drawLevel(lvl, scale);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
 }
@@ -247,7 +248,7 @@ void loadLvl2(){
     scale = (scaleX+scaleY)/2.0f;
     gameLoop(lvl2);
 }
-void movementEventHandler(Level& lvl){
+void movementEventHandler(Level& lvl, float dt){
     stepTimer-=GetFrameTime();
     if(stepTimer > 0.0f) return;
     float x=(float)lvl.playerPos.x;

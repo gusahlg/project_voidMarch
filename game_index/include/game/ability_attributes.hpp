@@ -14,6 +14,6 @@ extern int loadID;
 extern float Ox;
 extern float Oy;
 void loadRollTex();
-void updateRoll(Level& lvl);
+void updateRoll(Level& lvl, float dt);
 extern Texture2D playerTex;
 extern bool isWall(int cx, int cy, Level& lvl);

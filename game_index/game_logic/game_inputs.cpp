@@ -21,7 +21,7 @@ void loadRollTex(){
 bool rolling;
 float Ox;
 float Oy;
-void updateRoll(Level& lvl){
+void updateRoll(Level& lvl, float dt){
     int rollDistance = 5;
     rolling = true;
     float x = lvl.playerPos.x;
