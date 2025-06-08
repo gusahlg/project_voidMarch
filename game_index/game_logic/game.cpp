@@ -7,8 +7,8 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
-float PLAYERWIDTH = 0.5;
-float PLAYERHEIGHT = 0.5;
+float PLAYERWIDTH = 0.9;
+float PLAYERHEIGHT = 0.4;
 bool V = false;
 bool S = false;
 const float WALK_SPEED = 5.0f;
@@ -88,6 +88,11 @@ bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl){
     if(isWall(cx + cw, cy, lvl)) return true;
     if(isWall(cx + cw, cy + ch, lvl)) return true;
     if(isWall(cx, cy + ch, lvl)) return true;
+    else return false;
+}
+bool wallBellow(float cx, float cy, Level& lvl){
+    if(isWall(cx, cy + PLAYERHEIGHT * 2, lvl)) return true;
+    if(isWall(cx + PLAYERWIDTH, cy + PLAYERHEIGHT * 2, lvl)) return true;
     else return false;
 }
 // ── level loading ───────────────────────────────────────────────
@@ -208,6 +213,22 @@ void gameLoop(Level& lvl){
     dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl, scale);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
+    if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)) {
+    Rectangle srcTile = { 0, 0, 16, 16 };
+    for(int y = 0; y < (int)lvl.rows.size(); ++y) {
+        for(int x = 0; x < (int)lvl.rows[y].size(); ++x){
+            if(lvl.rows[y][x] == '#') {
+                Rectangle mapTile = {
+                    x * TILE * scale,
+                    y * TILE * scale,
+                    TILE * scale,
+                    TILE * scale
+                };
+                DrawTexturePro(purple.load, srcTile, mapTile, { 0, 0 }, 0.0f, WHITE);
+            }
+        }
+    }
+}
     EndMode2D();
 }
 void loadLvl1(){
