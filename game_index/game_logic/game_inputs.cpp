@@ -71,6 +71,28 @@ void updateRoll(Level& lvl, float dt){
 }
 
 //Weapons and their abilities are defined bellow.
-void updateRangedAttack(){
-    
+float projectileStepX;
+float projectileStepY;
+bool targetHit = false;
+float projectileSpeed = 10;
+float projectileW = 50;
+float projectileH = 50;
+bool pMove = false;
+void spawnProjectile(float x, float y, float w, float h, float dt, Level lvl){
+    if(collisionRect(x + projectileStepX * projectileSpeed * dt, y + projectileStepY * projectileSpeed * dt, w, h, lvl)){
+        targetHit = true;
+        projectileStepX = 0.0f;
+        projectileStepY = 0.0f;
+        pMove = false;
+    }
+    else{
+        projectileStepX += 1;
+        DrawRectangle(x + projectileStepX * projectileSpeed * dt, y + projectileStepY * projectileSpeed * dt, w, h, RED);
+    }
+}
+void updateRangedAttack(float x, float y, float dt, Level lvl){
+    /* Gonna add in stuff for drawing in the actual weapon as well.
+    DrawTexturePro()*/
+    pMove = true;
+    spawnProjectile(x, y, projectileW, projectileH, dt, lvl);
 }

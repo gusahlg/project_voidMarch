@@ -182,6 +182,7 @@ void inputEventHandler(Level& lvl, float dt){
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
     rollTimer += GetFrameTime();
+    // Related to movement
     if(!rolling){
         Ox = lvl.playerPos.x;
         Oy = lvl.playerPos.y;
@@ -210,6 +211,9 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         currentFrame=0;animTimer=0.0f;
         playerTex = VfacingDown.pos;
+    }
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || pMove){
+        updateRangedAttack(lvl.playerPos.x, lvl.playerPos.y, dt, lvl);
     }
 }
 int pPixX;
