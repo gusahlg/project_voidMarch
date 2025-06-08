@@ -209,7 +209,7 @@ void inputEventHandler(Level& lvl, float dt){
     }
     else{
         currentFrame=0;animTimer=0.0f;
-        playerTex = HfacingDown.pos;
+        playerTex = VfacingDown.pos;
     }
 }
 int pPixX;
