@@ -11,6 +11,7 @@ float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 bool V = false;
 bool S = false;
+bool H = false;
 const float WALK_SPEED = 5.0f;
 const float SQRT2 = 0.7071;
 int loadID = 0;
@@ -62,6 +63,15 @@ Space_lizard SfacingUpLeft;
 Space_lizard SfacingUpRight;
 Space_lizard SfacingDownLeft;
 Space_lizard SfacingDownRight;
+struct Human{
+    Texture2D pos;
+};
+Human HfacingUp;
+Human HfacingDown;
+Human HfacingUpLeft;
+Human HfacingUpRight;
+Human HfacingDownLeft;
+Human HfacingDownRight;
 void loadVoid_crawler(){
     VfacingUp.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     VfacingDown.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
@@ -71,12 +81,20 @@ void loadVoid_crawler(){
     VfacingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
 }
 void loadSpaceLizard(){
-    SfacingUp.pos = LoadTexture("assets/graphics/");
-    SfacingDown.pos = LoadTexture("assets/graphics/");
-    SfacingUpLeft.pos = LoadTexture("assets/graphics/");
-    SfacingUpRight.pos = LoadTexture("assets/graphics/");
-    SfacingDownLeft.pos = LoadTexture("assets/graphics/");
-    SfacingDownRight.pos = LoadTexture("assets/graphics/");
+    SfacingUp.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingDown.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingUpLeft.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingUpRight.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingDownLeft.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingDownRight.pos = LoadTexture("assets/graphics/space_lizard/");
+}
+void loadHuman(){
+    HfacingUp.pos = LoadTexture("assets/graphics/human/human2.png");
+    HfacingDown.pos = LoadTexture("assets/graphics/human/human3.png");
+    HfacingUpLeft.pos = LoadTexture("assets/graphics/human/human1.png");
+    HfacingUpRight.pos = LoadTexture("assets/graphics/human/human2.png");
+    HfacingDownLeft.pos = LoadTexture("assets/graphics/human/human4.png");
+    HfacingDownRight.pos = LoadTexture("assets/graphics/human/human3.png");
 }
 bool isWall(float cx, float cy, Level& lvl){
     if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
@@ -142,6 +160,7 @@ void spriteManager(){
         playerID = 3;
     }
     else{
+        loadHuman();
         playerID = 4;
     }
     switch(playerID){
@@ -151,6 +170,10 @@ void spriteManager(){
         case(2):
             V = true;
             break;
+        case(3):
+            break;
+        case(4):
+            H = true;
     }
 }
 bool rollWalkSwitch = false;
@@ -186,7 +209,7 @@ void inputEventHandler(Level& lvl, float dt){
     }
     else{
         currentFrame=0;animTimer=0.0f;
-        playerTex = VfacingDown.pos;
+        playerTex = HfacingDown.pos;
     }
 }
 int pPixX;
@@ -259,7 +282,7 @@ void loadLvl2(){
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-        SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
+        SetTextureFilter(playerTex, TEXTURE_FILTER_POINT);
         loaded=true;
     }
     scaleX = GetScreenWidth()/(float)(lvl2.rows[0].size()*TILE);
@@ -300,15 +323,24 @@ void movementEventHandler(Level& lvl, float dt){
             if(V){
                 playerTex = VfacingUpLeft.pos;
             }
+            else if(H){
+                playerTex = HfacingUpLeft.pos;
+            }
         }
         else if(right){
             if(V){
                 playerTex = VfacingUpRight.pos;
             }
+            else if(H){
+                playerTex = HfacingUpRight.pos;
+            }
         }
         else{
             if(V){
                 playerTex = VfacingUp.pos;
+            }
+            else if(H){
+                playerTex = HfacingUp.pos;
             }
         }
     }
@@ -317,15 +349,24 @@ void movementEventHandler(Level& lvl, float dt){
             if(V){
                 playerTex = VfacingDownLeft.pos;
             }
+            else if(H){
+                playerTex = HfacingDownLeft.pos;
+            }
         }
         else if(right){
             if(V){
                 playerTex = VfacingDownRight.pos;
             }
+            else if(H){
+                playerTex = HfacingDownRight.pos;
+            }
         }
         else{
             if(V){
                 playerTex = VfacingDown.pos;
+            }
+            else if(H){
+                playerTex = HfacingDown.pos;
             }
         }
     }
@@ -333,13 +374,20 @@ void movementEventHandler(Level& lvl, float dt){
         if(V){
             playerTex = VfacingDownLeft.pos;
         }
+        else if(H){
+            playerTex = HfacingDownLeft.pos;
+        }
     }
     else if(right){
-        playerTex = VfacingDownRight.pos;
+        if(V){
+            playerTex = VfacingDownRight.pos;
+        }
+        else if(H){
+            playerTex = HfacingDownRight.pos;
+        }
     }
     float newX = lvl.playerPos.x + x * WALK_SPEED * dt;
     float newY = lvl.playerPos.y + y * WALK_SPEED * dt;
-    /*bool collisionRect(int cx, int cy, int cw, int ch, Level& lvl)*/
     if(!collisionRect(newX, newY, PLAYERWIDTH, PLAYERHEIGHT, lvl)){
         lvl.playerPos.x = newX;
         lvl.playerPos.y = newY;

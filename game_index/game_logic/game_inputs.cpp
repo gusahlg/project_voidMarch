@@ -69,3 +69,8 @@ void updateRoll(Level& lvl, float dt){
         rolling = false;
     }
 }
+
+//Weapons and their abilities are defined bellow.
+void updateRangedAttack(){
+    
+}
