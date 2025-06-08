@@ -88,6 +88,7 @@ bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl){
     if(isWall(cx + cw, cy, lvl)) return true;
     if(isWall(cx + cw, cy + ch, lvl)) return true;
     if(isWall(cx, cy + ch, lvl)) return true;
+    else return false;
 }
 // ── level loading ───────────────────────────────────────────────
 void readlvlData(Level& lvl){
