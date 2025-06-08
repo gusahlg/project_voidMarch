@@ -7,6 +7,8 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
+float PLAYERWIDTH = 0.5;
+float PLAYERHEIGHT = 0.5;
 bool V = false;
 bool S = false;
 const float WALK_SPEED = 5.0f;
@@ -76,18 +78,16 @@ void loadSpaceLizard(){
     SfacingDownLeft.pos = LoadTexture("assets/graphics/");
     SfacingDownRight.pos = LoadTexture("assets/graphics/");
 }
-bool isWall(int cx, int cy, Level& lvl){
+bool isWall(float cx, float cy, Level& lvl){
     if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
     if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
     return lvl.rows[cy][cx] == '#';
 }
-bool wallAbove(Level& lvl){
-    if(isWall(lvl.playerPos.x, lvl.playerPos.y - 1, lvl)){
-        return true;  
-    }
-    else{
-        return false;
-    }
+bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl){
+    if(isWall(cx, cy, lvl)) return true;
+    if(isWall(cx + cw, cy, lvl)) return true;
+    if(isWall(cx + cw, cy + ch, lvl)) return true;
+    if(isWall(cx, cy + ch, lvl)) return true;
 }
 // ── level loading ───────────────────────────────────────────────
 void readlvlData(Level& lvl){
@@ -104,9 +104,9 @@ void readlvlData(Level& lvl){
 void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
-            int px = (int)x * TILE * s;
-            int py = (int)y * TILE * s;
-            int sz = (int)(TILE * s);
+            float px = x * TILE * s;
+            float py = y * TILE * s;
+            float sz = (TILE * s);
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             Rectangle srcTile = {0, 0, 16, 16};
             if(lvl.rows[y][x] == '#'){
@@ -205,7 +205,6 @@ void gameLoop(Level& lvl){
     pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
-    DrawRectangle(0, 0, 2000, 1000, DARKGRAY);
     drawLevel(lvl, scale);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     EndMode2D();
@@ -216,7 +215,7 @@ void loadLvl1(){
         readlvlData(lvl1);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = scale + 2;
+        cam.zoom = scale * 3.5;
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
@@ -234,7 +233,7 @@ void loadLvl2(){
         readlvlData(lvl2);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = scale;
+        cam.zoom = scale * 3.5;
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
@@ -318,8 +317,8 @@ void movementEventHandler(Level& lvl, float dt){
     }
     float newX = lvl.playerPos.x + x * WALK_SPEED * dt;
     float newY = lvl.playerPos.y + y * WALK_SPEED * dt;
-    if (!isWall((int)std::floor(newX), (int)std::floor(newY), lvl))
-    {
+    /*bool collisionRect(int cx, int cy, int cw, int ch, Level& lvl)*/
+    if(!collisionRect(newX, newY, PLAYERWIDTH, PLAYERHEIGHT, lvl)){
         lvl.playerPos.x = newX;
         lvl.playerPos.y = newY;
     }

@@ -61,9 +61,7 @@ void updateRoll(Level& lvl, float dt){
     }
     float newX = x + xofset * ROLL_SPEED * dt;
     float newY = y + yofset * ROLL_SPEED * dt;
-    int rx = (int)std::floorf(newX);
-    int ry = (int)std::floorf(newY);
-    if(!isWall(rx, ry, lvl)){
+    if(!collisionRect(newX, newY, PLAYERWIDTH, PLAYERHEIGHT, lvl)){
         lvl.playerPos.x = newX;
         lvl.playerPos.y = newY;
     }
