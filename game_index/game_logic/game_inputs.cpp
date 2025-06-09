@@ -71,8 +71,8 @@ void updateRoll(Level& lvl, float dt){
 }
 
 //Weapons and their abilities are defined bellow.
-float projectileStepX;
-float projectileStepY;
+float projectileStepX = 0;
+float projectileStepY = 0;
 bool targetHit = false;
 float projectileSpeed = 10;
 float projectileW = 50;
@@ -81,8 +81,8 @@ bool pMove = false;
 void spawnProjectile(float x, float y, float w, float h, float dt, Level lvl){
     if(collisionRect(x + projectileStepX * projectileSpeed * dt, y + projectileStepY * projectileSpeed * dt, w, h, lvl)){
         targetHit = true;
-        projectileStepX = 0.0f;
-        projectileStepY = 0.0f;
+        projectileStepX = 0.0;
+        projectileStepY = 0.0;
         pMove = false;
     }
     else{

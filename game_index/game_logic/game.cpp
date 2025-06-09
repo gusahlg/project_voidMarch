@@ -119,8 +119,8 @@ void readlvlData(Level& lvl){
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
-            if(lvl.rows[y][x]=='p'){
-                lvl.playerPos={(float)x,(float)y};
+            if(lvl.rows[y][x] == 'p'){
+                lvl.playerPos = {(float)x, (float)y};
                 lvl.rows[y][x]='.';
             }
 }
@@ -212,9 +212,6 @@ void inputEventHandler(Level& lvl, float dt){
         currentFrame=0;animTimer=0.0f;
         playerTex = VfacingDown.pos;
     }
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || pMove){
-        updateRangedAttack(lvl.playerPos.x, lvl.playerPos.y, dt, lvl);
-    }
 }
 int pPixX;
 int pPixY;
@@ -239,6 +236,9 @@ void gameLoop(Level& lvl){
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl, scale);
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || pMove){
+        updateRangedAttack(lvl.playerPos.x, lvl.playerPos.y, dt, lvl);
+    }
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)) {
     Rectangle srcTile = { 0, 0, 16, 16 };
@@ -291,7 +291,7 @@ void loadLvl2(){
     }
     scaleX = GetScreenWidth()/(float)(lvl2.rows[0].size()*TILE);
     scaleY = GetScreenHeight()/(float)(lvl2.rows.size()*TILE);
-    scale = (scaleX+scaleY)/2.0f;
+    scale = (scaleX + scaleY)/2.0f;
     gameLoop(lvl2);
 }
 void movementEventHandler(Level& lvl, float dt){

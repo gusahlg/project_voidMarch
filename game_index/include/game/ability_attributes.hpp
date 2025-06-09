@@ -2,7 +2,6 @@
 #include <raylib.h>
 #include <vector>
 #include <iostream>
-
 struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
