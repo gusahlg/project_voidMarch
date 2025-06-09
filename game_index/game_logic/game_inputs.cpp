@@ -71,28 +71,18 @@ void updateRoll(Level& lvl, float dt){
 }
 
 //Weapons and their abilities are defined bellow.
-float projectileStepX = 0;
-float projectileStepY = 0;
-bool targetHit = false;
-float projectileSpeed = 10;
-float projectileW = 50;
-float projectileH = 50;
-bool pMove = false;
-void spawnProjectile(float x, float y, float w, float h, float dt, Level lvl){
-    if(collisionRect(x + projectileStepX * projectileSpeed * dt, y + projectileStepY * projectileSpeed * dt, w, h, lvl)){
-        targetHit = true;
-        projectileStepX = 0.0;
-        projectileStepY = 0.0;
-        pMove = false;
-    }
-    else{
-        projectileStepX += 1;
-        DrawRectangle(x + projectileStepX * projectileSpeed * dt, y + projectileStepY * projectileSpeed * dt, w, h, RED);
-    }
+float projX = 0;
+float projY = 0;
+float dirX, dirY;
+bool projActive = false;
+float projectileSpeed = 300.0f;
+float projW = 8;
+float projH = 8;
+void spawnProjectile(float x, float y, float w, float h, float dt, Level& lvl){
+    DrawRectangle(x, y, projW, projH, RED);
 }
-void updateRangedAttack(float x, float y, float dt, Level lvl){
+void updateRangedAttack(float x, float y, float dt, Level& lvl){
     /* Gonna add in stuff for drawing in the actual weapon as well.
     DrawTexturePro()*/
-    pMove = true;
-    spawnProjectile(x, y, projectileW, projectileH, dt, lvl);
+    spawnProjectile(x, y, projW, projX, dt, lvl);
 }

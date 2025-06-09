@@ -212,6 +212,9 @@ void inputEventHandler(Level& lvl, float dt){
         currentFrame=0;animTimer=0.0f;
         playerTex = VfacingDown.pos;
     }
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || 1 == 1){
+        updateRangedAttack(lvl.playerPos.x, lvl.playerPos.y, dt, lvl);
+    }
 }
 int pPixX;
 int pPixY;
@@ -236,9 +239,6 @@ void gameLoop(Level& lvl){
     src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
     dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl, scale);
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || pMove){
-        updateRangedAttack(lvl.playerPos.x, lvl.playerPos.y, dt, lvl);
-    }
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)) {
     Rectangle srcTile = { 0, 0, 16, 16 };
