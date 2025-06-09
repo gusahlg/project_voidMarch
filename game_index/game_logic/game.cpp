@@ -177,6 +177,8 @@ void spriteManager(){
     }
 }
 bool rollWalkSwitch = false;
+int pPixX;
+int pPixY;
 void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
@@ -213,18 +215,15 @@ void inputEventHandler(Level& lvl, float dt){
         playerTex = VfacingDown.pos;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || 1 == 1){
-        updateRangedAttack(lvl.playerPos.x, lvl.playerPos.y, dt, lvl);
+        updateRangedAttack(pPixX, pPixY, dt, lvl);
     }
 }
-int pPixX;
-int pPixY;
 int pSizeW;
 int pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
     float dt = GetFrameTime();
-    inputEventHandler(lvl, dt);
     Vector2 playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2, lvl.playerPos.y*TILE*scale+(TILE*scale)/2};
     cam.target = playerPixCenter;
     ClearBackground(BLACK);
@@ -232,15 +231,16 @@ void gameLoop(Level& lvl){
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;
-    pSizeW = (int)(spriteW*scale);
-    pSizeH = (int)(spriteH*scale);
+    pSizeW = (int)(spriteW * scale);
+    pSizeH = (int)(spriteH * scale);
     pPixX = (int)(lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
     pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
-    src = {currentFrame*(float)spriteW,0.0f,(float)spriteW,(float)spriteH};
+    src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
     dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl, scale);
+    inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
-    if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)) {
+    if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)){
     Rectangle srcTile = { 0, 0, 16, 16 };
     for(int y = 0; y < (int)lvl.rows.size(); ++y) {
         for(int x = 0; x < (int)lvl.rows[y].size(); ++x){

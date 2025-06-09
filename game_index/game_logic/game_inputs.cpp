@@ -76,8 +76,8 @@ float projY = 0;
 float dirX, dirY;
 bool projActive = false;
 float projectileSpeed = 300.0f;
-float projW = 8;
-float projH = 8;
+float projW = 50;
+float projH = 50;
 void spawnProjectile(float x, float y, float w, float h, float dt, Level& lvl){
     DrawRectangle(x, y, projW, projH, RED);
 }
