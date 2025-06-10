@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <raymath.h>
+#include <algorithm>
 // Here things that can happen in game is defined. 
 struct void_crawler_roll{
     Texture2D pos;
@@ -77,38 +78,39 @@ struct projectile{
     Vector2 vel;
     float w, h;
     bool alive;
+    projectile(Vector2 p, Vector2 v, float w_, float h_)
+        : pos(p), vel(v), w(w_), h(h_), alive(true) {}
 };
 std::vector<projectile> bullets;
-float projX = 0;
-float projY = 0;
-float dirX, dirY;
-bool projActive = false;
-bool targetHit = false;
-float projectileSpeed = 300.0f;
-float projW = 20;
-float projH = 15;
-float projSpeed = 300.0f;
-int projCount = 1;
+const float projW = 20;
+const float projH = 15;
+const float projSpeed = 300.0f;
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed){
-    bullets.emplace_back(projectile{
+    bullets.emplace_back(
         startpos,
         Vector2Scale(dir, speed),
-        w, h,
-        true
-    });
+        w, h
+    );
 }
-void updateRangedAttack(float x, float y, float dt, Level& lvl){
-    /* Gonna add in stuff for drawing in the actual weapon as well. 
-    DrawTexturePro()*/
-    for(int i = 0; i < projCount; ++i){
-        spawnProjectile(x, y, projW, projH, projSpeed);
-    }
-    if(!targetHit){
-        projCount += 1;
-    }
-    else{
-        if(projCount < 1){
-            projCount -= 1;
+void updateProjectiles(Level& lvl, float dt){
+    for(auto& b : bullets){
+        if(!b.alive) continue;
+        b.pos.x += b.vel.x * dt;
+        b.pos.y += b.vel.y * dt;
+        if(collisionRect(b.pos.x, b.pos.y, b.w, b.h, lvl)){
+            b.alive = false;
         }
     }
+    bullets.erase(std::remove_if(bullets.begin(), bullets.end(), [](const projectile& p){return !p.alive;}), bullets.end());
+}
+void drawProjectiles(){
+    for(auto& b : bullets){
+        DrawRectangle(b.pos.x, b.pos.x, b.w, b.h, RED);
+    }
+}
+void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
+    bullets.reserve(512);
+    /* Gonna add in stuff for drawing in the actual weapon as well. 
+    DrawTexturePro()*/
+    spawnProjectile(pos, dir, projW, projH, projSpeed);
 }

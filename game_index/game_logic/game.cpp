@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
+#include <raymath.h>
 float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 bool V = false;
@@ -137,7 +138,7 @@ void drawLevel(Level& lvl, float s){
                 DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
             else if(lvl.rows[y][x] == '.'){
-                DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+                DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
             else if(lvl.rows[y][x] == 'x'){
                 DrawTexturePro(squiggly.load, srcTile, mapTile, {0, 0}, 0, WHITE);
@@ -215,7 +216,12 @@ void inputEventHandler(Level& lvl, float dt){
         playerTex = VfacingDown.pos;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || 1 == 1){
-        updateRangedAttack(pPixX, pPixY, dt, lvl);
+        Vector2 pixPos = {pPixX, pPixY};
+        Vector2 dir = Vector2Normalize({
+            GetMouseX() - pPixX,
+            GetMouseY() - pPixY
+        });
+        updateRangedAttack(pixPos, dir, dt, lvl);
     }
 }
 int pSizeW;

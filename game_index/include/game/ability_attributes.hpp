@@ -18,4 +18,5 @@ void loadRollTex();
 void updateRoll(Level& lvl, float dt);
 extern Texture2D playerTex;
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
-void updateRangedAttack(float x, float y, float dt, Level& lvl);
+void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl);
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed);
