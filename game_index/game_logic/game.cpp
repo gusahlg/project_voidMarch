@@ -180,6 +180,7 @@ void spriteManager(){
 bool rollWalkSwitch = false;
 int pPixX;
 int pPixY;
+bool projActive;
 void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
@@ -215,11 +216,13 @@ void inputEventHandler(Level& lvl, float dt){
         currentFrame=0;animTimer=0.0f;
         playerTex = VfacingDown.pos;
     }
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || 1 == 1){
-        Vector2 pixPos = {pPixX, pPixY};
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || projActive){
+        float x = (float)std::floor(pPixX);
+        float y = (float)std::floor(pPixY);
+        Vector2 pixPos = {x, y};
         Vector2 dir = Vector2Normalize({
-            GetMouseX() - pPixX,
-            GetMouseY() - pPixY
+            GetMouseX() - x,
+            GetMouseY() - y
         });
         updateRangedAttack(pixPos, dir, dt, lvl);
     }

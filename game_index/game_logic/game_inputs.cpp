@@ -93,6 +93,12 @@ void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float spee
     );
 }
 void updateProjectiles(Level& lvl, float dt){
+    if(sizeof(bullets) < 1){
+        projActive = false;
+    }
+    else{
+        projActive = true;
+    }
     for(auto& b : bullets){
         if(!b.alive) continue;
         b.pos.x += b.vel.x * dt;
@@ -112,5 +118,9 @@ void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
     bullets.reserve(512);
     /* Gonna add in stuff for drawing in the actual weapon as well. 
     DrawTexturePro()*/
-    spawnProjectile(pos, dir, projW, projH, projSpeed);
+    if(!projActive){
+        spawnProjectile(pos, dir, projW, projH, projSpeed);
+    }
+    updateProjectiles(lvl, dt);
+    drawProjectiles();
 }
