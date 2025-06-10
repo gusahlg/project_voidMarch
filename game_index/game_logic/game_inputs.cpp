@@ -84,8 +84,9 @@ struct projectile{
 std::vector<projectile> bullets;
 const float projW = 20;
 const float projH = 15;
-const float projSpeed = 300.0f;
+const float projSpeed = 100.0f;
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed){
+    projActive = true;
     bullets.emplace_back(
         startpos,
         Vector2Scale(dir, speed),
@@ -93,12 +94,6 @@ void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float spee
     );
 }
 void updateProjectiles(Level& lvl, float dt){
-    if(sizeof(bullets) < 1){
-        projActive = false;
-    }
-    else{
-        projActive = true;
-    }
     for(auto& b : bullets){
         if(!b.alive) continue;
         b.pos.x += b.vel.x * dt;
@@ -108,17 +103,21 @@ void updateProjectiles(Level& lvl, float dt){
         }
     }
     bullets.erase(std::remove_if(bullets.begin(), bullets.end(), [](const projectile& p){return !p.alive;}), bullets.end());
+    if(bullets.empty()){
+        projActive = false;
+    }
 }
 void drawProjectiles(){
-    for(auto& b : bullets){
-        DrawRectangle(b.pos.x, b.pos.x, b.w, b.h, RED);
+    for(const auto& b : bullets){
+        if(!b.alive) continue;
+        DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.w, (int)b.h, RED);
     }
 }
 void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
     bullets.reserve(512);
     /* Gonna add in stuff for drawing in the actual weapon as well. 
     DrawTexturePro()*/
-    if(!projActive){
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnProjectile(pos, dir, projW, projH, projSpeed);
     }
     updateProjectiles(lvl, dt);

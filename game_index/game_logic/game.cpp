@@ -217,8 +217,8 @@ void inputEventHandler(Level& lvl, float dt){
         playerTex = VfacingDown.pos;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || projActive){
-        float x = (float)std::floor(pPixX);
-        float y = (float)std::floor(pPixY);
+        float x = static_cast<float>(pPixX);
+        float y = static_cast<float>(pPixY);;
         Vector2 pixPos = {x, y};
         Vector2 dir = Vector2Normalize({
             GetMouseX() - x,
@@ -260,7 +260,7 @@ void gameLoop(Level& lvl){
                     TILE * scale,
                     TILE * scale
                 };
-                DrawTexturePro(purple.load, srcTile, mapTile, { 0, 0 }, 0.0f, WHITE);
+                DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0.0f, WHITE);
             }
         }
     }
