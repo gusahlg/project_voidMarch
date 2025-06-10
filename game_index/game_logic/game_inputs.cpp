@@ -4,6 +4,7 @@
 #include "../include/game/ability_attributes.hpp"
 #include <vector>
 #include <cmath>
+#include <raymath.h>
 // Here things that can happen in game is defined. 
 struct void_crawler_roll{
     Texture2D pos;
@@ -71,6 +72,13 @@ void updateRoll(Level& lvl, float dt){
 }
 
 //Weapons and their abilities are defined bellow.
+struct projectile{
+    Vector2 pos;
+    Vector2 vel;
+    float w, h;
+    bool alive;
+};
+std::vector<projectile> bullets;
 float projX = 0;
 float projY = 0;
 float dirX, dirY;
@@ -79,22 +87,21 @@ bool targetHit = false;
 float projectileSpeed = 300.0f;
 float projW = 20;
 float projH = 15;
-
+float projSpeed = 300.0f;
 int projCount = 1;
-void spawnProjectile(float x, float y, float w, float h, float dt, Level& lvl){
-    if(collisionRect(x, y, projW, projH, lvl)){
-        targetHit = true;
-    }
-    // Gotta add in so that the positions of all projectiles are remembered and referenced correctly.
-    else{
-        DrawRectangle(x, y, projW, projH, RED);
-    }
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed){
+    bullets.emplace_back(projectile{
+        startpos,
+        Vector2Scale(dir, speed),
+        w, h,
+        true
+    });
 }
 void updateRangedAttack(float x, float y, float dt, Level& lvl){
     /* Gonna add in stuff for drawing in the actual weapon as well. 
     DrawTexturePro()*/
     for(int i = 0; i < projCount; ++i){
-        spawnProjectile(x, y, projW, projX, dt, lvl);
+        spawnProjectile(x, y, projW, projH, projSpeed);
     }
     if(!targetHit){
         projCount += 1;
