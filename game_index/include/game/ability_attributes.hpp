@@ -6,6 +6,16 @@ struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
 };
+struct projectile {
+    Vector2 pos;
+    Vector2 vel;
+    float   w, h;
+    bool    alive;
+    projectile(Vector2 p, Vector2 v, float w_, float h_)
+      : pos(p), vel(v), w(w_), h(h_), alive(true) {}
+};
+extern std::vector<projectile> bullets;
+extern float scale;
 extern bool rolling;
 extern bool moving;
 extern int playerID;

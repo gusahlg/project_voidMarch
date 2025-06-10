@@ -217,12 +217,13 @@ void inputEventHandler(Level& lvl, float dt){
         playerTex = VfacingDown.pos;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || projActive){
+        Vector2 spawnPos = {static_cast<float>(pPixX), static_cast<float>(pPixY)};
+        Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
         float x = static_cast<float>(pPixX);
-        float y = static_cast<float>(pPixY);;
+        float y = static_cast<float>(pPixY);
         Vector2 pixPos = {x, y};
         Vector2 dir = Vector2Normalize({
-            GetMouseX() - x,
-            GetMouseY() - y
+            Vector2Subtract(mouseWorld, spawnPos) 
         });
         updateRangedAttack(pixPos, dir, dt, lvl);
     }
@@ -278,6 +279,7 @@ void loadLvl1(){
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
+        bullets.reserve(512);
         loaded=true;
     }
     scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
@@ -296,6 +298,7 @@ void loadLvl2(){
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
         SetTextureFilter(playerTex, TEXTURE_FILTER_POINT);
+        bullets.reserve(512);
         loaded=true;
     }
     scaleX = GetScreenWidth()/(float)(lvl2.rows[0].size()*TILE);

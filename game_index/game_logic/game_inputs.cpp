@@ -73,14 +73,6 @@ void updateRoll(Level& lvl, float dt){
 }
 
 //Weapons and their abilities are defined bellow.
-struct projectile{
-    Vector2 pos;
-    Vector2 vel;
-    float w, h;
-    bool alive;
-    projectile(Vector2 p, Vector2 v, float w_, float h_)
-        : pos(p), vel(v), w(w_), h(h_), alive(true) {}
-};
 std::vector<projectile> bullets;
 const float projW = 20;
 const float projH = 15;
@@ -98,7 +90,11 @@ void updateProjectiles(Level& lvl, float dt){
         if(!b.alive) continue;
         b.pos.x += b.vel.x * dt;
         b.pos.y += b.vel.y * dt;
-        if(collisionRect(b.pos.x, b.pos.y, b.w, b.h, lvl)){
+        float gx = b.pos.x / (16 * scale); 
+        float gy = b.pos.y / (16 * scale); 
+        float gw = b.w / (16 * scale); 
+        float gh = b.h / (16 * scale);
+        if(collisionRect(gx, gy, gw, gh, lvl)){
             b.alive = false;
         }
     }
@@ -114,7 +110,6 @@ void drawProjectiles(){
     }
 }
 void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
-    bullets.reserve(512);
     /* Gonna add in stuff for drawing in the actual weapon as well. 
     DrawTexturePro()*/
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
