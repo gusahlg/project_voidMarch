@@ -8,6 +8,7 @@
 #include <fstream>
 #include <cmath>
 #include <raymath.h>
+Vector2 playerPixCenter;
 float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 bool V = false;
@@ -15,6 +16,7 @@ bool S = false;
 bool H = false;
 const float WALK_SPEED = 5.0f;
 const float SQRT2 = 0.7071;
+constexpr float WEAPON_OFFSET = 20.0f;
 int loadID = 0;
 Level lvl1;
 Level lvl2;
@@ -227,15 +229,15 @@ void inputEventHandler(Level& lvl, float dt){
         rightZoom = false;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) || projActive){
-        Vector2 spawnPos = {static_cast<float>(pPixX), static_cast<float>(pPixY)};
+        static float w = 20.0f;
+        static float h = 20.0f;
+        static float speed = 100.0f;
         Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
-        float x = static_cast<float>(pPixX);
-        float y = static_cast<float>(pPixY);
-        Vector2 pixPos = {x, y};
-        Vector2 dir = Vector2Normalize({
-            Vector2Subtract(mouseWorld, spawnPos) 
-        });
-        updateRangedAttack(pixPos, dir, dt, lvl);
+        Vector2 dir = Vector2Normalize(
+            Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
+        );
+        Vector2 spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
+        updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
     }
 }
 int pSizeW;
@@ -246,7 +248,7 @@ void gameLoop(Level& lvl){
     if(rightZoom) cam.zoom = scale * 3.0;
     else cam.zoom = scale * 3.5;
     float dt = GetFrameTime();
-    Vector2 playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2, lvl.playerPos.y*TILE*scale+(TILE*scale)/2};
+    playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
     ClearBackground(BLACK);
     BeginMode2D(cam);

@@ -71,7 +71,6 @@ void updateRoll(Level& lvl, float dt){
         rolling = false;
     }
 }
-
 //Weapons and their abilities are defined bellow.
 std::vector<projectile> bullets;
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed){
@@ -106,12 +105,9 @@ void drawProjectiles(){
         DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.w, (int)b.h, RED);
     }
 }
-void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
+void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl){
     /* Gonna add in stuff for drawing in the actual weapon as well. 
     DrawTexturePro()*/
-    const float projW = 10;
-    const float projH = 10;
-    const float projSpeed = 500.0f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
         spawnProjectile(pos, dir, projW, projH, projSpeed);
     }
@@ -120,5 +116,6 @@ void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
 }
 //Add in melee logic.
 void updateMeleeAttack(){
-
+    /*Add in attack animation (swing a sword or something)*/
+    // Everything within an area based one player pos and mouse direction gets damaged.
 }
