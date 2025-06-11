@@ -74,9 +74,6 @@ void updateRoll(Level& lvl, float dt){
 
 //Weapons and their abilities are defined bellow.
 std::vector<projectile> bullets;
-const float projW = 20;
-const float projH = 15;
-const float projSpeed = 100.0f;
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed){
     projActive = true;
     bullets.emplace_back(
@@ -112,9 +109,16 @@ void drawProjectiles(){
 void updateRangedAttack(Vector2 pos, Vector2 dir, float dt, Level& lvl){
     /* Gonna add in stuff for drawing in the actual weapon as well. 
     DrawTexturePro()*/
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+    const float projW = 10;
+    const float projH = 10;
+    const float projSpeed = 500.0f;
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
         spawnProjectile(pos, dir, projW, projH, projSpeed);
     }
     updateProjectiles(lvl, dt);
     drawProjectiles();
+}
+//Add in melee logic.
+void updateMeleeAttack(){
+
 }

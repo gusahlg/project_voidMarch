@@ -143,6 +143,9 @@ void drawLevel(Level& lvl, float s){
             else if(lvl.rows[y][x] == 'x'){
                 DrawTexturePro(squiggly.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
+            else if(lvl.rows[y][x] == 'e'){
+                DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            }
         }
 }
 // ── spriteManager (your original ladder) ───────────────────────
@@ -181,6 +184,7 @@ bool rollWalkSwitch = false;
 int pPixX;
 int pPixY;
 bool projActive;
+bool rightZoom = false;
 void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
@@ -216,7 +220,13 @@ void inputEventHandler(Level& lvl, float dt){
         currentFrame=0;animTimer=0.0f;
         playerTex = VfacingDown.pos;
     }
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || projActive){
+    if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
+        rightZoom = true;
+    }
+    else{
+        rightZoom = false;
+    }
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) || projActive){
         Vector2 spawnPos = {static_cast<float>(pPixX), static_cast<float>(pPixY)};
         Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
         float x = static_cast<float>(pPixX);
@@ -233,6 +243,8 @@ int pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
+    if(rightZoom) cam.zoom = scale * 3.0;
+    else cam.zoom = scale * 3.5;
     float dt = GetFrameTime();
     Vector2 playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2, lvl.playerPos.y*TILE*scale+(TILE*scale)/2};
     cam.target = playerPixCenter;
@@ -274,7 +286,6 @@ void loadLvl1(){
         readlvlData(lvl1);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = scale * 3.5;
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
@@ -293,7 +304,6 @@ void loadLvl2(){
         readlvlData(lvl2);
         cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
         cam.rotation = 0.0f;
-        cam.zoom = scale * 3.5;
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
