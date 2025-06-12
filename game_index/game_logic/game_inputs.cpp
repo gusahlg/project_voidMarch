@@ -114,8 +114,28 @@ void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, floa
     updateProjectiles(lvl, dt);
     drawProjectiles();
 }
-//Add in melee logic.
+struct damageZone{
+    Vector2 lowerLeftpos;
+    float lw;
+    Vector2 higherLeftpos;
+    float hw;
+    damageZone(float lw, float hw, Vector2 lowerLeftpos, Vector2 higherLeftpos)
+    : lw(lw), hw(hw), lowerLeftpos(lowerLeftpos), higherLeftpos(higherLeftpos) {};    
+};
+void damageZoneCalc(Vector2 angles, Vector2 armLength, Vector2 pos, float width){
+    float xModifier1 = angles.x / 180.0f;
+    float yModifier1 = 1.0f - xModifier1;
+    float xModifier2 = angles.y / 180.0f;
+    float yModifier2 = 1.0f - xModifier2;
+    Vector2 higherLeftpos = {pos.x + armLength.x * xModifier1,
+                            pos.y + armLength.x * yModifier1};
+    Vector2 lowerLeftpos = {pos.x + width + armLength.y * xModifier2,
+                            pos.y + armLength.y * yModifier2};
+    float higherWidth = width + armLength.x * xModifier1 + armLength.y * xModifier2;
+    damageZone(width, higherWidth, lowerLeftpos, higherLeftpos); 
+}
 void updateMeleeAttack(){
     /*Add in attack animation (swing a sword or something)*/
     // Everything within an area based one player pos and mouse direction gets damaged.
+
 }

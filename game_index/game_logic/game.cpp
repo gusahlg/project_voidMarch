@@ -229,9 +229,9 @@ void inputEventHandler(Level& lvl, float dt){
         rightZoom = false;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) || projActive){
-        static float w = 20.0f;
+        static float w = 10.0f;
         static float h = 20.0f;
-        static float speed = 100.0f;
+        static float speed = 300.0f;
         Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
         Vector2 dir = Vector2Normalize(
             Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
