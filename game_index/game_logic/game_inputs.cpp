@@ -119,20 +119,15 @@ void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, floa
 inline float Vec2AngleDeg(Vector2 v){
     return atan2f(v.y, v.x) * RAD2DEG;
 }
-
 inline float Norm360(float a){
     a = fmodf(a + 360.0f, 360.0f);
     return a;
 }
-struct damageArea{
-    float radius;
-};
-void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir){
-    const float HALF_ARC = 47.0f;           
+void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZE){       
     float mid = Vec2AngleDeg(dir);            
-    float start = Norm360(mid - HALF_ARC);       
-    float end = Norm360(mid + HALF_ARC);
-    const int SEG = 20;
+    float start = Norm360(mid - ARCSIZE);       
+    float end = Norm360(mid + ARCSIZE);
+    const int SEG = 10000;
     if(end < start){
         DrawCircleSector(centerpos, radius, start, 360.0f, SEG, RED);
         DrawCircleSector(centerpos, radius,   0.0f,   end, SEG, RED);
@@ -141,9 +136,8 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir){
         DrawCircleSector(centerpos, radius, start, end,   SEG, RED);
     }
 }
-void updateMeleeAttack(Vector2 pos, Vector2 dir, Level lvl){
-    const float radius = 35.0f;
+void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl){
     /*Add in attack animation (swing a sword or something)*/
     // Everything within an area based one player pos and mouse direction gets damaged.
-    defineDamageArea(pos, radius, dir);
+    defineDamageArea(pos, radius, dir, ARCSIZE);
 }
