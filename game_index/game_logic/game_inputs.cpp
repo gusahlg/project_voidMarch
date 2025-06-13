@@ -116,15 +116,34 @@ void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, floa
 }
 //New gameplan for damageZones:
 /* I now want to calculate once specifications for */
+inline float Vec2AngleDeg(Vector2 v){
+    return atan2f(v.y, v.x) * RAD2DEG;
+}
+
+inline float Norm360(float a){
+    a = fmodf(a + 360.0f, 360.0f);
+    return a;
+}
 struct damageArea{
     float radius;
 };
-void defineDamageArea(Vector2 centerpos, float radius){
-    DrawCircleV(centerpos, radius, RED);
+void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir){
+    const float HALF_ARC = 47.0f;           
+    float mid = Vec2AngleDeg(dir);            
+    float start = Norm360(mid - HALF_ARC);       
+    float end = Norm360(mid + HALF_ARC);
+    const int SEG = 20;
+    if(end < start){
+        DrawCircleSector(centerpos, radius, start, 360.0f, SEG, RED);
+        DrawCircleSector(centerpos, radius,   0.0f,   end, SEG, RED);
+    }
+    else{
+        DrawCircleSector(centerpos, radius, start, end,   SEG, RED);
+    }
 }
-void updateMeleeAttack(Vector2 pos, Level lvl){
-    const float radius = 10.0f;
+void updateMeleeAttack(Vector2 pos, Vector2 dir, Level lvl){
+    const float radius = 35.0f;
     /*Add in attack animation (swing a sword or something)*/
     // Everything within an area based one player pos and mouse direction gets damaged.
-    defineDamageArea(pos, radius);
+    defineDamageArea(pos, radius, dir);
 }

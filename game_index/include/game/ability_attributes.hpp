@@ -25,7 +25,7 @@ extern float Oy;
 extern float PLAYERWIDTH;
 extern float PLAYERHEIGHT;
 void loadRollTex();
-void updateMeleeAttack(Vector2 pos, Level lvl);
+void updateMeleeAttack(Vector2 pos, Vector2 dir, Level lvl);
 void updateRoll(Level& lvl, float dt);
 extern Texture2D playerTex;
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);

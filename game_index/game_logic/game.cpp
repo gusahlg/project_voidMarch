@@ -16,7 +16,6 @@ bool S = false;
 bool H = false;
 const float WALK_SPEED = 5.0f;
 const float SQRT2 = 0.7071;
-constexpr float WEAPON_OFFSET = 20.0f;
 int loadID = 0;
 Level lvl1;
 Level lvl2;
@@ -188,6 +187,7 @@ int pPixY;
 bool projActive;
 bool rightZoom = false;
 void inputEventHandler(Level& lvl, float dt){
+    constexpr float WEAPON_OFFSET = 5.0f;
     Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
     static float w = 10.0f;
     static float h = 10.0f;
@@ -240,7 +240,7 @@ void inputEventHandler(Level& lvl, float dt){
         updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
     }
     else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || 1 == 1){
-        updateMeleeAttack(spawnPos, lvl);
+        updateMeleeAttack(spawnPos, dir, lvl);
     }
 }
 int pSizeW;
@@ -332,7 +332,7 @@ void movementEventHandler(Level& lvl, float dt){
     }
     if(IsKeyDown(KEY_S)){
         y += 1.0f;
-        right = true;
+        down = true;
         loadID = 2;
     }
     if(IsKeyDown(KEY_A)){
