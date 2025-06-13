@@ -188,6 +188,14 @@ int pPixY;
 bool projActive;
 bool rightZoom = false;
 void inputEventHandler(Level& lvl, float dt){
+    Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
+    static float w = 10.0f;
+    static float h = 10.0f;
+    static float speed = 100.0f;
+    Vector2 dir = Vector2Normalize(
+        Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
+    );
+    Vector2 spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
@@ -229,18 +237,10 @@ void inputEventHandler(Level& lvl, float dt){
         rightZoom = false;
     }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) || projActive){
-        static float w = 10.0f;
-        static float h = 10.0f;
-        static float speed = 100.0f;
-        Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
-        Vector2 dir = Vector2Normalize(
-            Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
-        );
-        Vector2 spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
     }
-    else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        
+    else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || 1 == 1){
+        updateMeleeAttack(spawnPos, lvl);
     }
 }
 int pSizeW;

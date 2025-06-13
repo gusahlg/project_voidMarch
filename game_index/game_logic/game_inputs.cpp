@@ -120,7 +120,7 @@ struct damageArea{
     float radius;
 };
 void defineDamageArea(Vector2 centerpos, float radius){
-    DrawCircleV(centerpos, radius, BLACK);
+    DrawCircleV(centerpos, radius, RED);
 }
 void updateMeleeAttack(Vector2 pos, Level lvl){
     const float radius = 10.0f;
