@@ -136,14 +136,14 @@ bool CircleSectorColl(float radius, Vector2 midpos, Rectangle enemy, Vector2 dir
     }
     float s = sinf(halfArc);
     float c = cosf(halfArc);
-    Vector2 edgeL = { dir.x * c - dir.y * s,  dir.x * s + dir.y * c };
-    Vector2 edgeR = { dir.x * c + dir.y * s,  dir.y * c - dir.x * s };
-    Vector2 A = { midpos.x + edgeL.x * radius, midpos.y + edgeL.y * radius };
-    Vector2 B = { midpos.x + edgeR.x * radius, midpos.y + edgeR.y * radius };
-    Vector2 TL = { enemy.x,                 enemy.y };
-    Vector2 TR = { enemy.x + enemy.width,   enemy.y };
-    Vector2 BR = { TR.x,                    enemy.y + enemy.height };
-    Vector2 BL = { TL.x,                    BR.y };
+    Vector2 edgeL = {dir.x * c - dir.y * s,  dir.x * s + dir.y * c};
+    Vector2 edgeR = {dir.x * c + dir.y * s,  dir.y * c - dir.x * s};
+    Vector2 A = {midpos.x + edgeL.x * radius, midpos.y + edgeL.y * radius};
+    Vector2 B = {midpos.x + edgeR.x * radius, midpos.y + edgeR.y * radius};
+    Vector2 TL = {enemy.x, enemy.y};
+    Vector2 TR = {enemy.x + enemy.width,   enemy.y};
+    Vector2 BR = {TR.x, enemy.y + enemy.height};
+    Vector2 BL = {TL.x, BR.y};
     if(!(dist2 <= radius * radius)) return false;
     if(cosTheta < cosEdge) return false;
     if((dist2 <= radius*radius) && (cosTheta >= cosEdge)) return true;
@@ -168,6 +168,9 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
     }
     else{
         DrawCircleSector(centerpos, radius, start, end,   SEG, RED);
+    }
+    if(CircleSectorColl(radius, centerpos, /*Enemy rectangle*/, dir, ARCSIZE)){
+        /*HP decrease of enemy*/
     }
 }
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl){
