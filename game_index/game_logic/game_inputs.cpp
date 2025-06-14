@@ -114,8 +114,42 @@ void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, floa
     updateProjectiles(lvl, dt);
     drawProjectiles();
 }
-//New gameplan for damageZones:
-/* I now want to calculate once specifications for */
+// clamp = forces something to stay within a range min - max.
+bool CircleSectorColl(float radius, Vector2 midpos, Rectangle enemy, Vector2 dir, float ArcAngle){
+    Vector2 closest;
+    closest.x = std::clamp(midpos.x, enemy.x, enemy.x + enemy.width);
+    closest.y = std::clamp(midpos.y, enemy.y, enemy.y + enemy.height);
+    float dx = closest.x - midpos.x; float dy = closest.y - midpos.y;
+    float dist2 = dx * dx + dy * dy;
+    Vector2 enemyCenter = {enemy.x + enemy.width / 2.0f, enemy.y + enemy.height / 2.0f};
+    Vector2 v = Vector2Subtract(enemyCenter, midpos);
+    float len = sqrtf(v.x*v.x + v.y*v.y);
+    if(len == 0.0f) return true;
+    float dot = dir.x * v.x + dir.y * v.y;
+    float cosTheta = dot / len;
+    float halfArc = (ArcAngle * DEG2RAD) * 0.5f;
+    float cosEdge = cosf(halfArc);                 
+    float halfDiag = 0.5f * sqrtf(enemy.width * enemy.width + enemy.height * enemy.height);
+    if(halfDiag < len){                     
+        float beta = asinf( halfDiag / len );
+        cosEdge = cosf(halfArc + beta);
+    }
+    float s = sinf(halfArc);
+    float c = cosf(halfArc);
+    Vector2 edgeL = { dir.x * c - dir.y * s,  dir.x * s + dir.y * c };
+    Vector2 edgeR = { dir.x * c + dir.y * s,  dir.y * c - dir.x * s };
+    Vector2 A = { midpos.x + edgeL.x * radius, midpos.y + edgeL.y * radius };
+    Vector2 B = { midpos.x + edgeR.x * radius, midpos.y + edgeR.y * radius };
+    Vector2 TL = { enemy.x,                 enemy.y };
+    Vector2 TR = { enemy.x + enemy.width,   enemy.y };
+    Vector2 BR = { TR.x,                    enemy.y + enemy.height };
+    Vector2 BL = { TL.x,                    BR.y };
+    if(!(dist2 <= radius * radius)) return false;
+    if(cosTheta < cosEdge) return false;
+    if((dist2 <= radius*radius) && (cosTheta >= cosEdge)) return true;
+    if(CheckCollisionLines(midpos, A, TL, TR, nullptr) || CheckCollisionLines(midpos, A, TR, BR, nullptr) || CheckCollisionLines(midpos, A, BR, BL, nullptr) || CheckCollisionLines(midpos, A, BL, TL, nullptr) || CheckCollisionLines(midpos, B, TL, TR, nullptr) || CheckCollisionLines(midpos, B, TR, BR, nullptr) || CheckCollisionLines(midpos, B, BR, BL, nullptr) || CheckCollisionLines(midpos, B, BL, TL, nullptr)) return true;
+    else return false;
+}
 inline float Vec2AngleDeg(Vector2 v){
     return atan2f(v.y, v.x) * RAD2DEG;
 }

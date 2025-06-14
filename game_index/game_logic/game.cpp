@@ -230,11 +230,12 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         rightZoom = false;
     }
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+    // rework neeedded bellow
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || projActive){
         const static float WEAPON_OFFSET = 40.0f;
         static float w = 10.0f;
         static float h = 10.0f;
-        static float speed = 2000.0f;
+        static float speed = 100.0f;
         mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
         dir = Vector2Normalize(
             Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
@@ -243,9 +244,11 @@ void inputEventHandler(Level& lvl, float dt){
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) || projActive){
             updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
         }
-        static float ARCSIZE = 1.0f;
-        static float range = 500.0f;
-        updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl);
+        else{
+            static float ARCSIZE = 1.0f;
+            static float range = 500.0f;
+            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl);
+        }
     }
 }
 int pSizeW;
