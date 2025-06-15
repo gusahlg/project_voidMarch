@@ -4,6 +4,7 @@
 #include "../include/game/loadGame.hpp"
 #include "../include/game/player_stats.hpp"
 #include "../include/game/ability_attributes.hpp"
+#include "../include/game/enemy_data.hpp"
 #include <vector>
 #include <fstream>
 #include <cmath>

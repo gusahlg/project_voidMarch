@@ -157,6 +157,10 @@ inline float Norm360(float a){
     a = fmodf(a + 360.0f, 360.0f);
     return a;
 }
+/*bool CircleSectorColl(float radius, Vector2 midpos, Rectangle enemy, Vector2 dir, float ArcAngle);*/
+//Send info from defineDamageArea to enemy_logic !!!
+bool CircleSectorColl(float radius, Vector2 midpos, Rectangle enemy, Vector2 dir, float ArcAngle);
+Vector2 Mcenter; float Mradius; float Mstart; float Mend; float MarcSize; Vector2 Mdir;
 void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZE){       
     float mid = Vec2AngleDeg(dir);            
     float start = Norm360(mid - ARCSIZE);       
@@ -167,11 +171,7 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
         DrawCircleSector(centerpos, radius,   0.0f,   end, SEG, RED);
     }
     else{
-        DrawCircleSector(centerpos, radius, start, end,   SEG, RED);
-    }
-    /*temporary*/Rectangle e = {10, 10, 10, 10};
-    if(CircleSectorColl(radius, centerpos, e, dir, ARCSIZE)){
-        /*HP decrease of enemy*/
+        DrawCircleSector(centerpos, radius, start, end, SEG, RED);
     }
 }
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl){
