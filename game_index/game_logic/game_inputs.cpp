@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../include/game/loadGame.hpp"
 #include "../include/game/ability_attributes.hpp"
+#include "../include/game/enemy_data.hpp"
 #include <vector>
 #include <cmath>
 #include <raymath.h>
@@ -101,7 +102,6 @@ void updateProjectiles(Level& lvl, float dt){
 }
 void drawProjectiles(){
     for(const auto& b : bullets){
-        if(!b.alive) continue;
         DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.w, (int)b.h, RED);
     }
 }
@@ -123,7 +123,7 @@ bool CircleSectorColl(float radius, Vector2 midpos, Rectangle enemy, Vector2 dir
     float dist2 = dx * dx + dy * dy;
     Vector2 enemyCenter = {enemy.x + enemy.width / 2.0f, enemy.y + enemy.height / 2.0f};
     Vector2 v = Vector2Subtract(enemyCenter, midpos);
-    float len = sqrtf(v.x*v.x + v.y*v.y);
+    float len = sqrtf(v.x * v.x + v.y * v.y);
     if(len == 0.0f) return true;
     float dot = dir.x * v.x + dir.y * v.y;
     float cosTheta = dot / len;
@@ -169,7 +169,8 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
     else{
         DrawCircleSector(centerpos, radius, start, end,   SEG, RED);
     }
-    if(CircleSectorColl(radius, centerpos, /*Enemy rectangle*/, dir, ARCSIZE)){
+    /*temporary*/Rectangle e = {10, 10, 10, 10};
+    if(CircleSectorColl(radius, centerpos, e, dir, ARCSIZE)){
         /*HP decrease of enemy*/
     }
 }
