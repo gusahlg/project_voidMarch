@@ -238,6 +238,7 @@ void inputEventHandler(Level& lvl, float dt){
     static float speed = 300.0f;
     static float ARCSIZE = 50.0f;
     static float range = 50.0f;
+    Rectangle dest; Vector2 origin; float rotation;
     mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
@@ -249,7 +250,7 @@ void inputEventHandler(Level& lvl, float dt){
             spawnProjectile(spawnPos, dir, w, h, speed);
         }
         else{
-            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl);
+            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
             enemyCollisionCheck();
         }
     }
@@ -258,7 +259,7 @@ void inputEventHandler(Level& lvl, float dt){
             updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
         }
         if(attacking){
-            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl);
+            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
         }
     }
 }
@@ -267,8 +268,8 @@ float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = scale * 3.0;
-    else cam.zoom = scale * 3.5;
+    if(rightZoom) cam.zoom = scale * 10;
+    else cam.zoom = scale * 9.5;
     float dt = GetFrameTime();
     playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
@@ -287,21 +288,21 @@ void gameLoop(Level& lvl){
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)){
-    Rectangle srcTile = { 0, 0, 16, 16 };
-    for(int y = 0; y < (int)lvl.rows.size(); ++y) {
-        for(int x = 0; x < (int)lvl.rows[y].size(); ++x){
-            if(lvl.rows[y][x] == '#') {
-                Rectangle mapTile = {
-                    x * TILE * scale,
-                    y * TILE * scale,
-                    TILE * scale,
-                    TILE * scale
-                };
-                DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0.0f, WHITE);
+        Rectangle srcTile = { 0, 0, 16, 16 };
+        for(int y = 0; y < (int)lvl.rows.size(); ++y){
+            for(int x = 0; x < (int)lvl.rows[y].size(); ++x){
+                if(lvl.rows[y][x] == '#') {
+                    Rectangle mapTile = {
+                        x * TILE * scale,
+                        y * TILE * scale,
+                        TILE * scale,
+                        TILE * scale
+                    };
+                    DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0.0f, WHITE);
+                }
             }
         }
     }
-}
     EndMode2D();
 }
 void loadLvl1(){
@@ -313,8 +314,9 @@ void loadLvl1(){
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+        Texture2D swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-        bullets.reserve(512);
+        bullets.reserve(1000);
         loaded=true;
     }
     scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
@@ -331,6 +333,7 @@ void loadLvl2(){
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+        Texture2D swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
         SetTextureFilter(playerTex, TEXTURE_FILTER_POINT);
         bullets.reserve(512);
         loaded=true;
