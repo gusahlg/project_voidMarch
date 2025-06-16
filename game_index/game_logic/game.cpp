@@ -241,15 +241,15 @@ void inputEventHandler(Level& lvl, float dt){
             if attacking:
                 update attack animation
     */
+    static float w = 10.0f;
+    static float h = 10.0f;
+    static float speed = 0.0f;
+    mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
+    dir = Vector2Normalize(
+        Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
+    );
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         const static float WEAPON_OFFSET = 40.0f;
-        static float w = 10.0f;
-        static float h = 10.0f;
-        static float speed = 0.0f;
-        mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
-        dir = Vector2Normalize(
-            Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
-        );
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
             spawnProjectile(spawnPos, dir, w, h, speed);
@@ -257,6 +257,8 @@ void inputEventHandler(Level& lvl, float dt){
         else{
             enemyCollisionCheck();
         }
+    }
+    if(projActive/*Add in melee animation logic here*/){
         if(projActive){
             updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
         }
