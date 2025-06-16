@@ -22,6 +22,7 @@ extern int playerID;
 extern int loadID;
 extern float Ox;
 extern float Oy;
+extern bool attacking;
 extern float PLAYERWIDTH;
 extern float PLAYERHEIGHT;
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed);

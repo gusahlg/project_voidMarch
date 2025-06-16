@@ -9,6 +9,7 @@
 #include <fstream>
 #include <cmath>
 #include <raymath.h>
+bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
 Vector2 dir;
@@ -231,40 +232,31 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         rightZoom = false;
     }
-    /* If left button pressed:
-            if right down: 
-                spawn proj
-            if right not down:
-                check if melee damage should be dealt
-            if projActive:
-                update projectiles
-            if attacking:
-                update attack animation
-    */
     static float w = 10.0f;
     static float h = 10.0f;
-    static float speed = 0.0f;
+    static float speed = 300.0f;
+    static float ARCSIZE = 50.0f;
+    static float range = 50.0f;
     mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        const static float WEAPON_OFFSET = 40.0f;
+        const static float WEAPON_OFFSET = 5.0f;
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
             spawnProjectile(spawnPos, dir, w, h, speed);
         }
         else{
+            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl);
             enemyCollisionCheck();
         }
     }
-    if(projActive/*Add in melee animation logic here*/){
+    if(projActive || attacking){
         if(projActive){
             updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
         }
-        else{
-            static float ARCSIZE = 1.0f;
-            static float range = 500.0f;
+        if(attacking){
             updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl);
         }
     }
