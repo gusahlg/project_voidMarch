@@ -187,8 +187,9 @@ void spriteManager(){
     }
 }
 bool rollWalkSwitch = false;
-int pPixX;
-int pPixY;
+//Change
+float pPixX;
+float pPixY;
 bool projActive;
 bool rightZoom = false;
 void inputEventHandler(Level& lvl, float dt){
@@ -261,8 +262,8 @@ void inputEventHandler(Level& lvl, float dt){
         }
     }
 }
-int pSizeW;
-int pSizeH;
+float pSizeW;
+float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
@@ -276,12 +277,12 @@ void gameLoop(Level& lvl){
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;
-    pSizeW = (int)(spriteW * scale);
-    pSizeH = (int)(spriteH * scale);
-    pPixX = (int)(lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2);
-    pPixY = (int)(lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH);
+    pSizeW = spriteW * scale;
+    pSizeH = spriteH * scale;
+    pPixX = lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2;
+    pPixY = lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH;
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
-    dst = {(float)pPixX, (float)pPixY, (float)pSizeW, (float)pSizeH};
+    dst = {pPixX, pPixY, pSizeW, pSizeH};
     drawLevel(lvl, scale);
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
