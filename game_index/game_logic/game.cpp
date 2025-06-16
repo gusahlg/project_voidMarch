@@ -245,7 +245,7 @@ void inputEventHandler(Level& lvl, float dt){
         const static float WEAPON_OFFSET = 40.0f;
         static float w = 10.0f;
         static float h = 10.0f;
-        static float speed = 100.0f;
+        static float speed = 0.0f;
         mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
         dir = Vector2Normalize(
             Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
