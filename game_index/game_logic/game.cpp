@@ -231,8 +231,17 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         rightZoom = false;
     }
-    // rework neeedded bellow
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || projActive){
+    /* If left button pressed:
+            if right down: 
+                spawn proj
+            if right not down:
+                check if melee damage should be dealt
+            if projActive:
+                update projectiles
+            if attacking:
+                update attack animation
+    */
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         const static float WEAPON_OFFSET = 40.0f;
         static float w = 10.0f;
         static float h = 10.0f;
@@ -242,7 +251,13 @@ void inputEventHandler(Level& lvl, float dt){
             Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
         );
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) || projActive){
+        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
+            spawnProjectile(spawnPos, dir, w, h, speed);
+        }
+        else{
+            enemyCollisionCheck();
+        }
+        if(projActive){
             updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
         }
         else{

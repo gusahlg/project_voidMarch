@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../include/game/loadGame.hpp"
 #include "../include/game/ability_attributes.hpp"
+#include "../include/game/enemy_data.hpp"
 #include <vector>
 #include <cmath>
 #include <raymath.h>
@@ -58,4 +59,11 @@ void drawEnemies(){
 void enemyLogic(float dt, Level& lvl){
     updateEnemies(dt, lvl);
     drawEnemies();
+}
+void enemyCollisionCheck(){
+    for(auto& e : enemies){
+        if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
+            e.HP -= 1;
+        }
+    }
 }

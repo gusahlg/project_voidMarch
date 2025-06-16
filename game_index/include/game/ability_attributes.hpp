@@ -24,6 +24,7 @@ extern float Ox;
 extern float Oy;
 extern float PLAYERWIDTH;
 extern float PLAYERHEIGHT;
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed);
 void loadRollTex();
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl);
 void updateRoll(Level& lvl, float dt);
