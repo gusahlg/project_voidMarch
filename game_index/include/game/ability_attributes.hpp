@@ -18,6 +18,7 @@ extern std::vector<projectile> bullets;
 extern float scale;
 extern bool rolling;
 extern bool moving;
+void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZE);
 extern int playerID;
 extern int loadID;
 extern float Ox;

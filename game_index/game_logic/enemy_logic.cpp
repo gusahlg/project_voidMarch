@@ -61,6 +61,7 @@ void enemyLogic(float dt, Level& lvl){
     drawEnemies();
 }
 void enemyCollisionCheck(){
+    attacking = true;
     for(auto& e : enemies){
         if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
             e.HP -= 1;

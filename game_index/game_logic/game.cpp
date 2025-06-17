@@ -32,6 +32,7 @@ float scaleX, scaleY, scale = 1.0f;
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
 Texture2D playerTex;
+Texture2D swordTex;
 const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
 float animTimer = 0.0f;
@@ -243,24 +244,32 @@ void inputEventHandler(Level& lvl, float dt){
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
+    const static float WEAPON_OFFSET = 5.0f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        const static float WEAPON_OFFSET = 5.0f;
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
             spawnProjectile(spawnPos, dir, w, h, speed);
         }
         else{
-            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
+            defineDamageArea(spawnPos, range, dir, ARCSIZE);
             enemyCollisionCheck();
         }
     }
-    if(projActive || attacking){
-        if(projActive){
-            updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
-        }
-        if(attacking){
-            updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
-        }
+    if(projActive){
+        updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
+    }
+    if(attacking){
+        updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
+    }
+    else{/*Draw sword with offset from player*/
+        static const Rectangle src = {0, 0, 32, 32};
+        Vector2 pivot = playerPixCenter + dir * WEAPON_OFFSET;
+        dest.x = pivot.x; dest.y = pivot.y;
+        float wh = 32.0f * scale;
+        dest.width, dest.height = wh;
+        origin = {wh/2, wh/2};
+        rotation = loadID ? 3 : 180;
+        DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
     }
 }
 float pSizeW;
@@ -276,8 +285,8 @@ void gameLoop(Level& lvl){
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
-    const int spriteW=18;
-    const int spriteH=25;
+    const float spriteW=18;
+    const float spriteH=25;
     pSizeW = spriteW * scale;
     pSizeH = spriteH * scale;
     pPixX = lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2;
@@ -314,7 +323,7 @@ void loadLvl1(){
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-        Texture2D swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
+        swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
         SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
         bullets.reserve(1000);
         loaded=true;
@@ -333,7 +342,7 @@ void loadLvl2(){
         spriteManager();
         loadTileTextures();
         playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-        Texture2D swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
+        swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
         SetTextureFilter(playerTex, TEXTURE_FILTER_POINT);
         bullets.reserve(512);
         loaded=true;

@@ -170,13 +170,13 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
     //Passing on variables.
     Mcenter = centerpos; Mradius = radius; Mstart = start; Mend = end; MarcSize = ARCSIZE; Mdir = dir;
 }
-Rectangle src = {0, 0, 32, 32};
+Rectangle Esrc = {0, 0, 32, 32};
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl, Rectangle dest, Vector2 origin, float rotation){
     /*Add in attack animation (swing a sword or something)*/
     // Everything within an area based one player pos and mouse direction gets damaged.
     
-    DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
+    DrawTexturePro(swordTex, Esrc, dest, origin, rotation, WHITE);
     
     //DrawTexturePro();
-    defineDamageArea(pos, radius, dir, ARCSIZE);
+    //defineDamageArea(pos, radius, dir, ARCSIZE);
 }
