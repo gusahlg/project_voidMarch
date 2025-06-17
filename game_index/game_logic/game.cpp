@@ -261,16 +261,16 @@ void inputEventHandler(Level& lvl, float dt){
     if(attacking){
         updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
     }
-    else{/*Draw sword with offset from player*/
-        static const Rectangle src = {0, 0, 32, 32};
-        Vector2 pivot = playerPixCenter + dir * WEAPON_OFFSET;
-        dest.x = pivot.x; dest.y = pivot.y;
-        float wh = 32.0f * scale;
-        dest.width, dest.height = wh;
-        origin = {wh/2, wh/2};
-        rotation = loadID ? 3 : 180;
-        DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
-    }
+    static Rectangle src = {0, 0, 32, 32};
+    static const float wh = 32.0f * scale;
+    dest.width = wh;
+    dest.height = wh;
+    Vector2 pivot = playerPixCenter + dir * WEAPON_OFFSET;
+    dest.x = pivot.x - wh/2.0f; dest.y = pivot.y - wh/2.0f;
+    origin = {wh/2, wh/2};
+    rotation = loadID ? 3 : 180;
+    DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
+    DrawRectangleLines(dest.x, dest.y, dest.width, dest.height, RED);
 }
 float pSizeW;
 float pSizeH;
@@ -314,18 +314,21 @@ void gameLoop(Level& lvl){
     }
     EndMode2D();
 }
+void preLoadTasks(Level& lvl){
+    readlvlData(lvl);
+    cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
+    cam.rotation = 0.0f;
+    spriteManager();
+    loadTileTextures();
+    playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+    swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
+    SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
+    bullets.reserve(1000);
+}
 void loadLvl1(){
     static bool loaded=false;
     if(!loaded){
-        readlvlData(lvl1);
-        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-        cam.rotation = 0.0f;
-        spriteManager();
-        loadTileTextures();
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-        swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
-        SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-        bullets.reserve(1000);
+        preLoadTasks(lvl1);
         loaded=true;
     }
     scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
@@ -336,15 +339,7 @@ void loadLvl1(){
 void loadLvl2(){
     static bool loaded=false;
     if(!loaded){
-        readlvlData(lvl2);
-        cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-        cam.rotation = 0.0f;
-        spriteManager();
-        loadTileTextures();
-        playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-        swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
-        SetTextureFilter(playerTex, TEXTURE_FILTER_POINT);
-        bullets.reserve(512);
+        preLoadTasks(lvl2);
         loaded=true;
     }
     scaleX = GetScreenWidth()/(float)(lvl2.rows[0].size()*TILE);
