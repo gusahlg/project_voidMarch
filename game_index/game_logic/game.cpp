@@ -188,7 +188,6 @@ void spriteManager(){
     }
 }
 bool rollWalkSwitch = false;
-//Change
 float pPixX;
 float pPixY;
 bool projActive;
@@ -244,7 +243,7 @@ void inputEventHandler(Level& lvl, float dt){
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
-    const static float WEAPON_OFFSET = 5.0f;
+    const static float WEAPON_OFFSET = 25.0f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
@@ -261,16 +260,27 @@ void inputEventHandler(Level& lvl, float dt){
     if(attacking){
         updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
     }
-    static Rectangle src = {0, 0, 32, 32};
-    static const float wh = 32.0f * scale;
+}
+void DrawEquip(){
+    Rectangle dest; Vector2 origin; float rotation;
+    Rectangle src;
+    float Xoffset; float Yoffset;
+    if(loadID == 3){
+        rotation = 180;
+        src = {0, 32, 32, -32};
+        Xoffset = -6.0f * scale; Yoffset = -4.8f * scale;
+    }
+    else{
+        src = {0, 0, 32, 32};
+        rotation = 0;
+        Xoffset = 6.0f * scale; Yoffset = -4.8f * scale;
+    }
+    float wh = 32.0f * scale;
     dest.width = wh;
     dest.height = wh;
-    Vector2 pivot = playerPixCenter + dir * WEAPON_OFFSET;
-    dest.x = pivot.x - wh/2.0f; dest.y = pivot.y - wh/2.0f;
+    dest.x = playerPixCenter.x + Xoffset; dest.y = playerPixCenter.y + Yoffset;
     origin = {wh/2, wh/2};
-    rotation = loadID ? 3 : 180;
     DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
-    DrawRectangleLines(dest.x, dest.y, dest.width, dest.height, RED);
 }
 float pSizeW;
 float pSizeH;
@@ -296,6 +306,8 @@ void gameLoop(Level& lvl){
     drawLevel(lvl, scale);
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
+    DrawEquip();
+    if(loadID == 2 || loadID == 4) DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)){
         Rectangle srcTile = { 0, 0, 16, 16 };
         for(int y = 0; y < (int)lvl.rows.size(); ++y){
@@ -321,7 +333,7 @@ void preLoadTasks(Level& lvl){
     spriteManager();
     loadTileTextures();
     playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-    swordTex = LoadTexture("../../assets/graphics/utilities/equipables/melee/sword.png");
+    swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
     SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
     bullets.reserve(1000);
 }
