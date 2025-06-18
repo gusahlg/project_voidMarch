@@ -9,6 +9,7 @@
 #include <fstream>
 #include <cmath>
 #include <raymath.h>
+#include <cstdint>
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
@@ -16,9 +17,23 @@ Vector2 dir;
 float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 Vector2 spawnPos;
-bool V = false;
-bool S = false;
-bool H = false;
+enum raceP : std::uint8_t{
+    voidCrawler,
+    spaceLizard,
+    human,
+    mechaSapien
+};
+raceP current;
+enum Direction : std::uint8_t{
+    Up,
+    Down,
+    Left,
+    Right,
+    UpLeft,
+    UpRight,
+    DownLeft,
+    DownRight
+};
 const float WALK_SPEED = 5.0f;
 const float SQRT2 = 0.7071;
 int loadID = 0;
@@ -47,7 +62,7 @@ tiles Dot4;
 tiles Dot4Split;
 tiles background;
 void loadTileTextures(){
-    purple.load = LoadTexture("assets/graphics/level_graphics/tiles/tile4.png");
+    purple.load = LoadTexture("assets/graphics/level_graphics/tiles/left.png");
     squiggly.load = LoadTexture("assets/graphics/level_graphics/tiles/tile3.png");
     Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/floor2.png");
     Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/floor1.png");
@@ -156,35 +171,23 @@ void drawLevel(Level& lvl, float s){
         }
 }
 // ── spriteManager (your original ladder) ───────────────────────
-int playerID;
 void spriteManager(){
     if(raceSPACELIZARD){
         loadSpaceLizard();
-        playerID = 1;
+        raceP current = raceP::spaceLizard;
     }
     else if(raceVOIDCRAWLER){
         loadVoid_crawler();
         loadRollTex();
-        playerID = 2;
+        raceP current = raceP::voidCrawler;
     }
     else if(raceMECHA_SAPIEN){
-        playerID = 3;
+
+        raceP current = raceP::mechaSapien;
     }
     else{
         loadHuman();
-        playerID = 4;
-    }
-    switch(playerID){
-        case(1):
-            S = true;
-            break;
-        case(2):
-            V = true;
-            break;
-        case(3):
-            break;
-        case(4):
-            H = true;
+        raceP current = raceP::human;
     }
 }
 bool rollWalkSwitch = false;
@@ -362,98 +365,159 @@ void loadLvl2(){
 void movementEventHandler(Level& lvl, float dt){
     float x = 0.0f;
     float y = 0.0f;
-    bool up = false; bool down = false; bool left = false; bool right = false;
     if(IsKeyDown(KEY_W)){
         y -= 1.0f;
-        up = true;
-        loadID = 1;
+        Direction current = Direction::Up;
     }
     if(IsKeyDown(KEY_S)){
         y += 1.0f;
-        down = true;
-        loadID = 2;
+        Direction current = Direction::Down;
     }
     if(IsKeyDown(KEY_A)){
         x -= 1.0f;
-        left = true;
-        loadID = 3;
+        if(Direction::Up) Direction current = UpLeft;
+        else if(Direction::Down) Direction current = DownLeft;
+        else Direction current = Left;
     }
     if(IsKeyDown(KEY_D)){
         x += 1.0f;
-        right = true;
-        loadID = 4;
+        if(Direction::Up) Direction current = UpRight;
+        else if(Direction::Down) Direction current = DownRight;
+        else Direction current = Right;
     }
     if(x != 0.0f && y != 0.0f){
         x *= SQRT2;
         y *= SQRT2;
     }
-    if(up){
-        if(left){
-            if(V){
-                playerTex = VfacingUpLeft.pos;
+    switch(current){
+        case(Up):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingUp.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingUp.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingUp.pos;
+                    break;
+                default:
+                    playerTex = HfacingUp.pos;
+                    break;
             }
-            else if(H){
-                playerTex = HfacingUpLeft.pos;
+            break;
+        case(Down):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingDown.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingDown.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingDown.pos;
+                    break;
+                default:
+                    playerTex = HfacingDown.pos;
+                    break;
             }
-        }
-        else if(right){
-            if(V){
-                playerTex = VfacingUpRight.pos;
+            break;
+        case(Left):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingDownLeft.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingDownLeft.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingDownLeft.pos;
+                    break;
+                default:
+                    playerTex = HfacingDownLeft.pos;
+                    break;
             }
-            else if(H){
-                playerTex = HfacingUpRight.pos;
+            break;
+        case(Right):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingDownRight.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingDownRight.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingDownRight.pos;
+                    break;
+                default:
+                    playerTex = HfacingDownRight.pos;
+                    break;
             }
-        }
-        else{
-            if(V){
-                playerTex = VfacingUp.pos;
+            break;
+        case(UpLeft):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingUpLeft.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingUpLeft.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingUpLeft.pos;
+                    break;
+                default:
+                    playerTex = HfacingUpLeft.pos;
+                    break;
             }
-            else if(H){
-                playerTex = HfacingUp.pos;
+            break;
+        case(UpRight):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingUpRight.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingUpRight.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingUpRight.pos;
+                    break;
+                default:
+                    playerTex = HfacingUpRight.pos;
+                    break;
             }
-        }
-    }
-    else if(down){
-        if(left){
-            if(V){
-                playerTex = VfacingDownLeft.pos;
+            break;
+        case(DownLeft):
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingDownLeft.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingDownLeft.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingDownLeft.pos;
+                    break;
+                default:
+                    playerTex = HfacingDownLeft.pos;
+                    break;
             }
-            else if(H){
-                playerTex = HfacingDownLeft.pos;
+            break;
+        default:
+            switch(current){
+                case(voidCrawler):
+                    playerTex = VfacingDownRight.pos;
+                    break;
+                case(spaceLizard):
+                    playerTex = SfacingDownRight.pos;
+                    break;
+                case(mechaSapien):
+                    //playerTex = MfacingDownRight.pos;
+                    break;
+                default:
+                    playerTex = HfacingDownRight.pos;
+                    break;
             }
-        }
-        else if(right){
-            if(V){
-                playerTex = VfacingDownRight.pos;
-            }
-            else if(H){
-                playerTex = HfacingDownRight.pos;
-            }
-        }
-        else{
-            if(V){
-                playerTex = VfacingDown.pos;
-            }
-            else if(H){
-                playerTex = HfacingDown.pos;
-            }
-        }
-    }
-    else if(left){
-        if(V){
-            playerTex = VfacingDownLeft.pos;
-        }
-        else if(H){
-            playerTex = HfacingDownLeft.pos;
-        }
-    }
-    else if(right){
-        if(V){
-            playerTex = VfacingDownRight.pos;
-        }
-        else if(H){
-            playerTex = HfacingDownRight.pos;
-        }
+            break;
     }
     float newX = lvl.playerPos.x + x * WALK_SPEED * dt;
     float newY = lvl.playerPos.y + y * WALK_SPEED * dt;
