@@ -11,15 +11,15 @@
 struct void_crawler_roll{
     Texture2D pos;
 };
-void_crawler_roll Up;
-void_crawler_roll Down;
-void_crawler_roll Left;
-void_crawler_roll Right;
+void_crawler_roll up;
+void_crawler_roll down;
+void_crawler_roll left;
+void_crawler_roll right;
 void loadRollTex(){
-    Up.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll4.png");
-    Down.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
-    Left.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll2.png");
-    Right.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
+    up.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll4.png");
+    down.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
+    left.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll2.png");
+    right.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
 }
 bool rolling;
 float Ox;
@@ -32,34 +32,34 @@ void updateRoll(Level& lvl, float dt){
     float y = lvl.playerPos.y;
     float xofset = 0.0f;
     float yofset = 0.0f;
-    switch(loadID){
-        case(1):
+    switch(currentDir){
+        case(Up):
             if(y <= Oy - rollDistance){
                 rolling = false;
             }
             yofset -= 1.0f;
-            playerTex = Up.pos;
+            playerTex = up.pos;
             break;
-        case(2):
+        case(Down):
             if(y >= Oy + rollDistance){
                 rolling = false;
             }
             yofset += 1.0f;
-            playerTex = Down.pos;
+            playerTex = down.pos;
             break;
-        case(3):
+        case(Left):
             if(x <= Ox - rollDistance){
                 rolling = false;
             }
             xofset -= 1.0f;
-            playerTex = Left.pos;
+            playerTex = left.pos;
             break;
         default:
             if(x >= Ox + rollDistance){
                 rolling = false;
             }
             xofset += 1.0f;
-            playerTex = Right.pos;
+            playerTex = right.pos;
             break;
     }
     float newX = x + xofset * ROLL_SPEED * dt;

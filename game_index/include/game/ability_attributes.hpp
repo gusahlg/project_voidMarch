@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include <iostream>
+#include <cstdint>
 struct Level{
     std::vector<std::string> rows;
     Vector2 playerPos;
@@ -20,7 +21,6 @@ extern bool rolling;
 extern bool moving;
 void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZE);
 extern int playerID;
-extern int loadID;
 extern float Ox;
 extern float Oy;
 extern bool attacking;
@@ -36,3 +36,21 @@ bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed);
 extern bool projActive;
+enum raceP : std::uint8_t{
+    voidCrawler,
+    spaceLizard,
+    human,
+    mechaSapien
+};
+extern raceP currentRace;
+enum Direction : std::uint8_t{
+    Up,
+    Down,
+    Left,
+    Right,
+    UpLeft,
+    UpRight,
+    DownLeft,
+    DownRight
+};
+extern Direction currentDir;

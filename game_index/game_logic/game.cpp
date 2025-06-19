@@ -17,28 +17,12 @@ Vector2 dir;
 float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 Vector2 spawnPos;
-enum raceP : std::uint8_t{
-    voidCrawler,
-    spaceLizard,
-    human,
-    mechaSapien
-};
-raceP current;
-enum Direction : std::uint8_t{
-    Up,
-    Down,
-    Left,
-    Right,
-    UpLeft,
-    UpRight,
-    DownLeft,
-    DownRight
-};
 const float WALK_SPEED = 5.0f;
 const float SQRT2 = 0.7071;
-int loadID = 0;
 Level lvl1;
 Level lvl2;
+Direction currentDir;
+raceP currentRace;
 constexpr float XAxisOffset = 1.0f;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
@@ -174,20 +158,20 @@ void drawLevel(Level& lvl, float s){
 void spriteManager(){
     if(raceSPACELIZARD){
         loadSpaceLizard();
-        raceP current = raceP::spaceLizard;
+        currentRace = raceP::spaceLizard;
     }
     else if(raceVOIDCRAWLER){
         loadVoid_crawler();
         loadRollTex();
-        raceP current = raceP::voidCrawler;
+        currentRace = raceP::voidCrawler;
     }
     else if(raceMECHA_SAPIEN){
 
-        raceP current = raceP::mechaSapien;
+        currentRace = raceP::mechaSapien;
     }
     else{
         loadHuman();
-        raceP current = raceP::human;
+        currentRace = raceP::human;
     }
 }
 bool rollWalkSwitch = false;
@@ -268,15 +252,15 @@ void DrawEquip(){
     Rectangle dest; Vector2 origin; float rotation;
     Rectangle src;
     float Xoffset; float Yoffset;
-    if(loadID == 3){
+    if(currentDir == Direction::Left || currentDir == Direction::UpLeft || currentDir == Direction::DownLeft){
         rotation = 180;
         src = {0, 32, 32, -32};
-        Xoffset = -6.0f * scale; Yoffset = -4.8f * scale;
+        Xoffset = -9.9f * scale; Yoffset = -7.6f * scale;
     }
     else{
         src = {0, 0, 32, 32};
         rotation = 0;
-        Xoffset = 6.0f * scale; Yoffset = -4.8f * scale;
+        Xoffset = 9.9f * scale; Yoffset = -7.6f * scale;
     }
     float wh = 32.0f * scale;
     dest.width = wh;
@@ -310,7 +294,7 @@ void gameLoop(Level& lvl){
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     DrawEquip();
-    if(loadID == 2 || loadID == 4) DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
+    if(currentDir == Direction::UpLeft || currentDir == Direction::UpRight || currentDir == Direction::Up) DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)){
         Rectangle srcTile = { 0, 0, 16, 16 };
         for(int y = 0; y < (int)lvl.rows.size(); ++y){
@@ -367,31 +351,31 @@ void movementEventHandler(Level& lvl, float dt){
     float y = 0.0f;
     if(IsKeyDown(KEY_W)){
         y -= 1.0f;
-        Direction current = Direction::Up;
+        currentDir = Direction::Up;
     }
     if(IsKeyDown(KEY_S)){
         y += 1.0f;
-        Direction current = Direction::Down;
+        currentDir = Direction::Down;
     }
     if(IsKeyDown(KEY_A)){
         x -= 1.0f;
-        if(Direction::Up) Direction current = UpLeft;
-        else if(Direction::Down) Direction current = DownLeft;
-        else Direction current = Left;
+        if(currentDir == Direction::Up) currentDir = UpLeft;
+        else if(currentDir == Direction::Down) currentDir = DownLeft;
+        else currentDir = Left;
     }
     if(IsKeyDown(KEY_D)){
         x += 1.0f;
-        if(Direction::Up) Direction current = UpRight;
-        else if(Direction::Down) Direction current = DownRight;
-        else Direction current = Right;
+        if(currentDir == Direction::Up) currentDir = UpRight;
+        else if(currentDir == Direction::Down) currentDir = DownRight;
+        else currentDir = Right;
     }
     if(x != 0.0f && y != 0.0f){
         x *= SQRT2;
         y *= SQRT2;
     }
-    switch(current){
+    switch(currentDir){
         case(Up):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingUp.pos;
                     break;
@@ -407,7 +391,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         case(Down):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingDown.pos;
                     break;
@@ -423,7 +407,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         case(Left):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingDownLeft.pos;
                     break;
@@ -439,7 +423,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         case(Right):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingDownRight.pos;
                     break;
@@ -455,7 +439,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         case(UpLeft):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingUpLeft.pos;
                     break;
@@ -471,7 +455,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         case(UpRight):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingUpRight.pos;
                     break;
@@ -487,7 +471,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         case(DownLeft):
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingDownLeft.pos;
                     break;
@@ -503,7 +487,7 @@ void movementEventHandler(Level& lvl, float dt){
             }
             break;
         default:
-            switch(current){
+            switch(currentRace){
                 case(voidCrawler):
                     playerTex = VfacingDownRight.pos;
                     break;
