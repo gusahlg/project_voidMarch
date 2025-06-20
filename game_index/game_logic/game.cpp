@@ -280,7 +280,7 @@ void DrawBlaster(){
     if(rotation > 90 && rotation < 180) src = {0, 20, 20, -20};
     else src = {0, 0, 20, 20};
     origin = {src.width/2.0f, src.height/2.0f};
-    float WEAPON_OFFSET = 3.0f * scale;
+    float WEAPON_OFFSET = 30.0f * scale;
     float w = 10.0f; float h = 10.0f;
     dest.width = w; dest.height = h;
     dest.x = playerPixCenter.x + WEAPON_OFFSET * dir.x;
