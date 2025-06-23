@@ -54,3 +54,8 @@ enum Direction : std::uint8_t{
     DownRight
 };
 extern Direction currentDir;
+enum weapon : std::uint8_t{
+    sword,
+    blaster
+};
+extern weapon equiped;

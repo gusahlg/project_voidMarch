@@ -23,6 +23,7 @@ Level lvl1;
 Level lvl2;
 Direction currentDir;
 raceP currentRace;
+weapon equiped;
 constexpr float XAxisOffset = 1.0f;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
@@ -297,15 +298,23 @@ void DrawBlaster(){
     DrawTexturePro(blasterTex, src, dest, origin, rotation, WHITE);
 }
 void DrawEquip(){
-
+    // Weapon drawing logic for idle performance.
+    switch(equiped){
+        case(blaster):
+            DrawBlaster();
+            break;
+        case(sword):
+            DrawSword();
+            break;
+    }
 }
 float pSizeW;
 float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = scale * 10;
-    else cam.zoom = scale * 9.5;
+    if(rightZoom) cam.zoom = scale * 10, equiped = blaster;
+    else cam.zoom = scale * 9.5, equiped = sword;
     float dt = GetFrameTime();
     playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
@@ -324,7 +333,6 @@ void gameLoop(Level& lvl){
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     DrawEquip();
-    DrawBlaster();
     if(currentDir == Direction::UpLeft || currentDir == Direction::UpRight || currentDir == Direction::Up) DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)){
         Rectangle srcTile = { 0, 0, 16, 16 };
