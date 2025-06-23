@@ -275,17 +275,27 @@ void DrawSword(){
     DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
 }
 void DrawBlaster(){
+    float w = 10.0f; float h = 10.0f;
     Rectangle src; Rectangle dest; Vector2 origin; float rotation;
     rotation = atan2f(dir.y, dir.x) * RAD2DEG;
-    if(rotation > 90 && rotation < 180) src = {0, 20, 20, -20};
-    else src = {0, 0, 20, 20};
+    float WEAPON_OFFSET = 22.5f * scale;
+    bool flip = rotation > 90 || rotation < -90;
+    float yflipOff;
+    float xflipOff;
+    if(flip){
+        yflipOff = h * dir.y;
+        xflipOff = (w) * dir.x;
+        src = {0, 20, 20, -20};
+        dest.y = playerPixCenter.y + WEAPON_OFFSET * dir.y + yflipOff; 
+        dest.x = playerPixCenter.x + WEAPON_OFFSET * dir.x + xflipOff;
+    }
+    else{
+        dest.y = playerPixCenter.y + WEAPON_OFFSET * dir.y;
+        dest.x = playerPixCenter.x + WEAPON_OFFSET * dir.x;
+        src = {0, 0, 20, 20};
+    }
     origin = {src.width/2.0f, src.height/2.0f};
-    float WEAPON_OFFSET = 30.0f * scale;
-    float w = 10.0f; float h = 10.0f;
     dest.width = w; dest.height = h;
-    dest.x = playerPixCenter.x + WEAPON_OFFSET * dir.x;
-    dest.y = playerPixCenter.y + WEAPON_OFFSET * dir.y;
-    // Please help!
     DrawTexturePro(blasterTex, src, dest, origin, rotation, WHITE);
 }
 void DrawEquip(){
