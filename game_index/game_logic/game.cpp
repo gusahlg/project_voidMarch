@@ -275,27 +275,25 @@ void DrawSword(){
     DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
 }
 void DrawBlaster(){
-    float w = 10.0f; float h = 10.0f;
-    Rectangle src; Rectangle dest; Vector2 origin; float rotation;
-    rotation = atan2f(dir.y, dir.x) * RAD2DEG;
+    float w = 10.0f;
+    float h = 10.0f;
     float WEAPON_OFFSET = 22.5f * scale;
+    float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
     bool flip = rotation > 90 || rotation < -90;
-    float yflipOff;
-    float xflipOff;
-    if(flip){
-        yflipOff = h * dir.y;
-        xflipOff = (w) * dir.x;
-        src = {0, 20, 20, -20};
-        dest.y = playerPixCenter.y + WEAPON_OFFSET * dir.y + yflipOff; 
-        dest.x = playerPixCenter.x + WEAPON_OFFSET * dir.x + xflipOff;
-    }
-    else{
-        dest.y = playerPixCenter.y + WEAPON_OFFSET * dir.y;
-        dest.x = playerPixCenter.x + WEAPON_OFFSET * dir.x;
-        src = {0, 0, 20, 20};
-    }
-    origin = {src.width/2.0f, src.height/2.0f};
-    dest.width = w; dest.height = h;
+    Rectangle src;
+    if (flip) src = {0, 20, 20, -20};
+    else      src = {0,  0, 20,  20};
+    Vector2 pivot = {
+        playerPixCenter.x + dir.x * WEAPON_OFFSET,
+        playerPixCenter.y + dir.y * WEAPON_OFFSET
+    };
+    Rectangle dest = {
+        pivot.x - w * 0.5f,
+        pivot.y - h * 0.5f,
+        w,
+        h
+    };
+    Vector2 origin = {w * 0.5f, h * 0.5f};
     DrawTexturePro(blasterTex, src, dest, origin, rotation, WHITE);
 }
 void DrawEquip(){
