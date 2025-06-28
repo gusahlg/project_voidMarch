@@ -226,9 +226,9 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         rightZoom = false;
     }
-    static float w = 10.0f;
-    static float h = 10.0f;
-    static float speed = 300.0f;
+    static float w = 5.0f;
+    static float h = 5.0f;
+    static float speed = 50.0f;
     static float ARCSIZE = 50.0f;
     static float range = 50.0f;
     Rectangle dest; Vector2 origin; float rotation;
@@ -236,7 +236,7 @@ void inputEventHandler(Level& lvl, float dt){
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
-    const static float WEAPON_OFFSET = 25.0f;
+    const static float WEAPON_OFFSET = 20.0f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
@@ -278,15 +278,17 @@ void DrawSword(){
 void DrawBlaster(){
     float w = 10.0f;
     float h = 10.0f;
-    float WEAPON_OFFSET = 22.5f * scale;
+    float WEAPON_OFFSET = 18.5f * scale;
     float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
     bool flip = rotation > 90 || rotation < -90;
+    float xOffset = 6.5f * scale;
+    float yOffset = 5.0f * scale;
     Rectangle src;
     if (flip) src = {0, 20, 20, -20};
     else      src = {0,  0, 20,  20};
     Vector2 pivot = {
-        playerPixCenter.x + dir.x * WEAPON_OFFSET,
-        playerPixCenter.y + dir.y * WEAPON_OFFSET
+        playerPixCenter.x + xOffset + dir.x * WEAPON_OFFSET,
+        playerPixCenter.y + yOffset + dir.y * WEAPON_OFFSET
     };
     Rectangle dest = {
         pivot.x - w * 0.5f,
