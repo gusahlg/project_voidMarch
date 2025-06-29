@@ -10,6 +10,12 @@
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
+struct Player{
+    //Add in all associated values
+};
+struct World{
+    //Add in all associated values
+};
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
@@ -24,7 +30,6 @@ Level lvl2;
 Direction currentDir;
 raceP currentRace;
 weapon equiped;
-constexpr float XAxisOffset = 1.0f;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl, float);
@@ -111,19 +116,19 @@ void loadHuman(){
 }
 bool isWall(float cx, float cy, Level& lvl){
     if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
-    if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
+    else if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
     return lvl.rows[cy][cx] == '#';
 }
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl){
     if(isWall(cx, cy, lvl)) return true;
-    if(isWall(cx + cw, cy, lvl)) return true;
-    if(isWall(cx + cw, cy + ch, lvl)) return true;
-    if(isWall(cx, cy + ch, lvl)) return true;
+    else if(isWall(cx + cw, cy, lvl)) return true;
+    else if(isWall(cx + cw, cy + ch, lvl)) return true;
+    else if(isWall(cx, cy + ch, lvl)) return true;
     else return false;
 }
 bool wallBellow(float cx, float cy, Level& lvl){
     if(isWall(cx, cy + PLAYERHEIGHT * 2, lvl)) return true;
-    if(isWall(cx + PLAYERWIDTH, cy + PLAYERHEIGHT * 2, lvl)) return true;
+    else if(isWall(cx + PLAYERWIDTH, cy + PLAYERHEIGHT * 2, lvl)) return true;
     else return false;
 }
 // ── level loading ───────────────────────────────────────────────
@@ -137,8 +142,15 @@ void readlvlData(Level& lvl){
                 lvl.rows[y][x]='.';
             }
 }
-// ── draw walls ─────────────────────────────────────────────────
+struct Enemy{
+    float w;
+    float h;
+    Texture2D spSh;
+    Enemy(float w, float h, Texture2D spSh)
+    : w(w), h(h), spSh(spSh) {}
+};
 void drawLevel(Level& lvl, float s){
+    Enemy generic(10.0f, 10.0f, Dot4.load);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
             float px = x * TILE * s;
@@ -157,6 +169,7 @@ void drawLevel(Level& lvl, float s){
             }
             else if(lvl.rows[y][x] == 'e'){
                 DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+                spawnEnemy({mapTile.x, mapTile.y}, generic.w, generic.h, 10);
             }
         }
 }
@@ -236,11 +249,11 @@ void inputEventHandler(Level& lvl, float dt){
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
-    const static float WEAPON_OFFSET = 20.0f;
+    const static float WEAPON_OFFSET = 12.5f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-            spawnProjectile(spawnPos, dir, w, h, speed);
+            spawnProjectile(spawnPos, dir, w, h, speed); 
         }
         else{
             defineDamageArea(spawnPos, range, dir, ARCSIZE);

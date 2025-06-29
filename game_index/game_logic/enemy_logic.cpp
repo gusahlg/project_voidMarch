@@ -10,8 +10,9 @@
 struct enemy{
     Rectangle Hbox;
     int HP;
-    enum dir{Up, Down, Left, Right};
-    enum state{Idle, Walking, Jumping};
+    enum dir : std::uint8_t{Up, Down, Left, Right};
+    dir currentDir = Up;
+    enum state : std::uint8_t{Idle, Walking, Jumping};
     state currentState = Idle;
     void determineState(){
         // Add in detection of some sort. Also add in direction calc.

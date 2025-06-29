@@ -162,7 +162,7 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
     const int SEG = 10000;
     if(end < start){
         DrawCircleSector(centerpos, radius, start, 360.0f, SEG, RED);
-        DrawCircleSector(centerpos, radius,   0.0f,   end, SEG, RED);
+        DrawCircleSector(centerpos, radius, 0.0f, end, SEG, RED);
     }
     else{
         DrawCircleSector(centerpos, radius, start, end, SEG, RED);
