@@ -7,6 +7,8 @@
 #include <cmath>
 #include <raymath.h>
 #include <algorithm>
+#include <random>
+#include <chrono>
 struct enemy{
     Rectangle Hbox;
     int HP;
@@ -15,8 +17,17 @@ struct enemy{
     enum state : std::uint8_t{Idle, Walking, Jumping};
     state currentState = Idle;
     void determineState(){
-        // Add in detection of some sort. Also add in direction calc.
-        state currentState = Idle;
+        std::mt19937 rng{
+            static_cast<std::mt19937::result_type>(
+                std::chrono::steady_clock::now().time_since_epoch().count())
+        };
+        std::uniform_int_distribution<int> pick(0, 1);   // Change so more alternativs with more abilities
+        int choice = pick(rng);
+        switch(choice){
+            case 0: currentState = Idle;
+            case 1: currentState = Walking;
+        }
+
     }
     enemy(Rectangle Hbox, int HP)
     : Hbox(Hbox), HP(HP) {}
@@ -32,9 +43,11 @@ void updateEnemies(float dt, Level& lvl){
         auto f = e;
         switch(e.currentState){
             case(e.Walking):
-                //Walk
+                e.Hbox.x -= 20;
+                break;
             case(e.Jumping):
                 //Jump
+                break;
             default:
                 
                 break;
@@ -54,7 +67,7 @@ void updateEnemies(float dt, Level& lvl){
 }
 void drawEnemies(){
     for(const auto& e : enemies){
-        DrawRectangleRec(e.Hbox, BLUE);
+        DrawRectangleRec(e.Hbox, RED);
     }
 }
 void enemyLogic(float dt, Level& lvl){
@@ -65,7 +78,7 @@ void enemyCollisionCheck(){
     attacking = true;
     for(auto& e : enemies){
         if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
-            e.HP -= 1;
+            e.HP -= 10;
         }
     }
 }

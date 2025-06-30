@@ -345,6 +345,7 @@ void gameLoop(Level& lvl){
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
     dst = {pPixX, pPixY, pSizeW, pSizeH};
     drawLevel(lvl, scale);
+    enemyLogic(dt, lvl);
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     DrawEquip();
