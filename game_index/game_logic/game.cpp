@@ -114,6 +114,15 @@ void loadHuman(){
     HfacingDownLeft.pos = LoadTexture("assets/graphics/human/human4.png");
     HfacingDownRight.pos = LoadTexture("assets/graphics/human/human3.png");
 }
+bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec){
+    if(FirstRec.x < SecondRec.x + SecondRec.width &&
+       FirstRec.x + FirstRec.width > SecondRec.x &&
+       FirstRec.y < SecondRec.y + SecondRec.height &&
+       FirstRec.y + FirstRec.height > SecondRec.y){
+        return true;
+       }
+    else return false;
+}
 bool isWall(float cx, float cy, Level& lvl){
     if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
     else if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
@@ -281,11 +290,11 @@ void inputEventHandler(Level& lvl, float dt){
         }
         else{
             defineDamageArea(spawnPos, range, dir, ARCSIZE);
-            enemyCollisionCheck();
         }
     }
     if(projActive){
         updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
+        enemyCollisionCheck();
     }
     if(attacking){
         // Put in an animtion into this function.

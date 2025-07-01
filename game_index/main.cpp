@@ -18,7 +18,6 @@ Sbuttons Btn2{2, {300, 340, 150, 50}};
 Sbuttons Btn3{3, {300, 420, 150, 50}};
 void updateHome();
 void updateSelect();
-void updateGame();
 void screen::update(){
     switch(screenIdentifier){
         case(1):
@@ -26,9 +25,6 @@ void screen::update(){
             break;
         case(2):
             updateSelect(); 
-            break;
-        case(3):
-            updateGame();
             break;
     }
 }

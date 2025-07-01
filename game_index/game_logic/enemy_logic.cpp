@@ -1,6 +1,5 @@
 #include <raylib.h>
 #include <iostream>
-#include "../include/game/loadGame.hpp"
 #include "../include/game/ability_attributes.hpp"
 #include "../include/game/enemy_data.hpp"
 #include <vector>
@@ -79,6 +78,13 @@ void enemyCollisionCheck(){
     for(auto& e : enemies){
         if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
             e.HP -= 1;
+        }
+        // Add in bullet coll.
+        for(auto& b : bullets){
+            if(R2CollCheck(e.Hbox, {b.pos.x, b.pos.y, b.w, b.h})){
+                e.HP -= 1;
+                b.alive = false;
+            }
         }
     }
 }

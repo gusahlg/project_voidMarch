@@ -58,3 +58,4 @@ enum weapon : std::uint8_t{
     blaster
 };
 extern weapon equipped;
+bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec);
