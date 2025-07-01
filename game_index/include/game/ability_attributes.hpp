@@ -57,4 +57,4 @@ enum weapon : std::uint8_t{
     sword,
     blaster
 };
-extern weapon equiped;
+extern weapon equipped;

@@ -29,7 +29,7 @@ Level lvl1;
 Level lvl2;
 Direction currentDir;
 raceP currentRace;
-weapon equiped;
+weapon equipped;
 const float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl, float);
@@ -174,7 +174,7 @@ void drawLevel(Level& lvl, float s){
         }
 }
 void loadEnemies(Level& lvl, float s){
-    int NumGeneric;
+    int NumGeneric = 0;
     for(size_t y = 0; y<lvl.rows.size(); ++y){
         for(size_t x = 0; x<lvl.rows[y].size(); ++x){
     // Check for enemy tiles and add to the total frequency of the enemy
@@ -182,17 +182,17 @@ void loadEnemies(Level& lvl, float s){
             if(lvl.rows[y][x] == 'e') ++NumGeneric;
         }
     }
+    int genI = 0;
     for(size_t y = 0; y<lvl.rows.size(); ++y){
         for(size_t x = 0; x<lvl.rows[y].size(); ++x){
             float px = x * TILE * s;
             float py = y * TILE * s;
             float sz = (TILE * s);
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-            // Remember amount of spawns done:
-            static int genI = 0;
             // Spawn in a set amount of an enemy of each type:
-            if(lvl.rows[y][x] == 'e' && !genI > NumGeneric){
+            if(lvl.rows[y][x] == 'e' && genI < NumGeneric){
                 spawnEnemy({mapTile.x, mapTile.y}, generic.w, generic.h, 10);
+                ++genI;
             }
         }
     }
@@ -338,7 +338,7 @@ void DrawBlaster(){
 }
 void DrawEquip(){
     // Weapon drawing logic for idle performance.
-    switch(equiped){
+    switch(equipped){
         case(blaster):
             DrawBlaster();
             break;
@@ -352,8 +352,8 @@ float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = scale * 10, equiped = blaster;
-    else cam.zoom = scale * 9.5, equiped = sword;
+    if(rightZoom) cam.zoom = scale * 10, equipped = blaster;
+    else cam.zoom = scale * 9.5, equipped = sword;
     float dt = GetFrameTime();
     playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
@@ -394,11 +394,13 @@ void gameLoop(Level& lvl){
 }
 void preLoadTasks(Level& lvl){
     readlvlData(lvl);
+    scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
+    scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
+    scale = (scaleX+scaleY)/2.0f;
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
-    Enemy generic(10.0f, 10.0f, Dot4.load);
     loadEnemies(lvl, scale);
     playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
@@ -412,9 +414,6 @@ void loadLvl1(){
         preLoadTasks(lvl1);
         loaded=true;
     }
-    scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
-    scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
-    scale = (scaleX+scaleY)/2.0f;
     gameLoop(lvl1);
 }
 void loadLvl2(){
@@ -423,9 +422,6 @@ void loadLvl2(){
         preLoadTasks(lvl2);
         loaded=true;
     }
-    scaleX = GetScreenWidth()/(float)(lvl2.rows[0].size()*TILE);
-    scaleY = GetScreenHeight()/(float)(lvl2.rows.size()*TILE);
-    scale = (scaleX + scaleY)/2.0f;
     gameLoop(lvl2);
 }
 void movementEventHandler(Level& lvl, float dt){

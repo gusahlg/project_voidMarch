@@ -58,7 +58,7 @@ void updateEnemies(float dt, Level& lvl){
     }
     enemies.erase(
         std::remove_if(
-            enemies.begin(), enemies.end(), [](const enemy& p){
+            enemies.begin(), enemies.end(), [](auto& p){
                 return p.HP <= 0;
             }
         ),
