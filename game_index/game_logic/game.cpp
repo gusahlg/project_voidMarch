@@ -265,7 +265,7 @@ void inputEventHandler(Level& lvl, float dt){
     }
     static float w = 5.0f;
     static float h = 5.0f;
-    static float speed = 50.0f;
+    static float speed = 300.0f;
     static float ARCSIZE = 50.0f;
     static float range = 50.0f;
     Rectangle dest; Vector2 origin; float rotation;
@@ -273,7 +273,7 @@ void inputEventHandler(Level& lvl, float dt){
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
-    const static float WEAPON_OFFSET = 12.5f;
+    const static float WEAPON_OFFSET = 20.0f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
@@ -288,6 +288,7 @@ void inputEventHandler(Level& lvl, float dt){
         updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
     }
     if(attacking){
+        // Put in an animtion into this function.
         updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
     }
 }

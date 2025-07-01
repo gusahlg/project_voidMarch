@@ -88,9 +88,3 @@ void updateHome(){
 void updateSelect(){
     DrawText("GAME SETUP", 400, 90, 75, PINK);
 }
-void updateGame(){
-    ClearBackground(YELLOW);
-    DrawText("PROJECT VOIDMARCH", 20, 20, 75, BLACK);
-    DrawText("FPS:", 1100, 20, 20, gRed);
-    DrawFPS(1150, 20);
-}
