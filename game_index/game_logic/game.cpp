@@ -149,6 +149,7 @@ struct Enemy{
     Enemy(float w, float h, Texture2D spSh)
     : w(w), h(h), spSh(spSh) {}
 };
+Enemy generic(10.0f, 10.0f, Dot4.load);
 void drawLevel(Level& lvl, float s){
     Enemy generic(10.0f, 10.0f, Dot4.load);
     for(size_t y=0;y<lvl.rows.size();++y)
@@ -169,9 +170,32 @@ void drawLevel(Level& lvl, float s){
             }
             else if(lvl.rows[y][x] == 'e'){
                 DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            }
+        }
+}
+void loadEnemies(Level& lvl, float s){
+    int NumGeneric;
+    for(size_t y = 0; y<lvl.rows.size(); ++y){
+        for(size_t x = 0; x<lvl.rows[y].size(); ++x){
+    // Check for enemy tiles and add to the total frequency of the enemy
+            // Add in additional enemy types here:
+            if(lvl.rows[y][x] == 'e') ++NumGeneric;
+        }
+    }
+    for(size_t y = 0; y<lvl.rows.size(); ++y){
+        for(size_t x = 0; x<lvl.rows[y].size(); ++x){
+            float px = x * TILE * s;
+            float py = y * TILE * s;
+            float sz = (TILE * s);
+            Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+            // Remember amount of spawns done:
+            static int genI = 0;
+            // Spawn in a set amount of an enemy of each type:
+            if(lvl.rows[y][x] == 'e' && !genI > NumGeneric){
                 spawnEnemy({mapTile.x, mapTile.y}, generic.w, generic.h, 10);
             }
         }
+    }
 }
 // ── spriteManager (your original ladder) ───────────────────────
 void spriteManager(){
@@ -374,6 +398,8 @@ void preLoadTasks(Level& lvl){
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
+    Enemy generic(10.0f, 10.0f, Dot4.load);
+    loadEnemies(lvl, scale);
     playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
     swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");

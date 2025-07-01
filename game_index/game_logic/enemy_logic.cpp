@@ -43,7 +43,7 @@ void updateEnemies(float dt, Level& lvl){
         auto f = e;
         switch(e.currentState){
             case(e.Walking):
-                e.Hbox.x -= 20;
+                f.Hbox.x -= 20;
                 break;
             case(e.Jumping):
                 //Jump
@@ -52,7 +52,7 @@ void updateEnemies(float dt, Level& lvl){
                 
                 break;
         }
-        if(collisionRect(e.Hbox.x, e.Hbox.y, e.Hbox.width, e.Hbox.height, lvl)){
+        if(!collisionRect(e.Hbox.x, e.Hbox.y, e.Hbox.width, e.Hbox.height, lvl)){
             e.Hbox = f.Hbox;
         }
     }
