@@ -290,6 +290,7 @@ void inputEventHandler(Level& lvl, float dt){
         }
         else{
             defineDamageArea(spawnPos, range, dir, ARCSIZE);
+            enemyCollisionCheck();
         }
     }
     if(projActive){

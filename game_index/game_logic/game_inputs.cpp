@@ -159,24 +159,10 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
     float mid = Vec2AngleDeg(dir);            
     float start = Norm360(mid - ARCSIZE);       
     float end = Norm360(mid + ARCSIZE);
-    const int SEG = 10000;
-    if(end < start){
-        DrawCircleSector(centerpos, radius, start, 360.0f, SEG, RED);
-        DrawCircleSector(centerpos, radius, 0.0f, end, SEG, RED);
-    }
-    else{
-        DrawCircleSector(centerpos, radius, start, end, SEG, RED);
-    }
     //Passing on variables.
     Mcenter = centerpos; Mradius = radius; Mstart = start; Mend = end; MarcSize = ARCSIZE; Mdir = dir;
 }
 Rectangle Esrc = {0, 0, 32, 32};
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl, Rectangle dest, Vector2 origin, float rotation){
     /*Add in attack animation (swing a sword or something)*/
-    // Everything within an area based one player pos and mouse direction gets damaged.
-    
-    DrawTexturePro(swordTex, Esrc, dest, origin, rotation, WHITE);
-    
-    //DrawTexturePro();
-    //defineDamageArea(pos, radius, dir, ARCSIZE);
 }

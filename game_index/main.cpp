@@ -34,6 +34,10 @@ int main(){
     screen home; home.screenIdentifier = 1;
     screen select; select.screenIdentifier = 2;
     screen game; game.screenIdentifier = 3;
+    // Fix this so Icon shows up.
+    Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
+    SetWindowIcon(icon);
+    UnloadImage(icon);
     while(!WindowShouldClose()){
         mousePos = GetMousePosition();
         if(IsKeyPressed(KEY_F11)){

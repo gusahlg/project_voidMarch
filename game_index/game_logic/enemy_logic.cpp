@@ -15,17 +15,21 @@ struct enemy{
     dir currentDir = Up;
     enum state : std::uint8_t{Idle, Walking, Jumping};
     state currentState = Idle;
-    void determineState(){
-        std::mt19937 rng{
-            static_cast<std::mt19937::result_type>(
-                std::chrono::steady_clock::now().time_since_epoch().count())
-        };
-        std::uniform_int_distribution<int> pick(0, 1);   // Change so more alternativs with more abilities
-        int choice = pick(rng);
-        switch(choice){
-            case 0: currentState = Idle;
-            case 1: currentState = Walking;
+    void determineState(float range){
+        bool inRangeX = false;
+        bool inRangeY = false;
+        Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
+        if((Emid.x > playerPixCenter.x && Emid.x < playerPixCenter.x + range) ||
+           (Emid.x < playerPixCenter.x && Emid.x > playerPixCenter.x - range)){
+            inRangeX = true;
         }
+        if((Emid.y > playerPixCenter.y && Emid.y < playerPixCenter.y + range) ||
+           (Emid.y < playerPixCenter.y && Emid.y > playerPixCenter.y - range)){
+            inRangeY = true;
+        }
+        // Add in randomness and such for good pathfinding current system is temporary
+        if(inRangeX && inRangeY) currentState = Walking;
+        else currentState = Idle;
 
     }
     enemy(Rectangle Hbox, int HP)
@@ -38,7 +42,7 @@ void spawnEnemy(Vector2 pos, float w, float h, int HP){ //Add into level initial
 }
 void updateEnemies(float dt, Level& lvl){
     for(auto& e : enemies){
-        e.determineState();
+        e.determineState(/*range*/100.0f);
         auto f = e;
         switch(e.currentState){
             case(e.Walking):
@@ -65,6 +69,7 @@ void updateEnemies(float dt, Level& lvl){
     );
 }
 void drawEnemies(){
+    // Add in sprites and such.
     for(const auto& e : enemies){
         DrawRectangleRec(e.Hbox, RED);
     }
@@ -74,7 +79,6 @@ void enemyLogic(float dt, Level& lvl){
     drawEnemies();
 }
 void enemyCollisionCheck(){
-    attacking = true;
     for(auto& e : enemies){
         if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
             e.HP -= 1;
