@@ -21,23 +21,30 @@ struct enemy{
         bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
         float distX = Emid.x < playerPixCenter.x ? playerPixCenter.x - Emid.x : Emid.x - playerPixCenter.x;
         float distY = Emid.y < playerPixCenter.y ? playerPixCenter.y - Emid.y : Emid.y - playerPixCenter.y;
+        float dx = std::fabs(playerPixCenter.x - Emid.x);
+        float dy = std::fabs(playerPixCenter.y - Emid.y);
         // Add in randomness and such for good pathfinding current system is temporary
         if(inRangeX && inRangeY){
-            currentState = Walking;
-        //Check if diagonals are faster, then left/right, up/down.
-            if(std::sqrtf(distX * distX + distY * distY) < distX && std::sqrtf(distX * distX + distY * distY) < distY){
-                bool right = distX < playerPixCenter.x;
-                bool down = distY < playerPixCenter.y;
-                if(right && !down) currentDir = dir::UpRight;
-                else if(right && down) currentDir = dir::DownRight;
-                else if(!right && !down) currentDir = dir::UpLeft;
-                else currentDir = dir::DownLeft;
-            } 
-            else if(distX < distY) currentDir = Emid.x < playerPixCenter.x ? dir::Left : dir::Right;
-            else currentDir = Emid.y < playerPixCenter.y ? dir::Up : dir::Down;
+            currentState = state::Walking;
         }
-        else currentState = Idle;
-
+        else currentState = state::Idle;
+        //Check if diagonals are faster, then left/right, up/down.
+        if(dx >= 1.0f && dy >= 1.0f){ 
+            bool right = Emid.x < playerPixCenter.x;
+            bool down  = Emid.y < playerPixCenter.y;
+            currentDir = right
+                        ? (down ? DownRight : UpRight)
+                        : (down ? DownLeft  : UpLeft);
+        }
+        else if(dx > dy){  
+            currentDir = (Emid.x < playerPixCenter.x) ? Right : Left;
+        }
+        else if(dy > 0.0f){
+            currentDir = (Emid.y < playerPixCenter.y) ? Down : Up;
+        }
+        else{
+            currentState = Idle;
+        }
     }
     enemy(Rectangle Hbox, int HP)
     : Hbox(Hbox), HP(HP) {}
