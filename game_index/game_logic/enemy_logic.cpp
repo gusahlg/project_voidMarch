@@ -11,24 +11,31 @@
 struct enemy{
     Rectangle Hbox;
     int HP;
-    enum dir : std::uint8_t{Up, Down, Left, Right};
+    enum dir : std::uint8_t{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight};
     dir currentDir = Up;
     enum state : std::uint8_t{Idle, Walking, Jumping};
     state currentState = Idle;
-    void determineState(float range){
-        bool inRangeX = false;
-        bool inRangeY = false;
+    void determineState(const float range){
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
-        if((Emid.x > playerPixCenter.x && Emid.x < playerPixCenter.x + range) ||
-           (Emid.x < playerPixCenter.x && Emid.x > playerPixCenter.x - range)){
-            inRangeX = true;
-        }
-        if((Emid.y > playerPixCenter.y && Emid.y < playerPixCenter.y + range) ||
-           (Emid.y < playerPixCenter.y && Emid.y > playerPixCenter.y - range)){
-            inRangeY = true;
-        }
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
+        float distX = Emid.x < playerPixCenter.x ? playerPixCenter.x - Emid.x : Emid.x - playerPixCenter.x;
+        float distY = Emid.y < playerPixCenter.y ? playerPixCenter.y - Emid.y : Emid.y - playerPixCenter.y;
         // Add in randomness and such for good pathfinding current system is temporary
-        if(inRangeX && inRangeY) currentState = Walking;
+        if(inRangeX && inRangeY){
+            currentState = Walking;
+        //Check if diagonals are faster, then left/right, up/down.
+            if(std::sqrtf(distX * distX + distY * distY) < distX && std::sqrtf(distX * distX + distY * distY) < distY){
+                bool right = distX < playerPixCenter.x;
+                bool down = distY < playerPixCenter.y;
+                if(right && !down) currentDir = dir::UpRight;
+                else if(right && down) currentDir = dir::DownRight;
+                else if(!right && !down) currentDir = dir::UpLeft;
+                else currentDir = dir::DownLeft;
+            } 
+            else if(distX < distY) currentDir = Emid.x < playerPixCenter.x ? dir::Left : dir::Right;
+            else currentDir = Emid.y < playerPixCenter.y ? dir::Up : dir::Down;
+        }
         else currentState = Idle;
 
     }
@@ -42,7 +49,7 @@ void spawnEnemy(Vector2 pos, float w, float h, int HP){ //Add into level initial
 }
 void updateEnemies(float dt, Level& lvl){
     for(auto& e : enemies){
-        e.determineState(/*range*/100.0f);
+        e.determineState(100.0f * scale);
         auto f = e;
         switch(e.currentState){
             case(e.Walking):
