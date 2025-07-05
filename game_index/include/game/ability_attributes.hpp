@@ -23,9 +23,9 @@ void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZ
 extern float Ox;
 extern float Oy;
 extern bool attacking;
-extern Vector2 playerPixCenter;
 extern Texture2D swordTex;
 extern float PLAYERWIDTH;
+extern const float SQRT2;
 extern float PLAYERHEIGHT;
 void loadRollTex();
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl, Rectangle dest, Vector2 origin, float rotation);

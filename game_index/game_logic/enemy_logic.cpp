@@ -21,7 +21,7 @@ struct enemy{
     Texture2D sprite; //Good for later
     // Bellow depends on type.
     float speed{};
-    void determineState(const float range){
+    void determineState(const float range, Vector2 playerPixCenter){
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
         bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
         bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
@@ -54,10 +54,14 @@ struct enemy{
     }
     enemy(Rectangle Hbox, int HP, Type t = Type::generic)
     : Hbox(Hbox), HP(HP), kind(t) {
-    static constexpr float speedLUT[] = {10.0f, 20.0f, 30.0f};
+    static constexpr float speedLUT[] = {90.0f, 20.0f, 50.0f};
     speed = speedLUT[static_cast<uint8_t>(kind)];
     }
 };
+/*if(x != 0.0f && y != 0.0f){
+        x *= SQRT2;
+        y *= SQRT2;
+    }*/
 std::vector<enemy> enemies;
 void spawnEnemy(Vector2 pos, float w, float h, int HP, enemy::Type t = enemy::Type::generic){ //Add into level initialization and other stuff.
     Rectangle Hbox = {pos.x, pos.y, w, h};
@@ -66,16 +70,16 @@ void spawnEnemy(Vector2 pos, float w, float h, int HP, enemy::Type t = enemy::Ty
 void spawnLogic(Vector2 pos, float w, float h, int HP, int ID){
     enemy::Type t;
     switch(ID){
-        case(0): t = enemy::Type::generic;
-        case(1): t = enemy::Type::TurtleMaster;
-        case(2): t = enemy::Type::Bob;
+        case(0): t = enemy::Type::generic; break;
+        case(1): t = enemy::Type::TurtleMaster; break;
+        case(2): t = enemy::Type::Bob; break;
     }
     spawnEnemy(pos, w, h, 10, t);
 }
 // Idea: Add in types, speed and stuff in enemies struct
-void updateEnemies(float dt, Level& lvl){
+void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
     for(auto& e : enemies){
-        e.determineState(100.0f * scale);
+        e.determineState(5000.0f * scale, playerCenter);
         Rectangle f = e.Hbox;
         switch(e.currentState){
             case(enemy::Walking):
@@ -86,10 +90,10 @@ void updateEnemies(float dt, Level& lvl){
                     case enemy::Down:      f.y += step; break;
                     case enemy::Left:      f.x -= step; break;
                     case enemy::Right:     f.x += step; break;
-                    case enemy::UpLeft:    f.x -= step; f.y -= step; break;
-                    case enemy::UpRight:   f.x += step; f.y -= step; break;
-                    case enemy::DownLeft:  f.x -= step; f.y += step; break;
-                    case enemy::DownRight: f.x += step; f.y += step; break;
+                    case enemy::UpLeft:    f.x -= step * SQRT2; f.y -= step * SQRT2; break;
+                    case enemy::UpRight:   f.x += step * SQRT2; f.y -= step * SQRT2; break;
+                    case enemy::DownLeft:  f.x -= step * SQRT2; f.y += step * SQRT2; break;
+                    case enemy::DownRight: f.x += step * SQRT2; f.y += step * SQRT2; break;
                 }
                 break;
             }
@@ -119,8 +123,8 @@ void drawEnemies(){
         DrawRectangleRec(e.Hbox, RED);
     }
 }
-void enemyLogic(float dt, Level& lvl){
-    updateEnemies(dt, lvl);
+void enemyLogic(float dt, Level& lvl, Vector2 playerCenter){
+    updateEnemies(dt, lvl, playerCenter);
     drawEnemies();
 }
 void enemyCollisionCheck(){

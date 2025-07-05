@@ -24,7 +24,7 @@ float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 Vector2 spawnPos;
 const float WALK_SPEED = 5.0f;
-const float SQRT2 = 0.7071;
+const float SQRT2 = 0.70710678119;
 Level lvl1;
 Level lvl2;
 Direction currentDir;
@@ -154,13 +154,14 @@ void readlvlData(Level& lvl){
 struct Enemy{
     float w;
     float h;
+    float ID;
     Texture2D spSh;
-    Enemy(float w, float h, Texture2D spSh)
-    : w(w), h(h), spSh(spSh) {}
+    Enemy(float w, float h, Texture2D spSh, int ID)
+    : w(w), h(h), spSh(spSh), ID(ID) {}
 };
-Enemy generic(10.0f, 10.0f, Dot4.load);
+Enemy generic(10.0f, 10.0f, Dot4.load, 0);
+Enemy TurtleMaster(20.0f, 20.0f, Dot4.load, 1);
 void drawLevel(Level& lvl, float s){
-    Enemy generic(10.0f, 10.0f, Dot4.load);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
             float px = x * TILE * s;
@@ -180,18 +181,24 @@ void drawLevel(Level& lvl, float s){
             else if(lvl.rows[y][x] == 'e'){
                 DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
             }
+            else if(lvl.rows[y][x] == 't'){
+                DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            }
         }
 }
 void loadEnemies(Level& lvl, float s){
     int NumGeneric = 0;
+    int NumTurtle = 0;
     for(size_t y = 0; y<lvl.rows.size(); ++y){
         for(size_t x = 0; x<lvl.rows[y].size(); ++x){
     // Check for enemy tiles and add to the total frequency of the enemy
             // Add in additional enemy types here:
             if(lvl.rows[y][x] == 'e') ++NumGeneric;
+            else if(lvl.rows[y][x] == 't') ++NumTurtle;
         }
     }
     int genI = 0;
+    int turtI = 0;
     for(size_t y = 0; y<lvl.rows.size(); ++y){
         for(size_t x = 0; x<lvl.rows[y].size(); ++x){
             float px = x * TILE * s;
@@ -202,6 +209,10 @@ void loadEnemies(Level& lvl, float s){
             if(lvl.rows[y][x] == 'e' && genI < NumGeneric){
                 spawnLogic({mapTile.x, mapTile.y}, generic.w, generic.h, 10, 0);
                 ++genI;
+            }
+            else if(lvl.rows[y][x] == 't' && turtI < NumTurtle){
+                spawnLogic({mapTile.x, mapTile.y}, TurtleMaster.w, TurtleMaster.h, 10, 1);
+                ++turtI;
             }
         }
     }
@@ -380,7 +391,7 @@ void gameLoop(Level& lvl){
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
     dst = {pPixX, pPixY, pSizeW, pSizeH};
     drawLevel(lvl, scale);
-    enemyLogic(dt, lvl);
+    enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
     DrawEquip();
