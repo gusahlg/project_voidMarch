@@ -81,7 +81,7 @@ void spawnLogic(Vector2 pos, float w, float h, int HP, int ID){
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
     static const float tileSize = 16 * scale;
     for(auto& e : enemies){
-        e.determineState(50.0f * scale, playerCenter);
+        e.determineState(75.0f * scale, playerCenter);
         Rectangle f = e.Hbox;
         switch(e.currentState){
             case(enemy::Walking):
