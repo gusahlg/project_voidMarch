@@ -15,6 +15,11 @@ struct enemy{
     dir currentDir = Up;
     enum state : std::uint8_t{Idle, Walking, Jumping};
     state currentState = Idle;
+    enum class Type : std::uint8_t{generic, TurtleMaster, Bob}; //Expand for more variations
+    Type kind = Type::generic;
+    Texture2D sprite; //Good for later
+    // Bellow depends on type.
+    float speed{};
     void determineState(const float range){
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
         bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
@@ -46,23 +51,37 @@ struct enemy{
             currentState = Idle;
         }
     }
-    enemy(Rectangle Hbox, int HP)
-    : Hbox(Hbox), HP(HP) {}
+    enemy(Rectangle Hbox, int HP, Type t = Type::generic)
+    : Hbox(Hbox), HP(HP), kind(t) {
+    static constexpr float speedLUT[] = {10.0f, 20.0f, 30.0f};
+    speed = speedLUT[static_cast<uint8_t>(kind)];
+    }
 };
 std::vector<enemy> enemies;
-void spawnEnemy(Vector2 pos, float w, float h, int HP){ //Add into level initialization and other stuff.
+void spawnEnemy(Vector2 pos, float w, float h, int HP, enemy::Type t = enemy::Type::generic){ //Add into level initialization and other stuff.
     Rectangle Hbox = {pos.x, pos.y, w, h};
-    enemies.emplace_back(Hbox, HP);
+    enemies.emplace_back(Hbox, HP, t);
 }
+// Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl){
     for(auto& e : enemies){
         e.determineState(100.0f * scale);
-        auto f = e;
+        Rectangle f = e.Hbox;
         switch(e.currentState){
-            case(e.Walking):
-                f.Hbox.x -= 20;
+            case(e.state::Walking):
+                float step = e.speed * dt;
+                switch (e.currentDir){
+                    case e.dir::Up:        f.y -= step; break;
+                    case e.dir::Down:      f.y += step; break;
+                    case e.dir::Left:      f.x -= step; break;
+                    case e.dir::Right:     f.x += step; break;
+                    case e.dir::UpLeft:    f.x -= step; f.y -= step; break;
+                    case e.dir::UpRight:   f.x += step; f.y -= step; break;
+                    case e.dir::DownLeft:  f.x -= step; f.y += step; break;
+                    case e.dir::DownRight: f.x += step; f.y += step; break;
+                }
                 break;
-            case(e.Jumping):
+            case(e.state::Jumping):
                 //Jump
                 break;
             default:
@@ -70,7 +89,7 @@ void updateEnemies(float dt, Level& lvl){
                 break;
         }
         if(!collisionRect(e.Hbox.x, e.Hbox.y, e.Hbox.width, e.Hbox.height, lvl)){
-            e.Hbox = f.Hbox;
+            e.Hbox = f;
         }
     }
     enemies.erase(
