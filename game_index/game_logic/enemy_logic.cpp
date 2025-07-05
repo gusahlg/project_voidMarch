@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <cstdint>
 struct enemy{
     Rectangle Hbox;
     int HP;
@@ -62,33 +63,44 @@ void spawnEnemy(Vector2 pos, float w, float h, int HP, enemy::Type t = enemy::Ty
     Rectangle Hbox = {pos.x, pos.y, w, h};
     enemies.emplace_back(Hbox, HP, t);
 }
+void spawnLogic(Vector2 pos, float w, float h, int HP, int ID){
+    enemy::Type t;
+    switch(ID){
+        case(0): t = enemy::Type::generic;
+        case(1): t = enemy::Type::TurtleMaster;
+        case(2): t = enemy::Type::Bob;
+    }
+    spawnEnemy(pos, w, h, 10, t);
+}
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl){
     for(auto& e : enemies){
         e.determineState(100.0f * scale);
         Rectangle f = e.Hbox;
         switch(e.currentState){
-            case(e.state::Walking):
+            case(enemy::Walking):
+            {
                 float step = e.speed * dt;
                 switch (e.currentDir){
-                    case e.dir::Up:        f.y -= step; break;
-                    case e.dir::Down:      f.y += step; break;
-                    case e.dir::Left:      f.x -= step; break;
-                    case e.dir::Right:     f.x += step; break;
-                    case e.dir::UpLeft:    f.x -= step; f.y -= step; break;
-                    case e.dir::UpRight:   f.x += step; f.y -= step; break;
-                    case e.dir::DownLeft:  f.x -= step; f.y += step; break;
-                    case e.dir::DownRight: f.x += step; f.y += step; break;
+                    case enemy::Up:        f.y -= step; break;
+                    case enemy::Down:      f.y += step; break;
+                    case enemy::Left:      f.x -= step; break;
+                    case enemy::Right:     f.x += step; break;
+                    case enemy::UpLeft:    f.x -= step; f.y -= step; break;
+                    case enemy::UpRight:   f.x += step; f.y -= step; break;
+                    case enemy::DownLeft:  f.x -= step; f.y += step; break;
+                    case enemy::DownRight: f.x += step; f.y += step; break;
                 }
                 break;
-            case(e.state::Jumping):
+            }
+            case(enemy::Jumping):
                 //Jump
                 break;
             default:
                 
                 break;
         }
-        if(!collisionRect(e.Hbox.x, e.Hbox.y, e.Hbox.width, e.Hbox.height, lvl)){
+        if(!collisionRect(f.x, f.y, f.width, f.height, lvl)){
             e.Hbox = f;
         }
     }

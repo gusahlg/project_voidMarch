@@ -200,7 +200,7 @@ void loadEnemies(Level& lvl, float s){
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             // Spawn in a set amount of an enemy of each type:
             if(lvl.rows[y][x] == 'e' && genI < NumGeneric){
-                spawnEnemy({mapTile.x, mapTile.y}, generic.w, generic.h, 10);
+                spawnLogic({mapTile.x, mapTile.y}, generic.w, generic.h, 10, 0);
                 ++genI;
             }
         }
