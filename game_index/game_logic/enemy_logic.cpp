@@ -73,13 +73,15 @@ void spawnLogic(Vector2 pos, float w, float h, int HP, int ID){
         case(0): t = enemy::Type::generic; break;
         case(1): t = enemy::Type::TurtleMaster; break;
         case(2): t = enemy::Type::Bob; break;
+        default: t = enemy::Type::generic; break;
     }
     spawnEnemy(pos, w, h, 10, t);
 }
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
+    static const float tileSize = 16 * scale;
     for(auto& e : enemies){
-        e.determineState(5000.0f * scale, playerCenter);
+        e.determineState(50.0f * scale, playerCenter);
         Rectangle f = e.Hbox;
         switch(e.currentState){
             case(enemy::Walking):
@@ -104,7 +106,11 @@ void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
                 
                 break;
         }
-        if(!collisionRect(f.x, f.y, f.width, f.height, lvl)){
+        float tileX = f.x / tileSize;
+        float tileY = f.y / tileSize;
+        float tileW = f.width  / tileSize;
+        float tileH = f.height / tileSize;
+        if(!collisionRect(tileX, tileY, tileW, tileH, lvl)){
             e.Hbox = f;
         }
     }
