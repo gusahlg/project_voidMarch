@@ -11,10 +11,10 @@
 #include <raymath.h>
 #include <cstdint>
 struct Player{
-    //Add in all associated values
+
 };
 struct World{
-    //Add in all associated values
+
 };
 bool attacking = false;
 Vector2 mouseWorld;

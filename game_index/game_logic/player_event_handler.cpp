@@ -11,3 +11,8 @@
 #include <raymath.h>
 #include <cstdint>
 // This is for handling different player states, stats (two similar words after each other, don't fall asleep my fellow 'stay up late gamedev') such as health and attributes such as 'intelligence'.
+struct playerData{
+    int HP;
+    playerData(int hp)
+    : HP(hp) {}
+};
