@@ -10,12 +10,15 @@
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
-struct Player{
-
+// Cool idea: Add in so that the constructor takes in the current level as input to determine which variations to use.
+struct TileSet{
+    Texture2D wall;
+    Texture2D floor;
+    //Add more if needed.
+    TileSet(Texture2D wall, Texture2D floor)
+    : wall(wall), floor(floor) {}
 };
-struct World{
-
-};
+TileSet tiles{/*wall =*/ {}, /*floor =*/ {} };
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
@@ -44,24 +47,13 @@ int currentFrame = 0;
 float animTimer = 0.0f;
 Camera2D cam{};
 const int TILE = 16;
-struct tiles{
-    Texture2D load;
-};
-tiles purple;
-tiles squiggly;
-tiles Dot4;
-tiles Dot4Split;
-tiles background;
-tiles Bleft;
-tiles Bright;
-tiles Bup;
-tiles Bdown;
 void loadTileTextures(){
-    purple.load = LoadTexture("assets/graphics/level_graphics/tiles/left.png");
-    squiggly.load = LoadTexture("assets/graphics/level_graphics/tiles/tile3.png");
-    Dot4.load = LoadTexture("assets/graphics/level_graphics/tiles/floor2.png");
-    Dot4Split.load = LoadTexture("assets/graphics/level_graphics/tiles/floor1.png");
-    background.load = LoadTexture("assets/graphics/level_graphics/tiles/stdbackground.png");
+    const std::vector<std::pair<const char*, Texture2D*>> todo = {
+        {"assets/graphics/level_graphics/tiles/left.png",         &tiles.wall},
+        {"assets/graphics/level_graphics/tiles/stdbackground.png",&tiles.floor}
+        // Add more textures here and in struct.
+    };
+    for (auto [file, out] : todo) *out = LoadTexture(file);
 }
 struct void_crawler{
     Texture2D pos;
@@ -159,8 +151,8 @@ struct Enemy{
     Enemy(float w, float h, Texture2D spSh, int ID)
     : w(w), h(h), spSh(spSh), ID(ID) {}
 };
-Enemy generic(10.0f, 10.0f, Dot4.load, 0);
-Enemy TurtleMaster(20.0f, 20.0f, Dot4.load, 1);
+Enemy generic(10.0f, 10.0f, tiles.wall, 0);
+Enemy TurtleMaster(20.0f, 20.0f, tiles.wall, 1);
 void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
@@ -169,20 +161,13 @@ void drawLevel(Level& lvl, float s){
             float sz = (TILE * s);
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             Rectangle srcTile = {0, 0, 16, 16};
-            if(lvl.rows[y][x] == '#'){
-                DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0, WHITE);
-            }
-            else if(lvl.rows[y][x] == '.'){
-                DrawTexturePro(background.load, srcTile, mapTile, {0, 0}, 0, WHITE);
-            }
-            else if(lvl.rows[y][x] == 'x'){
-                DrawTexturePro(squiggly.load, srcTile, mapTile, {0, 0}, 0, WHITE);
-            }
-            else if(lvl.rows[y][x] == 'e'){
-                DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
-            }
-            else if(lvl.rows[y][x] == 't'){
-                DrawTexturePro(Dot4.load, srcTile, mapTile, {0, 0}, 0, WHITE);
+            switch(lvl.rows[y][x]){
+                case('#'): DrawTexturePro(tiles.wall, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('.'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('x'): DrawTexturePro(tiles.wall, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('e'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('t'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                default: break;
             }
         }
 }
@@ -407,7 +392,7 @@ void gameLoop(Level& lvl){
                         TILE * scale,
                         TILE * scale
                     };
-                    DrawTexturePro(purple.load, srcTile, mapTile, {0, 0}, 0.0f, WHITE);
+                    DrawTexturePro(tiles.wall, srcTile, mapTile, {0, 0}, 0.0f, WHITE);
                 }
             }
         }
