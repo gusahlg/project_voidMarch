@@ -359,8 +359,8 @@ float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = scale * 10, equipped = blaster;
-    else cam.zoom = scale * 9.5, equipped = sword;
+    if(rightZoom) cam.zoom = 1.1, equipped = blaster;
+    else cam.zoom = 1, equipped = sword;
     float dt = GetFrameTime();
     playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
@@ -413,6 +413,8 @@ void preLoadTasks(Level& lvl){
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
     swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
     SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
+    SetTextureFilter(tiles.wall , TEXTURE_FILTER_POINT);
+    SetTextureFilter(tiles.floor, TEXTURE_FILTER_POINT);
     bullets.reserve(1000);
 }
 void loadLvl1(){

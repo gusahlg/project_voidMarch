@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <raylib.h>
 #include <iostream>
 #include <vector>
@@ -22,3 +22,4 @@ struct Stats{
 
 };
 //Help me with adding stuff HERE!!!
+*/

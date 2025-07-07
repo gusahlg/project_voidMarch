@@ -3,7 +3,6 @@
 //From main.cpp
 void updateHome();
 void updateSelect();
-void updateGame();
 class screen {
     public:
         int screenIdentifier = 0;
