@@ -26,14 +26,14 @@ Vector2 dir;
 float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
 Vector2 spawnPos;
-const float WALK_SPEED = 5.0f;
-const float SQRT2 = 0.70710678119;
+constexpr float WALK_SPEED = 5.0f;
+constexpr float SQRT2 = 0.70710678119;
 Level lvl1;
 Level lvl2;
 Direction currentDir;
 raceP currentRace;
 weapon equipped;
-const float STEP_DELAY = 0.005f;
+constexpr float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl, float);
 float scaleX, scaleY, scale = 1.0f;
@@ -278,7 +278,7 @@ void inputEventHandler(Level& lvl, float dt){
     dir = Vector2Normalize(
         Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
     );
-    const static float WEAPON_OFFSET = 20.0f;
+    const static float WEAPON_OFFSET = 15.0f;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
@@ -322,7 +322,7 @@ void DrawSword(){
 void DrawBlaster(){
     float w = 10.0f;
     float h = 10.0f;
-    float WEAPON_OFFSET = 18.5f * scale;
+    float WEAPON_OFFSET = 12.5f * scale;
     float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
     bool flip = rotation > 90 || rotation < -90;
     float xOffset = 6.5f * scale;

@@ -89,6 +89,6 @@
 a = avgrund, man ska dasha över
 e = enemy
 k = key
-t = tillfallig vagg
+t = tillfallig vagg (haha nope it's da turtlemaster)
 h = stalle dar arrows hittar
 d = låst dörr

@@ -1,10 +1,6 @@
-/*#include <raylib.h>
+#pragma once
+#include <raylib.h>
 #include <iostream>
-#include "../include/select/Sbuttons.hpp"
-#include "../include/game/loadGame.hpp"
-#include "../include/game/player_stats.hpp"
-#include "../include/game/ability_attributes.hpp"
-#include "../include/game/enemy_data.hpp"
 #include <vector>
 #include <fstream>
 #include <cmath>
@@ -21,7 +17,8 @@ enum class Stat : uint8_t{
 };
 struct Stats{
     static constexpr size_t COUNT = static_cast<size_t>(Stat::_COUNT);
-    
+    //std::array<int, COUNT> v{};
+    //int get(Stat s)
 
 };
-//Help me with adding stuff HERE!!!*/
+//Help me with adding stuff HERE!!!
