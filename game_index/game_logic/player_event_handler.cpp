@@ -1,4 +1,4 @@
-/*#include <raylib.h>
+#include <raylib.h>
 #include <iostream>
 #include "../include/select/Sbuttons.hpp"
 #include "../include/game/loadGame.hpp"
@@ -24,4 +24,4 @@ struct Stats{
     
 
 };
-//Help me with adding stuff HERE!!!*/
+

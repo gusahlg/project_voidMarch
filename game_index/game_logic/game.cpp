@@ -132,15 +132,19 @@ bool wallBellow(float cx, float cy, Level& lvl){
     else if(isWall(cx + PLAYERWIDTH, cy + PLAYERHEIGHT * 2, lvl)) return true;
     else return false;
 }
-// ── level loading ───────────────────────────────────────────────
+std::vector<Vector2> turtlesPos;
+std::vector<Vector2> genericPos;
 void readlvlData(Level& lvl){
     std::ifstream in("assets/levels/level1.txt");
     for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x)
-            if(lvl.rows[y][x] == 'p'){
-                lvl.playerPos = {(float)x, (float)y};
-                lvl.rows[y][x]='.';
+        //Making it so that enemies and such are interperated once and then painted as floor.
+            switch(lvl.rows[y][x]){
+                case('p'): lvl.playerPos = {(float)x, (float)y}; lvl.rows[y][x]='.'; break;
+                //Enemies below
+                case('t'): lvl.rows[y][x]='.';turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                case('e'): lvl.rows[y][x]='.';genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
             }
 }
 struct Enemy{
@@ -165,41 +169,23 @@ void drawLevel(Level& lvl, float s){
                 case('#'): DrawTexturePro(tiles.wall, srcTile, mapTile, {0,0}, 0, WHITE); break;
                 case('.'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
                 case('x'): DrawTexturePro(tiles.wall, srcTile, mapTile, {0,0}, 0, WHITE); break;
-                case('e'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
-                case('t'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
                 default: break;
             }
         }
 }
 void loadEnemies(Level& lvl, float s){
-    int NumGeneric = 0;
-    int NumTurtle = 0;
-    for(size_t y = 0; y<lvl.rows.size(); ++y){
-        for(size_t x = 0; x<lvl.rows[y].size(); ++x){
-    // Check for enemy tiles and add to the total frequency of the enemy
-            // Add in additional enemy types here:
-            if(lvl.rows[y][x] == 'e') ++NumGeneric;
-            else if(lvl.rows[y][x] == 't') ++NumTurtle;
-        }
+    static float sz = (TILE * s);
+    for(Vector2 e : genericPos){
+        float px = e.x * TILE * s;
+        float py = e.y * TILE * s;
+        Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+        spawnLogic({mapTile.x, mapTile.y}, generic.w, generic.h, 10, 0);
     }
-    int genI = 0;
-    int turtI = 0;
-    for(size_t y = 0; y<lvl.rows.size(); ++y){
-        for(size_t x = 0; x<lvl.rows[y].size(); ++x){
-            float px = x * TILE * s;
-            float py = y * TILE * s;
-            float sz = (TILE * s);
-            Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-            // Spawn in a set amount of an enemy of each type:
-            if(lvl.rows[y][x] == 'e' && genI < NumGeneric){
-                spawnLogic({mapTile.x, mapTile.y}, generic.w, generic.h, 10, 0);
-                ++genI;
-            }
-            else if(lvl.rows[y][x] == 't' && turtI < NumTurtle){
-                spawnLogic({mapTile.x, mapTile.y}, TurtleMaster.w, TurtleMaster.h, 10, 1);
-                ++turtI;
-            }
-        }
+    for(Vector2 t : turtlesPos){
+        float px = t.x * TILE * s;
+        float py = t.y * TILE * s;
+        Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+        spawnLogic({mapTile.x, mapTile.y}, TurtleMaster.w, TurtleMaster.h, 10, 1);
     }
 }
 // ── spriteManager (your original ladder) ───────────────────────
@@ -359,8 +345,8 @@ float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = 1.1, equipped = blaster;
-    else cam.zoom = 1, equipped = sword;
+    if(rightZoom) cam.zoom = 2 / scale, equipped = blaster;
+    else cam.zoom = 1 / scale, equipped = sword;
     float dt = GetFrameTime();
     playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
@@ -416,6 +402,8 @@ void preLoadTasks(Level& lvl){
     SetTextureFilter(tiles.wall , TEXTURE_FILTER_POINT);
     SetTextureFilter(tiles.floor, TEXTURE_FILTER_POINT);
     bullets.reserve(1000);
+    turtlesPos.reserve(300);
+    genericPos.reserve(300);
 }
 void loadLvl1(){
     static bool loaded=false;
