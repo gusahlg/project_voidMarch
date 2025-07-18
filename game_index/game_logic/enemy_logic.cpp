@@ -66,10 +66,6 @@ struct enemy{
     speed = speedLUT[static_cast<uint8_t>(kind)];
     }
 };
-/*if(x != 0.0f && y != 0.0f){
-        x *= SQRT2;
-        y *= SQRT2;
-    }*/
 std::vector<enemy> enemies;
 void spawnEnemy(Vector2 pos, float w, float h, int HP, enemy::Type t = enemy::Type::generic){ //Add into level initialization and other stuff.
     Rectangle Hbox = {pos.x, pos.y, w, h};
