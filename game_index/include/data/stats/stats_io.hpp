@@ -16,3 +16,4 @@ inline Stats load(std::string_view file){
     else s.v={100,30,12,14,8};
     return s;
 }
+// saving and loading.

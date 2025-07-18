@@ -12,4 +12,5 @@ struct Stats {
     void damage(int dmg){ v[0] = std::max(0, get(Stat::HP)-dmg);} // 0 == HP
     bool isDead() const { return get(Stat::HP) == 0; }
 };
+// Helpers for checking states and the basic structure of the stat system.
 

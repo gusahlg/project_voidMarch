@@ -13,3 +13,4 @@ public:
 private:
     Stats stats_;
 };
+//Gives easy access to stats.

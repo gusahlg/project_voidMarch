@@ -10,6 +10,8 @@
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
+#include "../include/data/stats/player_data.hpp"
+#include "../include/data/stats/player.hpp"
 // Cool idea: Add in so that the constructor takes in the current level as input to determine which variations to use.
 struct TileSet{
     Texture2D wall;
@@ -95,8 +97,8 @@ void loadSpaceLizard(){
     SfacingDown.pos = LoadTexture("assets/graphics/space_lizard/");
     SfacingUpLeft.pos = LoadTexture("assets/graphics/space_lizard/");
     SfacingUpRight.pos = LoadTexture("assets/graphics/space_lizard/");
-    SfacingDownLeft.pos = LoadTexture("assets/graphics/space_lizard/");
-    SfacingDownRight.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingDownLeft.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardLeft.png");
+    SfacingDownRight.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardRight.png");
 }
 void loadHuman(){
     HfacingUp.pos = LoadTexture("assets/graphics/human/human2.png");
@@ -246,7 +248,22 @@ void inputEventHandler(Level& lvl, float dt){
     }
     else{
         currentFrame=0;animTimer=0.0f;
-        playerTex = VfacingDown.pos;
+        if(currentDir == Direction::Left || currentDir == Direction::DownLeft || currentDir == Direction::UpLeft){
+            switch(currentRace){
+                case(raceP::spaceLizard): playerTex = SfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
+                case(raceP::voidCrawler): playerTex = VfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
+                case(raceP::human): playerTex = HfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
+                //Add mechasapien
+            }
+        }
+        else{
+            switch(currentRace){
+                case(raceP::spaceLizard): playerTex = SfacingDownRight.pos; currentDir = Direction::DownRight; break;
+                case(raceP::voidCrawler): playerTex = VfacingDownRight.pos; currentDir = Direction::DownRight; break;
+                case(raceP::human): playerTex = HfacingDownRight.pos; currentDir = Direction::DownRight; break;
+                //Add mechasapien
+            }
+        }
     }
     if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
         rightZoom = true;
