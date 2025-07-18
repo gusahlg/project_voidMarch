@@ -1,4 +1,3 @@
-//paths work
 #include <raylib.h>
 #include <iostream>
 #include "include/standardUI/globalC.hpp"
