@@ -52,6 +52,14 @@ struct enemy{
             currentState = Idle;
         }
     }
+    // Determine if damage should be dealt to player.
+    bool playerInRange(float range, Vector2 playerPixCenter){
+        Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
+        if(inRangeX && inRangeY) return true;
+        else return false;
+    }
     enemy(Rectangle Hbox, int HP, Type t = Type::generic)
     : Hbox(Hbox), HP(HP), kind(t) {
     static constexpr float speedLUT[] = {90.0f, 20.0f, 50.0f};

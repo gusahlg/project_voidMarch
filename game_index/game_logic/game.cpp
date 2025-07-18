@@ -10,8 +10,7 @@
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
-#include "../include/data/stats/player_data.hpp"
-#include "../include/data/stats/player.hpp"
+#include "../include/game/global_player.hpp" // Player stats, all in one place.
 // Cool idea: Add in so that the constructor takes in the current level as input to determine which variations to use.
 struct TileSet{
     Texture2D wall;
