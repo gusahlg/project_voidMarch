@@ -7,6 +7,7 @@
 #include <cmath>
 #include <raymath.h>
 #include <algorithm>
+#include "../include/game/global_player.hpp" // Player stats, all in one place.
 // Here things that can happen in game is defined. 
 struct void_crawler_roll{
     Texture2D pos;

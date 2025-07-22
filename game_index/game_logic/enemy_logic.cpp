@@ -9,9 +9,11 @@
 #include <random>
 #include <chrono>
 #include <cstdint>
+#include "../include/game/global_player.hpp" // Player stats, all in one place.
 struct enemy{
     Rectangle Hbox;
     int HP;
+    float cooldown; // Attack cooldown duration
     enum dir : std::uint8_t{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight};
     dir currentDir = Up;
     enum state : std::uint8_t{Idle, Walking, Jumping};

@@ -92,10 +92,10 @@ void loadVoid_crawler(){
     VfacingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
 }
 void loadSpaceLizard(){
-    SfacingUp.pos = LoadTexture("assets/graphics/space_lizard/");
-    SfacingDown.pos = LoadTexture("assets/graphics/space_lizard/");
-    SfacingUpLeft.pos = LoadTexture("assets/graphics/space_lizard/");
-    SfacingUpRight.pos = LoadTexture("assets/graphics/space_lizard/");
+    SfacingUp.pos = LoadTexture("assets/graphics/space_lizard/LizardUpRight.png");
+    SfacingDown.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardLeft.png");
+    SfacingUpLeft.pos = LoadTexture("assets/graphics/space_lizard/LizardUpLeft.png");
+    SfacingUpRight.pos = LoadTexture("assets/graphics/space_lizard/LizardUpRight.png");
     SfacingDownLeft.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardLeft.png");
     SfacingDownRight.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardRight.png");
 }
@@ -361,8 +361,8 @@ float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = 2 / scale, equipped = blaster;
-    else cam.zoom = 1 / scale, equipped = sword;
+    if(rightZoom) cam.zoom = 8 * scale, equipped = blaster;
+    else cam.zoom = 5 * scale, equipped = sword;
     float dt = GetFrameTime();
     playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
     cam.target = playerPixCenter;
