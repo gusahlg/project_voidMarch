@@ -10,6 +10,7 @@
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
+#include "../include/global/scale.hpp"
 #include "../include/game/global_player.hpp" // Player stats, all in one place.
 // Cool idea: Add in so that the constructor takes in the current level as input to determine which variations to use.
 struct TileSet{
@@ -149,15 +150,12 @@ void readlvlData(Level& lvl){
             }
 }
 struct Enemy{
-    float w;
-    float h;
     float ID;
-    Texture2D spSh;
-    Enemy(float w, float h, Texture2D spSh, int ID)
-    : w(w), h(h), spSh(spSh), ID(ID) {}
+    Enemy(int ID)
+    : ID(ID) {}
 };
-Enemy generic(10.0f, 10.0f, tiles.wall, 0);
-Enemy TurtleMaster(20.0f, 20.0f, tiles.wall, 1);
+Enemy generic(0);
+Enemy TurtleMaster(1);
 void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
@@ -175,18 +173,13 @@ void drawLevel(Level& lvl, float s){
         }
 }
 void loadEnemies(Level& lvl, float s){
-    static float sz = (TILE * s);
     for(Vector2 e : genericPos){
-        float px = e.x * TILE * s;
-        float py = e.y * TILE * s;
-        Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-        spawnLogic({mapTile.x, mapTile.y}, generic.w, generic.h, 10, 0);
+        Vector2 pos = {e.x * TILE * s, e.y * TILE * s};
+        spawnLogic(pos, 10, 0, scale);
     }
     for(Vector2 t : turtlesPos){
-        float px = t.x * TILE * s;
-        float py = t.y * TILE * s;
-        Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
-        spawnLogic({mapTile.x, mapTile.y}, TurtleMaster.w, TurtleMaster.h, 10, 1);
+        Vector2 pos = {t.x * TILE * s, t.y * TILE * s};
+        spawnLogic(pos, 10, 1, scale);
     }
 }
 // ── spriteManager (your original ladder) ───────────────────────

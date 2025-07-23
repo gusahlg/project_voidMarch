@@ -16,7 +16,6 @@ struct projectile {
       : pos(p), vel(v), w(w_), h(h_), alive(true) {}
 };
 extern std::vector<projectile> bullets;
-extern float scale;
 extern bool rolling;
 extern bool moving;
 void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZE);

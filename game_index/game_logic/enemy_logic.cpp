@@ -10,10 +10,14 @@
 #include <chrono>
 #include <cstdint>
 #include "../include/game/global_player.hpp" // Player stats, all in one place.
+#include "../include/global/scale.hpp"
+#include <cassert>
 struct enemy{
     Rectangle Hbox;
-    int HP;
+    int MAXHP; //Maximum HP.
+    int HP; //Actual HP, mutable.
     float cooldown; // Attack cooldown duration
+    float range; // Detection range
     enum dir : std::uint8_t{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight};
     dir currentDir = Up;
     enum state : std::uint8_t{Idle, Walking, Jumping};
@@ -23,7 +27,7 @@ struct enemy{
     Texture2D sprite; //Good for later
     // Bellow depends on type.
     float speed{};
-    void determineState(const float range, Vector2 playerPixCenter){
+    void determineState(Vector2 playerPixCenter){
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
         bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
         bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
@@ -31,7 +35,7 @@ struct enemy{
         float distY = Emid.y < playerPixCenter.y ? playerPixCenter.y - Emid.y : Emid.y - playerPixCenter.y;
         float dx = std::fabs(playerPixCenter.x - Emid.x);
         float dy = std::fabs(playerPixCenter.y - Emid.y);
-        // Add in randomness and such for good pathfinding current system is temporary
+        // Add in randomness and such for good pathfinding, current system is temporary
         if(inRangeX && inRangeY){
             currentState = state::Walking;
         }
@@ -62,18 +66,31 @@ struct enemy{
         if(inRangeX && inRangeY) return true;
         else return false;
     }
-    enemy(Rectangle Hbox, int HP, Type t = Type::generic)
-    : Hbox(Hbox), HP(HP), kind(t) {
-    static constexpr float speedLUT[] = {90.0f, 20.0f, 50.0f};
-    speed = speedLUT[static_cast<uint8_t>(kind)];
-    }
+    enemy(Vector2 pos, int hp, Type t, float s)
+    : Hbox{}, MAXHP(hp), HP(hp), kind(t)
+{
+    const size_t idx = static_cast<size_t>(kind);
+    // Constant LUT 
+    static constexpr float   speedLUT[]  = { 90.f,  20.f,  50.f };
+    static constexpr Vector2 sizeLUT []  = { {10.f,10.f}, {20.f,20.f}, {25.f,25.f} };
+    static constexpr float   delayLUT[]  = { 30.f,  40.f,  50.f };
+    static constexpr float   rangeLUT[]  = { 50.f, 100.f,  25.f };
+
+    //Determined values from tables above
+    speed    = speedLUT[idx] * s;
+    cooldown = delayLUT[idx] * s;
+    range    = rangeLUT[idx] * s;
+
+    // Hitbox calc
+    Vector2 sz = { sizeLUT[idx].x * s, sizeLUT[idx].y * s };
+    Hbox = { pos.x, pos.y, sz.x, sz.y };
+}
 };
 std::vector<enemy> enemies;
-void spawnEnemy(Vector2 pos, float w, float h, int HP, enemy::Type t = enemy::Type::generic){ //Add into level initialization and other stuff.
-    Rectangle Hbox = {pos.x, pos.y, w, h};
-    enemies.emplace_back(Hbox, HP, t);
+void spawnEnemy(Vector2 pos, int HP, enemy::Type t, float s){ //Add into level initialization and other stuff.
+    enemies.emplace_back(pos, HP, t, s);
 }
-void spawnLogic(Vector2 pos, float w, float h, int HP, int ID){
+void spawnLogic(Vector2 pos, int HP, int ID, float scale){
     enemy::Type t;
     switch(ID){
         case(0): t = enemy::Type::generic; break;
@@ -81,13 +98,13 @@ void spawnLogic(Vector2 pos, float w, float h, int HP, int ID){
         case(2): t = enemy::Type::Bob; break;
         default: t = enemy::Type::generic; break;
     }
-    spawnEnemy(pos, w, h, 10, t);
+    spawnEnemy(pos, HP, t, scale);
 }
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
-    static const float tileSize = 16 * scale;
+    float tileSize = 16 * scale;
     for(auto& e : enemies){
-        e.determineState(75.0f * scale, playerCenter);
+        e.determineState(playerCenter);
         Rectangle f = e.Hbox;
         switch(e.currentState){
             case(enemy::Walking):
