@@ -145,8 +145,8 @@ void readlvlData(Level& lvl){
             switch(lvl.rows[y][x]){
                 case('p'): lvl.playerPos = {(float)x, (float)y}; lvl.rows[y][x]='.'; break;
                 //Enemies below
-                case('t'): lvl.rows[y][x]='.';turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
-                case('e'): lvl.rows[y][x]='.';genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                case('t'): lvl.rows[y][x] = '.'; turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                case('e'): lvl.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
             }
 }
 struct Enemy{

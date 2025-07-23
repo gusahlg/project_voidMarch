@@ -102,7 +102,8 @@ void spawnLogic(Vector2 pos, int HP, int ID, float scale){
 }
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
-    float tileSize = 16 * scale;
+    float tileSize = 16.0f * std::max(scale, 0.0001f);
+    assert(tileSize > 0.0f && "global scale not initialised yet");
     for(auto& e : enemies){
         e.determineState(playerCenter);
         Rectangle f = e.Hbox;
