@@ -1,11 +1,12 @@
 // for game.cpp and sprites.
 #pragma once
-extern bool raceSPACELIZARD;
-extern bool raceVOIDCRAWLER;
-extern bool raceMECHA_SAPIEN;
-extern bool raceHUMAN;
+// Output from the select that can then be used in the game:
+extern bool raceSPACELIZARD = true;
+extern bool raceVOIDCRAWLER = false;
+extern bool raceMECHA_SAPIEN = false;
+extern bool raceHUMAN = false;
 
-extern bool profNECROMANCER;
-extern bool profCRAFTSMAN;
-extern bool profWIZARD;
-extern bool profDUALIST;
+extern bool profNECROMANCER = true;
+extern bool profCRAFTSMAN = false;
+extern bool profWIZARD = false;
+extern bool profDUALIST = false;

@@ -182,7 +182,6 @@ void loadEnemies(Level& lvl, float s){
         spawnLogic(pos, 10, 1, scale);
     }
 }
-// ── spriteManager (your original ladder) ───────────────────────
 void spriteManager(){
     if(raceSPACELIZARD){
         loadSpaceLizard();

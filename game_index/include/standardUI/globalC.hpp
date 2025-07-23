@@ -1,3 +1,2 @@
-#include <raylib.h>
-#include <iostream>
+#pragma once
 extern Color Ctext;

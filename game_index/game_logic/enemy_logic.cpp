@@ -11,7 +11,6 @@
 #include <cstdint>
 #include "../include/game/global_player.hpp" // Player stats, all in one place.
 #include "../include/global/scale.hpp"
-#include <cassert>
 struct enemy{
     Rectangle Hbox;
     int MAXHP; //Maximum HP.
@@ -103,7 +102,6 @@ void spawnLogic(Vector2 pos, int HP, int ID, float scale){
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
     float tileSize = 16.0f * std::max(scale, 0.0001f);
-    assert(tileSize > 0.0f && "global scale not initialised yet");
     for(auto& e : enemies){
         e.determineState(playerCenter);
         Rectangle f = e.Hbox;
