@@ -428,6 +428,11 @@ void loadLvl2(){
     }
     gameLoop(lvl2);
 }
+// Will determine what level gets loaded and more.
+void gameStateEventHandler(){
+    // For now only loads lvl 1 for simplicity
+    loadLvl1();
+}
 void movementEventHandler(Level& lvl, float dt){
     float x = 0.0f;
     float y = 0.0f;
