@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <iostream>
 #include <cstdint>
+#include <vector>
 // Provides standard ui to other files:
 #include "include/standardUI/globalC.hpp"
 // Provides gameloop functions to int main:
@@ -24,7 +25,20 @@ int main(){
         BeginDrawing();
         switch(currentScreen){
             case screen::Main: // Do da load main stuff.
-            case screen::Select: // Do da load select stuff.
+            case screen::Select:
+                static bool loaded = false;
+                if(!loaded){
+                    std::vector<Rectangle> btns;
+                    // Make da buttons
+                    Texture tex; // Add an actual texture at some point
+                    btns.emplace_back(Rectangle{0, 0, 100, 100});
+                    btns.emplace_back(Rectangle{100, 100, 100, 100});
+                    btns.emplace_back(Rectangle{200, 200, 100, 100});
+                    btns.emplace_back(Rectangle{300, 300, 100, 100});
+                    BtnAssembly(btns, tex);
+                    loaded = true;
+                }
+                updateButtons(mousePos);
             case screen::Game: gameStateEventHandler();
         }
         EndDrawing();
