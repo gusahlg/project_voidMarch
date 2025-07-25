@@ -12,8 +12,8 @@ Vector2 mousePos;
 Color Ctext = {160, 160, 160, 255};
 Color spaceBlue = {25, 70, 240, 255};
 // Use to determine what to load:
-enum screen : std::uint8_t {Main, Select, Game};
-screen currentScreen;
+enum class screen : std::uint8_t {Main, Select, Game};
+screen currentScreen = screen::Select;
 int main(){
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");
     Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
@@ -24,7 +24,9 @@ int main(){
         mousePos = GetMousePosition();
         BeginDrawing();
         switch(currentScreen){
-            case screen::Main: // Do da load main stuff.
+            case screen::Main: 
+                // Do da load main stuff.
+                break;
             case screen::Select:
                 static bool loaded = false;
                 if(!loaded){
@@ -39,7 +41,10 @@ int main(){
                     loaded = true;
                 }
                 updateButtons(mousePos);
-            case screen::Game: gameStateEventHandler();
+                break;
+            case screen::Game: 
+                gameStateEventHandler();
+                break;
         }
         EndDrawing();
     }

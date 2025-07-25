@@ -23,7 +23,10 @@ struct button{
     state currentState = state::Inactive;
     void determineState(Vector2 mousePos){
         bool inside = mousePos.x - rect.x < rect.width && mousePos.y - rect.y < rect.height;
-        if(!inside) return;
+        if(!inside){
+            currentState = state::Inactive;
+            return;
+        }
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
             currentState = state::Pressed;
         }
@@ -54,7 +57,6 @@ void updateButtons(Vector2 mousePos){
             case b.state::Clicked: /*Do something*/ break;
         }
         b.drawBtn();
-        b.currentState = b.state::Inactive;
     }
 }
 void BtnAssembly(std::vector<Rectangle> rects, Texture texture){
