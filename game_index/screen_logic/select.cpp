@@ -22,18 +22,16 @@ struct button{
     enum state : std::uint8_t{Inactive, Hover, Pressed, Clicked};
     state currentState = state::Inactive;
     void determineState(Vector2 mousePos){
-        bool inside = mousePos.x - rect.x < rect.width && mousePos.y - rect.y < rect.height;
-        if(!inside){
-            currentState = state::Inactive;
-            return;
+        if(CheckCollisionPointRec(mousePos, rect)){
+            if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                currentState = state::Pressed;
+            }
+            else if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT)){
+                currentState = state::Clicked;
+            }
+            else currentState = state::Hover;
         }
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-            currentState = state::Pressed;
-        }
-        else if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT)){
-            currentState = state::Clicked;
-        }
-        else currentState = state::Hover;
+        else currentState = state::Inactive;
     }
     void drawBtn(){
         //Change to use textures later
