@@ -23,11 +23,10 @@ class Button{
             }
             else state = State::Hover;
         }
-        void draw() 
-            const{
-                const Texture2D& tex = state == State::Hover ? hover : state == State::Pressed ? pressed : idle;
+        void draw() const{
+            const Texture2D tex = state == State::Hover ? hover : state == State::Pressed ? pressed : idle;
             DrawTextureRec(tex, {0,0, bounds.width, bounds.height}, {bounds.x, bounds.y}, WHITE);
-            }
+        }
     private:
         enum class State : std::uint8_t { Idle, Hover, Pressed, Clicked };
         Rectangle bounds;
