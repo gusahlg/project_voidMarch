@@ -8,6 +8,8 @@
 #include "include/game/loadGame.hpp"
 // Select button output:
 #include "include/screen_load/select_main.hpp"
+// Gives easy access to all standard ui features:
+#include "include/standardUI/manager.hpp"
 Vector2 mousePos;
 Color Ctext = {160, 160, 160, 255};
 Color spaceBlue = {25, 70, 240, 255};
@@ -30,17 +32,10 @@ int main(){
             case screen::Select:
                 static bool loaded = false;
                 if(!loaded){
-                    std::vector<Rectangle> btns;
-                    // Make da buttons
-                    Texture tex; // Add an actual texture at some point
-                    btns.emplace_back(Rectangle{0, 0, 100, 100});
-                    btns.emplace_back(Rectangle{100, 0, 100, 100});
-                    btns.emplace_back(Rectangle{200, 0, 100, 100});
-                    btns.emplace_back(Rectangle{300, 0, 100, 100});
-                    BtnAssembly(btns, tex);
+                    // Load 
                     loaded = true;
                 }
-                updateButtons(mousePos);
+                // Update
                 break;
             case screen::Game: 
                 gameStateEventHandler();
