@@ -34,9 +34,9 @@ int main(){
                     // Make da buttons
                     Texture tex; // Add an actual texture at some point
                     btns.emplace_back(Rectangle{0, 0, 100, 100});
-                    btns.emplace_back(Rectangle{100, 100, 100, 100});
-                    btns.emplace_back(Rectangle{200, 200, 100, 100});
-                    btns.emplace_back(Rectangle{300, 300, 100, 100});
+                    btns.emplace_back(Rectangle{100, 0, 100, 100});
+                    btns.emplace_back(Rectangle{200, 0, 100, 100});
+                    btns.emplace_back(Rectangle{300, 0, 100, 100});
                     BtnAssembly(btns, tex);
                     loaded = true;
                 }
