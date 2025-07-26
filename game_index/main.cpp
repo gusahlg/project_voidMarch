@@ -15,7 +15,7 @@ Color Ctext = {160, 160, 160, 255};
 Color spaceBlue = {25, 70, 240, 255};
 // Use to determine what to load:
 enum class screen : std::uint8_t {Main, Select, Game};
-screen currentScreen = screen::Select;
+screen currentScreen = screen::Game;
 int main(){
     InitWindow(1280, 720, "PROJECT: VOIDMARCH");
     Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
@@ -30,12 +30,7 @@ int main(){
                 // Do da load main stuff.
                 break;
             case screen::Select:
-                static bool loaded = false;
-                if(!loaded){
-                    // Load 
-                    loaded = true;
-                }
-                // Update
+                loadSelectScreen();
                 break;
             case screen::Game: 
                 gameStateEventHandler();
