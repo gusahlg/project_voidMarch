@@ -8,28 +8,35 @@
 #include "../include/screen_load/select_main.hpp"
 // Gives easy access to all standard ui features:
 #include "../include/standardUI/manager.hpp"
-// The files local ui manager:
+// The files' local ui manager:
 ui::Manager selectBtnManager;
 bool raceSPACELIZARD = false;
-bool raceVOIDCRAWLER = false;
+bool raceVOIDCRAWLER = true;
 bool raceMECHA_SAPIEN = false;
-bool raceHUMAN = true;
+bool raceHUMAN = false;
 
 bool profNECROMANCER = true;
 bool profCRAFTSMAN = false;
 bool profWIZARD = false;
 bool profDUALIST = false;
-enum class prof : std::uint8_t{Necromancer, Craftsman, Wizard, Dualist};
-prof currentProf;
-enum class race : std::uint8_t{Spacelizard, Voidcrawler, Mecha_sapien, Human};
-race currentRac; // Can't be named 'currentRace' since that is the same as another enum in game.cpp, will fix at some point.
+enum class Prof : std::uint8_t{Necromancer, Craftsman, Wizard, Dualist};
+Prof currentProf;
+enum class Race : std::uint8_t{Spacelizard, Voidcrawler, Mecha_sapien, Human};
+Race currentRace; // Can't be named 'currentRace' since that is the same as another enum in game.cpp, will fix at some point.
 void selectPreLoadTasks(){
     static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
     static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
     static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
-    selectBtnManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},
-                                   Idle, Hover, Pressed,
-                                   []{ToggleFullscreen();});
+    // Race select buttons
+    selectBtnManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;});
+    selectBtnManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;});
+    selectBtnManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;});
+    selectBtnManager.emplaceButton(Rectangle{150, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Human;});
+    // Proffesion select buttons
+    selectBtnManager.emplaceButton(Rectangle{0, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Necromancer;});
+    selectBtnManager.emplaceButton(Rectangle{50, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Craftsman;});
+    selectBtnManager.emplaceButton(Rectangle{100, 50, float(Idle.width), float(Idle.height)}, Idle, Hover, Pressed,[]{currentProf = Prof::Wizard;});
+    selectBtnManager.emplaceButton(Rectangle{150, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Dualist;});
 }
 void loadSelectScreen(Vector2 mousePos){
     // Update and initialise buttons here please.
