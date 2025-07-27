@@ -32,7 +32,6 @@ constexpr float SQRT2 = 0.70710678119;
 Level lvl1;
 Level lvl2;
 Direction currentDir;
-raceP currentRace;
 weapon equipped;
 constexpr float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
@@ -182,22 +181,11 @@ void loadEnemies(Level& lvl, float s){
     }
 }
 void spriteManager(){
-    if(raceSPACELIZARD){
-        loadSpaceLizard();
-        currentRace = raceP::spaceLizard;
-    }
-    else if(raceVOIDCRAWLER){
-        loadVoid_crawler();
-        loadRollTex();
-        currentRace = raceP::voidCrawler;
-    }
-    else if(raceMECHA_SAPIEN){
-
-        currentRace = raceP::mechaSapien;
-    }
-    else{
-        loadHuman();
-        currentRace = raceP::human;
+    switch(currentRace){
+        case Race::Spacelizard: loadSpaceLizard(); break;
+        case Race::Voidcrawler: loadVoid_crawler();loadRollTex(); break;
+        case Race::Mecha_sapien: break;
+        case Race::Human: loadHuman(); break;
     }
 }
 bool rollWalkSwitch = false;
@@ -240,17 +228,17 @@ void inputEventHandler(Level& lvl, float dt){
         currentFrame=0;animTimer=0.0f;
         if(currentDir == Direction::Left || currentDir == Direction::DownLeft || currentDir == Direction::UpLeft){
             switch(currentRace){
-                case(raceP::spaceLizard): playerTex = SfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
-                case(raceP::voidCrawler): playerTex = VfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
-                case(raceP::human): playerTex = HfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
+                case(Race::Spacelizard): playerTex = SfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
+                case(Race::Voidcrawler): playerTex = VfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
+                case(Race::Human): playerTex = HfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
                 //Add mechasapien
             }
         }
         else{
             switch(currentRace){
-                case(raceP::spaceLizard): playerTex = SfacingDownRight.pos; currentDir = Direction::DownRight; break;
-                case(raceP::voidCrawler): playerTex = VfacingDownRight.pos; currentDir = Direction::DownRight; break;
-                case(raceP::human): playerTex = HfacingDownRight.pos; currentDir = Direction::DownRight; break;
+                case(Race::Spacelizard): playerTex = SfacingDownRight.pos; currentDir = Direction::DownRight; break;
+                case(Race::Voidcrawler): playerTex = VfacingDownRight.pos; currentDir = Direction::DownRight; break;
+                case(Race::Human): playerTex = HfacingDownRight.pos; currentDir = Direction::DownRight; break;
                 //Add mechasapien
             }
         }
@@ -463,13 +451,13 @@ void movementEventHandler(Level& lvl, float dt){
     switch(currentDir){
         case(Up):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingUp.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingUp.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingUp.pos;
                     break;
                 default:
@@ -479,13 +467,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         case(Down):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingDown.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingDown.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingDown.pos;
                     break;
                 default:
@@ -495,13 +483,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         case(Left):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingDownLeft.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingDownLeft.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingDownLeft.pos;
                     break;
                 default:
@@ -511,13 +499,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         case(Right):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingDownRight.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingDownRight.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingDownRight.pos;
                     break;
                 default:
@@ -527,13 +515,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         case(UpLeft):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingUpLeft.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingUpLeft.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingUpLeft.pos;
                     break;
                 default:
@@ -543,13 +531,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         case(UpRight):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingUpRight.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingUpRight.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingUpRight.pos;
                     break;
                 default:
@@ -559,13 +547,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         case(DownLeft):
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingDownLeft.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingDownLeft.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingDownLeft.pos;
                     break;
                 default:
@@ -575,13 +563,13 @@ void movementEventHandler(Level& lvl, float dt){
             break;
         default:
             switch(currentRace){
-                case(voidCrawler):
+                case(Race::Voidcrawler):
                     playerTex = VfacingDownRight.pos;
                     break;
-                case(spaceLizard):
+                case(Race::Spacelizard):
                     playerTex = SfacingDownRight.pos;
                     break;
-                case(mechaSapien):
+                case(Race::Mecha_sapien):
                     //playerTex = MfacingDownRight.pos;
                     break;
                 default:

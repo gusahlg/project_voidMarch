@@ -1,12 +1,8 @@
 // for game.cpp and sprites.
 #pragma once
+#include <cstdint>
 // Output from the select that can then be used in the game:
-extern bool raceSPACELIZARD;
-extern bool raceVOIDCRAWLER;
-extern bool raceMECHA_SAPIEN;
-extern bool raceHUMAN;
-
-extern bool profNECROMANCER;
-extern bool profCRAFTSMAN;
-extern bool profWIZARD;
-extern bool profDUALIST;
+enum class Prof : std::uint8_t{Necromancer, Craftsman, Wizard, Dualist};
+extern Prof currentProf;
+enum class Race : std::uint8_t{Spacelizard, Voidcrawler, Mecha_sapien, Human};
+extern Race currentRace;

@@ -10,19 +10,8 @@
 #include "../include/standardUI/manager.hpp"
 // The files' local ui manager:
 ui::Manager selectBtnManager;
-bool raceSPACELIZARD = false;
-bool raceVOIDCRAWLER = true;
-bool raceMECHA_SAPIEN = false;
-bool raceHUMAN = false;
-
-bool profNECROMANCER = true;
-bool profCRAFTSMAN = false;
-bool profWIZARD = false;
-bool profDUALIST = false;
-enum class Prof : std::uint8_t{Necromancer, Craftsman, Wizard, Dualist};
+Race currentRace;
 Prof currentProf;
-enum class Race : std::uint8_t{Spacelizard, Voidcrawler, Mecha_sapien, Human};
-Race currentRace; // Can't be named 'currentRace' since that is the same as another enum in game.cpp, will fix at some point.
 void selectPreLoadTasks(){
     static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
     static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");

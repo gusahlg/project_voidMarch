@@ -34,7 +34,6 @@ void updateRoll(Level& lvl, float dt){
     float y = lvl.playerPos.y;
     float xofset = 0.0f;
     float yofset = 0.0f;
-
     switch(currentDir){
         case Up:
             if (y <= Oy - rollDistance) {
