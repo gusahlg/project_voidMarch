@@ -9,31 +9,35 @@
 // Gives easy access to all standard ui features:
 #include "../include/standardUI/manager.hpp"
 // The files' local ui manager:
-ui::Manager selectBtnManager;
+ui::Manager selectManager;
 Race currentRace;
 Prof currentProf;
-void selectPreLoadTasks(){
+void selectPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
     static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
     static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
     // Race select buttons
-    selectBtnManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;});
-    selectBtnManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;});
-    selectBtnManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;});
-    selectBtnManager.emplaceButton(Rectangle{150, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Human;});
+    selectManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;});
+    selectManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;});
+    selectManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;});
+    selectManager.emplaceButton(Rectangle{150, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Human;});
     // Proffesion select buttons
-    selectBtnManager.emplaceButton(Rectangle{0, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Necromancer;});
-    selectBtnManager.emplaceButton(Rectangle{50, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Craftsman;});
-    selectBtnManager.emplaceButton(Rectangle{100, 50, float(Idle.width), float(Idle.height)}, Idle, Hover, Pressed,[]{currentProf = Prof::Wizard;});
-    selectBtnManager.emplaceButton(Rectangle{150, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Dualist;});
+    selectManager.emplaceButton(Rectangle{0, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Necromancer;});
+    selectManager.emplaceButton(Rectangle{50, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Craftsman;});
+    selectManager.emplaceButton(Rectangle{100, 50, float(Idle.width), float(Idle.height)}, Idle, Hover, Pressed,[]{currentProf = Prof::Wizard;});
+    selectManager.emplaceButton(Rectangle{150, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Dualist;});
+    // Create background:
+    selectManager.setupHelper(Idle, []{DrawRectangle(100, 50, 500, 500, YELLOW);});
+    selectManager.Helper.setupScale(screenWidth, screenHeight);
 }
-void loadSelectScreen(Vector2 mousePos){
-    // Update and initialise buttons here please.
+void loadSelectScreen(Vector2 mousePos, float screenWidth, float screenHeight){
     static bool loaded = false;
     if(!loaded){
-        selectPreLoadTasks();
+        selectPreLoadTasks(screenWidth, screenHeight);
         loaded = true;
     }
-    selectBtnManager.updateAll(mousePos);
-    selectBtnManager.drawAll();
+    selectManager.updateAll(mousePos);
+    selectManager.drawAll();
+    selectManager.Helper.updateFuncs();
+    selectManager.Helper.draw();
 }

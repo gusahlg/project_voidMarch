@@ -1,4 +1,3 @@
 #pragma once
 #include <raylib.h>
-#include <vector>
-void loadSelectScreen(Vector2 mousePos);
+void loadSelectScreen(Vector2 mousePos, float screenWidth, float screenHeight);

@@ -16,8 +16,10 @@ Color spaceBlue = {25, 70, 240, 255};
 // Use to determine what to load:
 enum class screen : std::uint8_t {Main, Select, Game};
 screen currentScreen = screen::Select;
+int screenWidth = 1280;
+int screenHeight = 720;
 int main(){
-    InitWindow(1280, 720, "PROJECT: VOIDMARCH");
+    InitWindow(screenWidth, screenHeight, "PROJECT: VOIDMARCH");
     SetTargetFPS(100);
     Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
     SetWindowIcon(icon);
@@ -31,12 +33,13 @@ int main(){
                 // Do da load main stuff.
                 break;
             case screen::Select:
-                loadSelectScreen(mousePos);
+                loadSelectScreen(mousePos, screenWidth, screenHeight);
                 break;
             case screen::Game: 
                 gameStateEventHandler();
                 break;
         }
+        ClearBackground(BLACK);
         EndDrawing();
     }
     CloseWindow();

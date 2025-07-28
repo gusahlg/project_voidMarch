@@ -27,6 +27,9 @@ class Button{
             const Texture2D tex = state == State::Hover ? hover : state == State::Pressed ? pressed : idle;
             DrawTextureRec(tex, {0,0, bounds.width, bounds.height}, {bounds.x, bounds.y}, WHITE);
         }
+        void drawOutline() const{
+            DrawRectangleLines(bounds.x, bounds.y, bounds.width, bounds.height, RED);
+        }
     private:
         enum class State : std::uint8_t { Idle, Hover, Pressed, Clicked };
         Rectangle bounds;
