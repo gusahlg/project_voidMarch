@@ -10,6 +10,7 @@
 #include "../include/standardUI/manager.hpp"
 // The files' local ui manager:
 ui::Manager selectManager;
+using DP = ui::Button::DisplayDependency;
 Race currentRace;
 Prof currentProf;
 void selectPreLoadTasks(float screenWidth, float screenHeight){
@@ -17,9 +18,9 @@ void selectPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
     static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
     // Race select buttons
-    selectManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;});
-    selectManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;});
-    selectManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;});
+    selectManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;}, "Bert", DP::None);
+    selectManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;}, "Sighurt", DP::Previous);
+    selectManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;}, "Gertrud", DP::Custom);
     selectManager.emplaceButton(Rectangle{150, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Human;});
     // Proffesion select buttons
     selectManager.emplaceButton(Rectangle{0, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Necromancer;});

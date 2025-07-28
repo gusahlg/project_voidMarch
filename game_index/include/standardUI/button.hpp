@@ -9,9 +9,9 @@ class Button{
         using Action = std::function<void()>;
         Button(Rectangle bounds,
             Texture2D idle, Texture2D hover, Texture2D pressed,
-            Action onClick = nullptr)
+            Action onClick = nullptr, std::string name = NULL, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None)
         : bounds(bounds), idle(idle), hover(hover), pressed(pressed), 
-          onClick(std::move(onClick)) {}
+          onClick(std::move(onClick)), name(name), DependencyType(dependency) {}
 
         void update(Vector2 mouse){
             bool inside = CheckCollisionPointRec(mouse, bounds);
@@ -30,8 +30,11 @@ class Button{
         void drawOutline() const{
             DrawRectangleLines(bounds.x, bounds.y, bounds.width, bounds.height, RED);
         }
+        enum class DisplayDependency : std::uint8_t {None, Previous, Custom};
     private:
-        enum class State : std::uint8_t { Idle, Hover, Pressed, Clicked };
+        std::string name;
+        enum class State : std::uint8_t {Idle, Hover, Pressed, Clicked};
+        DisplayDependency DependencyType = DisplayDependency::None;
         Rectangle bounds;
         Texture2D idle, hover, pressed;
         Action onClick;
