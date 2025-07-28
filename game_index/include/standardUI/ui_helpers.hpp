@@ -11,6 +11,8 @@ class UI_Helper{
         using Action = std::function<void()>;
         UI_Helper(Texture2D BG, Action action = nullptr)
         : background(BG), func(action) {}
+        UI_Helper()
+        : background{}, func(nullptr) {}
         void setupScale(float screenWidth, float screenHeight){
             float sizeMultiplier = screenHeight/background.height;
             drawArea = {(screenWidth - background.width * sizeMultiplier) / 2.0f, 0, background.width * sizeMultiplier, background.height * sizeMultiplier};

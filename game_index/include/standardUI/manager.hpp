@@ -28,7 +28,8 @@ class Manager{
             buttons.clear();
         }
         // Texture2D and func vector.
-        UI_Helper& setupHelper(Texture2D background, std::function<void()>){return Helper;}
+        UI_Helper& setupHelper(Texture2D background, std::function<void()> action = nullptr){Helper = UI_Helper{background, std::move(action)};
+        return Helper;}
         UI_Helper Helper;
     private:
         std::vector<Button> buttons;
