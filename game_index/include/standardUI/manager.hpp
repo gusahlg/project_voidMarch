@@ -18,26 +18,44 @@ class Manager{
         }
         void updateAll(Vector2 mouse){
             for(auto& b : buttons){
-                if(b.DependencyType == DP::Custom){
-                    for(const auto& p : buttons){
-                        if(b.targetName == p.name && p.state == State::Hover || p.state == State::Pressed){
-                            b.update(mouse);
+                switch(b.DependencyType){
+                    case DP::OnHover:
+                        for(const auto& p : buttons){
+                            if(b.targetName == p.name && p.state == State::Hover || p.state == State::Pressed){
+                                b.update(mouse);
+                            }
                         }
-                    }
+                        break;
+                    case DP::OnClick:
+                        for(const auto& p : buttons){
+                            if(b.targetName == p.name && p.toggled){
+                                b.update(mouse);
+                            }
+                        }
+                        break;
+                    default: b.update(mouse); break;
                 }
-                else b.update(mouse);
             }
         }  
         void drawAll() const{
             for(auto& b : buttons){
-                if(b.DependencyType == DP::Custom){
-                    for(const auto& p : buttons){
-                        if(b.targetName == p.name && p.state == State::Hover || p.state == State::Pressed){
-                            b.draw();
+                switch(b.DependencyType){
+                    case DP::OnHover:
+                        for(const auto& p : buttons){
+                            if(b.targetName == p.name && p.state == State::Hover || p.state == State::Pressed){
+                                b.draw();
+                            }
                         }
-                    }
+                        break;
+                    case DP::OnClick:
+                        for(const auto& p : buttons){
+                            if(b.targetName == p.name && p.toggled){
+                                b.draw();
+                            }
+                        }
+                        break;
+                    default: b.draw(); break;
                 }
-                else b.draw();
             }
         }
         // For more easily seing borders, great for debugging.

@@ -7,7 +7,7 @@ namespace ui{
 class Button{
     public:
         using Action = std::function<void()>;
-        enum class DisplayDependency : std::uint8_t {None, Previous, Custom};
+        enum class DisplayDependency : std::uint8_t {None, OnHover, OnClick};
         Button(Rectangle bounds,
             Texture2D idle, Texture2D hover, Texture2D pressed,
             Action onClick = nullptr, std::string name = {}, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None, std::string targetName = {})
@@ -20,6 +20,8 @@ class Button{
             else if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) state = State::Pressed;
             else if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && state == State::Pressed){
                 state = State::Clicked;
+                if(toggled) toggled = false;
+                else toggled = true;
                 if(onClick) onClick();
             }
             else state = State::Hover;
@@ -36,6 +38,7 @@ class Button{
         std::string targetName; // Used for checking when to update when set to custom dependency.
         enum class State : std::uint8_t {Idle, Hover, Pressed, Clicked};
         State state = State::Idle;
+        bool toggled = false;
     private:
         Rectangle bounds;
         Texture2D idle, hover, pressed;

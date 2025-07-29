@@ -18,9 +18,9 @@ void selectPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
     static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
     // Race select buttons
-    selectManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;}, "Bert", DP::None);
-    selectManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;}, "Sighurt", DP::None);
-    selectManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;}, "Gertrud", DP::Custom, "Sighurt");
+    selectManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;}, "Bert");
+    selectManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;}, "Sighurt", DP::OnHover, "Bert");
+    selectManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;}, "Gertrud", DP::OnClick, "Sighurt");
     selectManager.emplaceButton(Rectangle{150, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Human;});
     // Proffesion select buttons
     selectManager.emplaceButton(Rectangle{0, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Necromancer;});
