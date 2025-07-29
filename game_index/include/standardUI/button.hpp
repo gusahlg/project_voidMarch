@@ -9,9 +9,9 @@ class Button{
         using Action = std::function<void()>;
         Button(Rectangle bounds,
             Texture2D idle, Texture2D hover, Texture2D pressed,
-            Action onClick = nullptr, std::string name = NULL, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None)
+            Action onClick = nullptr, std::string name = NULL, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None, std::string targetName = NULL)
         : bounds(bounds), idle(idle), hover(hover), pressed(pressed), 
-          onClick(std::move(onClick)), name(name), DependencyType(dependency) {}
+          onClick(std::move(onClick)), name(name), DependencyType(dependency), targetName(targetName) {}
 
         void update(Vector2 mouse){
             bool inside = CheckCollisionPointRec(mouse, bounds);
@@ -31,14 +31,15 @@ class Button{
             DrawRectangleLines(bounds.x, bounds.y, bounds.width, bounds.height, RED);
         }
         enum class DisplayDependency : std::uint8_t {None, Previous, Custom};
-    private:
-        std::string name;
-        enum class State : std::uint8_t {Idle, Hover, Pressed, Clicked};
         DisplayDependency DependencyType = DisplayDependency::None;
+        std::string name;
+        std::string targetName; // Used for checking when to update when set to custom dependency.
+        enum class State : std::uint8_t {Idle, Hover, Pressed, Clicked};
+        State state = State::Idle;
+    private:
         Rectangle bounds;
         Texture2D idle, hover, pressed;
         Action onClick;
-        State state = State::Idle;
 };
 
 
