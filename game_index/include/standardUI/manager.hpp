@@ -20,9 +20,8 @@ class Manager{
             for(auto& b : buttons){
                 if(b.DependencyType == DP::Custom){
                     for(const auto& p : buttons){
-                        if(b.targetName == p.name && p.state == State::Hover){
+                        if(b.targetName == p.name && p.state == State::Hover || p.state == State::Pressed){
                             b.update(mouse);
-                            return;
                         }
                     }
                 }
@@ -33,9 +32,8 @@ class Manager{
             for(auto& b : buttons){
                 if(b.DependencyType == DP::Custom){
                     for(const auto& p : buttons){
-                        if(b.targetName == p.name && p.state == State::Hover){
+                        if(b.targetName == p.name && p.state == State::Hover || p.state == State::Pressed){
                             b.draw();
-                            return;
                         }
                     }
                 }
