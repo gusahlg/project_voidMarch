@@ -15,7 +15,7 @@ Color Ctext = {160, 160, 160, 255};
 Color spaceBlue = {25, 70, 240, 255};
 // Use to determine what to load:
 enum class screen : std::uint8_t {Main, Select, Game};
-screen currentScreen = screen::Select;
+screen currentScreen = screen::Game;
 int screenWidth = 1280;
 int screenHeight = 720;
 int main(){
