@@ -28,6 +28,7 @@ int main(){
     while(!WindowShouldClose()){
         mousePos = GetMousePosition();
         BeginDrawing();
+        ClearBackground(BLACK);
         switch(currentScreen){
             case screen::Main: 
                 // Do da load main stuff.
@@ -39,7 +40,6 @@ int main(){
                 gameStateEventHandler();
                 break;
         }
-        ClearBackground(BLACK);
         EndDrawing();
     }
     CloseWindow();

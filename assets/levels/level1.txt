@@ -84,7 +84,6 @@
 ---------------------------#................#--------------------------------------------------
 ---------------------------#................#--------------------------------------------------
 ---------------------------##################--------------------------------------------------
-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 
 a = avgrund, man ska dasha över
 e = enemy
@@ -92,3 +91,7 @@ k = key
 t = tillfallig vagg (haha noPe it's da turtlemaster)
 h = stalle dar arrows hittar
 d = låst dörr
+1 = vägg uPP
+2 = vägg höger
+3 = vägg ner
+4 = vägg vänster

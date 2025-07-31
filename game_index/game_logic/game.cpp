@@ -13,13 +13,22 @@
 #include "../include/game/global_player.hpp" // Player stats, all in one place.
 // Cool idea: Add in so that the constructor takes in the current level as input to determine which variations to use.
 struct TileSet{
-    Texture2D wall;
+    Texture2D WallUp;
+    Texture2D WallDown;
+    Texture2D WallUpLeft;
+    Texture2D WallUpRight;
+    Texture2D WallDownLeft;
+    Texture2D WallDownRight;
+    Texture2D WallLeft;
+    Texture2D WallRight;
     Texture2D floor;
     //Add more if needed.
-    TileSet(Texture2D wall, Texture2D floor)
-    : wall(wall), floor(floor) {}
+    TileSet(Texture2D WallUp, Texture2D WallDown, Texture2D WallUpLeft, Texture2D WallUpRight, Texture2D WallDownLeft, 
+            Texture2D WallDownRight, Texture2D WallLeft, Texture2D WallRight, Texture2D floor)
+    : WallUp(WallUp), WallDown(WallDown), WallUpLeft(WallUpLeft), WallUpRight(WallUpRight), WallDownLeft(WallDownLeft), 
+      WallDownRight(WallDownRight), WallLeft(WallLeft), WallRight(WallRight), floor(floor) {}
 };
-TileSet tiles{/*wall =*/ {}, /*floor =*/ {} };
+TileSet tiles{/*wall =*/ {}, /*floor =*/ {}, {}, {}, {}, {}, {}, {}, {}};
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
@@ -49,7 +58,7 @@ Camera2D cam{};
 const int TILE = 16;
 void loadTileTextures(){
     const std::vector<std::pair<const char*, Texture2D*>> todo = {
-        {"assets/graphics/level_graphics/tiles/left.png",         &tiles.wall},
+        {"assets/graphics/level_graphics/tiles/walls/left.png",   &tiles.WallLeft},
         {"assets/graphics/level_graphics/tiles/stdbackground.png",&tiles.floor}
         // Add more textures here and in struct.
     };

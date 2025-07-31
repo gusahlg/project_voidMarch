@@ -11,7 +11,7 @@
 // The files' local ui manager:
 ui::Manager selectManager;
 using DP = ui::Button::DisplayDependency;
-Race currentRace;
+Race currentRace = Race::Spacelizard;
 Prof currentProf;
 void selectPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
