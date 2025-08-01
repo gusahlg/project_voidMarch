@@ -21,14 +21,15 @@ struct TileSet{
     Texture2D WallDownRight;
     Texture2D WallLeft;
     Texture2D WallRight;
+    Texture2D WallFull;
     Texture2D floor;
     //Add more if needed.
     TileSet(Texture2D WallUp, Texture2D WallDown, Texture2D WallUpLeft, Texture2D WallUpRight, Texture2D WallDownLeft, 
-            Texture2D WallDownRight, Texture2D WallLeft, Texture2D WallRight, Texture2D floor)
+            Texture2D WallDownRight, Texture2D WallLeft, Texture2D WallRight, Texture2D WallFull, Texture2D floor)
     : WallUp(WallUp), WallDown(WallDown), WallUpLeft(WallUpLeft), WallUpRight(WallUpRight), WallDownLeft(WallDownLeft), 
-      WallDownRight(WallDownRight), WallLeft(WallLeft), WallRight(WallRight), floor(floor) {}
+      WallDownRight(WallDownRight), WallLeft(WallLeft), WallRight(WallRight), WallFull(WallFull), floor(floor) {}
 };
-TileSet tiles{/*wall =*/ {}, /*floor =*/ {}, {}, {}, {}, {}, {}, {}, {}};
+TileSet tiles{/*wall =*/ {}, /*floor =*/ {}, {}, {}, {}, {}, {}, {}, {}, {}};
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
@@ -58,8 +59,16 @@ Camera2D cam{};
 const int TILE = 16;
 void loadTileTextures(){
     const std::vector<std::pair<const char*, Texture2D*>> todo = {
-        {"assets/graphics/level_graphics/tiles/walls/left.png",   &tiles.WallLeft},
-        {"assets/graphics/level_graphics/tiles/stdbackground.png",&tiles.floor}
+        {"assets/graphics/level_graphics/tiles/walls/Top_Walll.png",        &tiles.WallUp},
+        {"assets/graphics/level_graphics/tiles/walls/Bottom_Wall.png",      &tiles.WallDown},
+        {"assets/graphics/level_graphics/tiles/walls/Top_Left_Wall.png",    &tiles.WallUpLeft},
+        {"assets/graphics/level_graphics/tiles/walls/Top_Right_Wall.png",   &tiles.WallUpRight},
+        {"assets/graphics/level_graphics/tiles/walls/Bottom_Left_Wall.png", &tiles.WallDownLeft},
+        {"assets/graphics/level_graphics/tiles/walls/Bottom_Right_Wall.png",&tiles.WallDownRight},
+        {"assets/graphics/level_graphics/tiles/walls/Left_Wall.png",        &tiles.WallLeft},
+        {"assets/graphics/level_graphics/tiles/walls/Right_Wall.png",       &tiles.WallRight},
+        {"assets/graphics/level_graphics/tiles/walls/Full_Blue_Wall.png",   &tiles.WallFull},
+        {"assets/graphics/level_graphics/tiles/stdbackground.png",          &tiles.floor}
         // Add more textures here and in struct.
     };
     for (auto [file, out] : todo) *out = LoadTexture(file);
@@ -127,7 +136,18 @@ bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec){
 bool isWall(float cx, float cy, Level& lvl){
     if(cy < 0 || cy >= (int)lvl.rows.size()) return true;
     else if(cx < 0 || cx >= (int)lvl.rows[cy].size()) return true;
-    return lvl.rows[cy][cx] == '#';
+    switch(lvl.rows[cy][cx]){
+        case '#': return true; break;
+        case '1': return true; break;
+        case '2': return true; break;
+        case '3': return true; break;
+        case '4': return true; break;
+        case '5': return true; break;
+        case '6': return true; break;
+        case '7': return true; break; 
+        case '8': return true; break;
+        default: return false; break;
+    }
 }
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl){
     if(isWall(cx, cy, lvl)) return true;
@@ -172,9 +192,17 @@ void drawLevel(Level& lvl, float s){
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             Rectangle srcTile = {0, 0, 16, 16};
             switch(lvl.rows[y][x]){
-                case('#'): DrawTexturePro(tiles.wall, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('1'): DrawTexturePro(tiles.WallUp, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('2'): DrawTexturePro(tiles.WallUpLeft, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('3'): DrawTexturePro(tiles.WallUpRight, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('4'): DrawTexturePro(tiles.WallDownLeft, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('5'): DrawTexturePro(tiles.WallDownRight, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('6'): DrawTexturePro(tiles.WallLeft, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('7'): DrawTexturePro(tiles.WallRight, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('8'): DrawTexturePro(tiles.WallDown, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('#'): DrawTexturePro(tiles.WallFull, srcTile, mapTile, {0,0}, 0, WHITE); break;
                 case('.'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
-                case('x'): DrawTexturePro(tiles.wall, srcTile, mapTile, {0,0}, 0, WHITE); break;
+                case('x'): DrawTexturePro(tiles.floor, srcTile, mapTile, {0,0}, 0, WHITE); break;
                 default: break;
             }
         }
@@ -375,14 +403,17 @@ void gameLoop(Level& lvl){
         Rectangle srcTile = { 0, 0, 16, 16 };
         for(int y = 0; y < (int)lvl.rows.size(); ++y){
             for(int x = 0; x < (int)lvl.rows[y].size(); ++x){
-                if(lvl.rows[y][x] == '#') {
-                    Rectangle mapTile = {
-                        x * TILE * scale,
-                        y * TILE * scale,
-                        TILE * scale,
-                        TILE * scale
-                    };
-                    DrawTexturePro(tiles.wall, srcTile, mapTile, {0, 0}, 0.0f, WHITE);
+                Rectangle mapTile = {x*TILE*scale,y*TILE*scale,TILE*scale,TILE*scale};
+                switch(lvl.rows[y][x]){
+                    case '#': DrawTexturePro(tiles.WallFull, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '1': DrawTexturePro(tiles.WallUp, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '2': DrawTexturePro(tiles.WallUpLeft, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '3': DrawTexturePro(tiles.WallUpRight, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '4': DrawTexturePro(tiles.WallDownLeft, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '5': DrawTexturePro(tiles.WallDownRight, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '6': DrawTexturePro(tiles.WallLeft, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '7': DrawTexturePro(tiles.WallRight, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
+                    case '8': DrawTexturePro(tiles.WallDown, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
                 }
             }
         }
@@ -403,7 +434,6 @@ void preLoadTasks(Level& lvl){
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
     swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
     SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-    SetTextureFilter(tiles.wall , TEXTURE_FILTER_POINT);
     SetTextureFilter(tiles.floor, TEXTURE_FILTER_POINT);
     bullets.reserve(1000);
     turtlesPos.reserve(300);
