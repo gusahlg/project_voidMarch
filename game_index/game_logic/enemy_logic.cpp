@@ -13,9 +13,9 @@
 #include "../include/global/scale.hpp"
 struct enemy{
     int frames;
-    int currentFrame;
+    int currentFrame = 0;
     float animDelay;
-    float animTimer;
+    float animTimer = 0.f;
     Rectangle Hbox;
     int MAXHP;      // Maximum HP.
     int HP;         // Actual HP, mutable.
@@ -80,12 +80,14 @@ struct enemy{
                 break;
             case state::Idle:
                 animTimer = 0.0f;
+                currentFrame = 0;
                 break;
             case state::Jumping:
                 //Cool things
                 break;
         }
-        Rectangle src = {currentFrame*(float)tex.width, 0.0f, (float)tex.width/frames, (float)tex.height};
+        float frameW = (float)tex.width / frames; 
+        Rectangle src = { currentFrame * frameW, 0, frameW, (float)tex.height };
         DrawTexturePro(tex, src, Hbox, {0,0}, 0, WHITE);
     }
     enemy(Vector2 pos, int hp, Type t, float s)
@@ -97,7 +99,7 @@ struct enemy{
     static constexpr Vector2 sizeLUT      [] = {{10.f,10.f}, {20.f,20.f}, {25.f,25.f}};
     static constexpr float   delayLUT     [] = {30.f, 40.f, 50.f};
     static constexpr float   rangeLUT     [] = {50.f, 100.f, 25.f};
-    static constexpr float   animDelayLUT [] = {1.f, 0.5f, 10.f};
+    static constexpr float   animDelayLUT [] = {0.1f, 0.25f, 5.f};
     static constexpr int     framesLUT    [] = {3, 4, 5};
     //Determined values from tables above
     speed     = speedLUT[idx] * s;
