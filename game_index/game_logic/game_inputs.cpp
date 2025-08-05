@@ -8,8 +8,6 @@
 #include <raymath.h>
 #include <algorithm>
 #include "../include/game/global_player.hpp" // Player stats, all in one place.
-#include "../include/global/scale.hpp"
-// Here things that can happen in game is defined. 
 struct void_crawler_roll{
     Texture2D pos;
 };
@@ -130,10 +128,11 @@ void updateProjectiles(Level& lvl, float dt){
         if(!b.alive) continue;
         b.pos.x += b.vel.x * dt;
         b.pos.y += b.vel.y * dt;
-        float gx = b.pos.x / (16 * scale); 
-        float gy = b.pos.y / (16 * scale); 
-        float gw = b.w / (16 * scale); 
-        float gh = b.h / (16 * scale);
+        auto& si = scaleSys.info();
+        float gx = toTiles(b.pos.x, si);
+        float gy = toTiles(b.pos.y, si);
+        float gw = toTiles(b.w, si);
+        float gh = toTiles(b.h, si);
         if(collisionRect(gx, gy, gw, gh, lvl)){
             b.alive = false;
         }

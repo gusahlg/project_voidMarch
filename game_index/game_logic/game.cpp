@@ -180,12 +180,12 @@ void readlvlData(Level& lvl){
                 case('e'): lvl.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
             }
 }
-void drawLevel(Level& lvl, float s){
+void drawLevel(Level& lvl){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
-            float px = x * TILE * s;
-            float py = y * TILE * s;
-            float sz = (TILE * s);
+            float px = x * TILE * scaleSys.info().scale;
+            float py = y * TILE * scaleSys.info().scale;
+            float sz = (TILE * scaleSys.info().scale);
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             Rectangle srcTile = {0, 0, 16, 16};
             switch(lvl.rows[y][x]){
@@ -204,14 +204,14 @@ void drawLevel(Level& lvl, float s){
             }
         }
 }
-void loadEnemies(Level& lvl, float s){
+void loadEnemies(Level& lvl){
     for(Vector2 e : genericPos){
-        Vector2 pos = {e.x * TILE * s, e.y * TILE * s};
-        spawnLogic(pos, 10, 0, scale);
+        Vector2 pos = {e.x * TILE * scaleSys.info().scale, e.y * TILE * scaleSys.info().scale};
+        spawnLogic(pos, 10, 0);
     }
     for(Vector2 t : turtlesPos){
-        Vector2 pos = {t.x * TILE * s, t.y * TILE * s};
-        spawnLogic(pos, 10, 1, scale);
+        Vector2 pos = {t.x * TILE * scaleSys.info().scale, t.y * TILE * scaleSys.info().scale};
+        spawnLogic(pos, 10, 1);
     }
 }
 void spriteManager(){
@@ -320,14 +320,16 @@ void DrawSword(){
     if(currentDir == Direction::Left || currentDir == Direction::UpLeft || currentDir == Direction::DownLeft){
         rotation = 180;
         src = {0, 32, 32, -32};
-        Xoffset = -9.9f * scale; Yoffset = -7.6f * scale;
+        Xoffset = -9.9f * scaleSys.info().scale;
+        Yoffset = -7.6f * scaleSys.info().scale;
     }
     else{
         src = {0, 0, 32, 32};
         rotation = 0;
-        Xoffset = 9.9f * scale; Yoffset = -7.6f * scale;
+        Xoffset = -7.6f * scaleSys.info().scale;
+        Yoffset = -9.9f * scaleSys.info().scale;
     }
-    float wh = 32.0f * scale;
+    float wh = 32.0f * scaleSys.info().scale;
     dest.width = wh;
     dest.height = wh;
     dest.x = playerPixCenter.x + Xoffset; dest.y = playerPixCenter.y + Yoffset;
@@ -337,11 +339,11 @@ void DrawSword(){
 void DrawBlaster(){
     float w = 10.0f;
     float h = 10.0f;
-    float WEAPON_OFFSET = 12.5f * scale;
+    float WEAPON_OFFSET = 12.5f * scaleSys.info().scale;
     float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
     bool flip = rotation > 90 || rotation < -90;
-    float xOffset = 6.5f * scale;
-    float yOffset = 5.0f * scale;
+    float xOffset = 6.5f * scaleSys.info().scale;
+    float yOffset = 5.0f * scaleSys.info().scale;
     Rectangle src;
     if (flip) src = {0, 20, 20, -20};
     else      src = {0,  0, 20,  20};
@@ -376,21 +378,21 @@ Rectangle dst;
 void gameLoop(Level& lvl){
     float dt = GetFrameTime();
     const auto& si = scaleSys.info();
-    playerPixCenter = {toPx(lvl.playerPos.x, si) + si.tilePx/2,
-                       toPx(lvl.playerPos.y, si) + si.tilePx/2};
+    playerPixCenter = {toPx(lvl.playerPos.x, si) + pSizeW/2,
+                       toPx(lvl.playerPos.y, si) + pSizeH/2};
     cam.target = playerPixCenter;
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
     const float spriteW=18;
     const float spriteH=25;
-    pSizeW = spriteW * scale;
-    pSizeH = spriteH * scale;
-    pPixX = lvl.playerPos.x * TILE * scale + (TILE * scale - pSizeW)/2;
-    pPixY = lvl.playerPos.y * TILE * scale + (TILE * scale) - pSizeH;
+    pSizeW = spriteW * scaleSys.info().scale;
+    pSizeH = spriteH * scaleSys.info().scale;
+    pPixX = toPx(lvl.playerPos.x, scaleSys.info()) + (scaleSys.info().tilePx - pSizeW)/2;
+    pPixY = toPx(lvl.playerPos.y, scaleSys.info()) + scaleSys.info().tilePx - pSizeH;
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
     dst = {pPixX, pPixY, pSizeW, pSizeH};
-    drawLevel(lvl, scale);
+    drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
     DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
@@ -400,7 +402,7 @@ void gameLoop(Level& lvl){
         Rectangle srcTile = { 0, 0, 16, 16 };
         for(int y = 0; y < (int)lvl.rows.size(); ++y){
             for(int x = 0; x < (int)lvl.rows[y].size(); ++x){
-                Rectangle mapTile = {x*TILE*scale,y*TILE*scale,TILE*scale,TILE*scale};
+                Rectangle mapTile = {toPx(x,si), toPx(y,si), si.tilePx, si.tilePx};
                 switch(lvl.rows[y][x]){
                     case '#': DrawTexturePro(tiles.WallFull, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
                     case '1': DrawTexturePro(tiles.WallUp, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
@@ -425,7 +427,7 @@ void preLoadTasks(Level& lvl){
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
-    loadEnemies(lvl, scale);
+    loadEnemies(lvl);
     playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
     swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");

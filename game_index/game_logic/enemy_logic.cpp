@@ -13,7 +13,6 @@
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
-ScaleSystem scaleSys;
 struct enemy{
     int frames;
     int currentFrame = 0;
@@ -91,7 +90,7 @@ struct enemy{
         }
         float frameW = (float)tex.width / frames; 
         Rectangle src = {currentFrame * frameW, 0, frameW, (float)tex.height};
-        Rectangle dst = {Hbox.x, Hbox.y, frameW*scale, tex.height*scale};
+        Rectangle dst = {Hbox.x, Hbox.y, frameW*scaleSys.info().scale, tex.height*scaleSys.info().scale};
         DrawTexturePro(tex, src, dst, {0,0}, 0, WHITE);
     }
     enemy(Vector2 pos, int hp, Type t, float s)
@@ -127,7 +126,7 @@ std::vector<enemy> enemies;
 void spawnEnemy(Vector2 pos, int HP, enemy::Type t, float s){ //Add into level initialization and other stuff.
     enemies.emplace_back(pos, HP, t, s);
 }
-void spawnLogic(Vector2 pos, int HP, int ID, float scale){
+void spawnLogic(Vector2 pos, int HP, int ID){
     enemy::Type t;
     switch(ID){
         case(0): t = enemy::Type::generic; break;
@@ -135,11 +134,11 @@ void spawnLogic(Vector2 pos, int HP, int ID, float scale){
         case(2): t = enemy::Type::Bob; break;
         default: t = enemy::Type::generic; break;
     }
-    spawnEnemy(pos, HP, t, scale);
+    spawnEnemy(pos, HP, t);
 }
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
-    float tileSize = 16.0f * std::max(scale, 0.0001f);
+    float tileSize = scaleSys.info().tilePx;
     for(auto& e : enemies){
         e.determineState(playerCenter);
         Rectangle f = e.Hbox;
