@@ -15,7 +15,7 @@ struct enemy{
     int frames;
     int currentFrame;
     float animDelay;
-    float animtimer;
+    float animTimer;
     Rectangle Hbox;
     int MAXHP;      // Maximum HP.
     int HP;         // Actual HP, mutable.
@@ -70,7 +70,23 @@ struct enemy{
         else return false;
     }
     void draw(){
-        DrawTexturePro(tex, {0,0,float(tex.width)/4,float(tex.height)}, Hbox, {0,0}, 0, WHITE);
+        switch(currentState){
+            case state::Walking:
+                animTimer += GetFrameTime();
+                if(animTimer > animDelay){
+                    currentFrame = (currentFrame + 1) % frames;
+                    animTimer = 0.f;
+                }
+                break;
+            case state::Idle:
+                animTimer = 0.0f;
+                break;
+            case state::Jumping:
+                //Cool things
+                break;
+        }
+        Rectangle src = {currentFrame*(float)tex.width, 0.0f, (float)tex.width/frames, (float)tex.height};
+        DrawTexturePro(tex, src, Hbox, {0,0}, 0, WHITE);
     }
     enemy(Vector2 pos, int hp, Type t, float s)
     : Hbox{}, MAXHP(hp), HP(hp), kind(t)
@@ -81,7 +97,7 @@ struct enemy{
     static constexpr Vector2 sizeLUT      [] = {{10.f,10.f}, {20.f,20.f}, {25.f,25.f}};
     static constexpr float   delayLUT     [] = {30.f, 40.f, 50.f};
     static constexpr float   rangeLUT     [] = {50.f, 100.f, 25.f};
-    static constexpr float   animDelayLUT [] = {10.f, 20.f, 30.f};
+    static constexpr float   animDelayLUT [] = {1.f, 0.5f, 10.f};
     static constexpr int     framesLUT    [] = {3, 4, 5};
     //Determined values from tables above
     speed     = speedLUT[idx] * s;
