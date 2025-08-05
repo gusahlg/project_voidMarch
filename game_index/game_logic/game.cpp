@@ -1,17 +1,19 @@
 #include <raylib.h>
 #include <iostream>
-#include "../include/game/loadGame.hpp"
-#include "../include/game/player_stats.hpp"
-#include "../include/game/ability_attributes.hpp"
-#include "../include/game/enemy_data.hpp"
 #include <vector>
 #include <fstream>
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
-#include "../include/global/scale.hpp"
-#include "../include/game/global_player.hpp" // Player stats, all in one place.
-// Cool idea: Add in so that the constructor takes in the current level as input to determine which variations to use.
+#include "../include/game/loadGame.hpp"
+#include "../include/game/player_stats.hpp"
+#include "../include/game/ability_attributes.hpp"
+#include "../include/game/enemy_data.hpp"
+// Essential systems used for scaling and communicating constants.
+#include "../include/global/constants.hpp"
+#include "../include/global/scale_system.hpp"
+// Player stats, all in one place.
+#include "../include/game/global_player.hpp"
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -30,6 +32,7 @@ struct TileSet{
       WallDownRight(WallDownRight), WallLeft(WallLeft), WallRight(WallRight), WallFull(WallFull), floor(floor) {}
 };
 TileSet tiles{/*wall =*/ {}, /*floor =*/ {}, {}, {}, {}, {}, {}, {}, {}, {}};
+
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
