@@ -12,18 +12,22 @@
 #include "../include/game/global_player.hpp" // Player stats, all in one place.
 #include "../include/global/scale.hpp"
 struct enemy{
+    int frames;
+    int currentFrame;
+    float animDelay;
+    float animtimer;
     Rectangle Hbox;
-    int MAXHP; //Maximum HP.
-    int HP; //Actual HP, mutable.
+    int MAXHP;      // Maximum HP.
+    int HP;         // Actual HP, mutable.
     float cooldown; // Attack cooldown duration
-    float range; // Detection range
+    float range;    // Detection range
+    Texture2D tex;  // Enemy texture
     enum dir : std::uint8_t{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight};
     dir currentDir = Up;
     enum state : std::uint8_t{Idle, Walking, Jumping};
     state currentState = Idle;
     enum class Type : std::uint8_t{generic, TurtleMaster, Bob}; //Expand for more variations
     Type kind = Type::generic;
-    Texture2D sprite; //Good for later
     // Bellow depends on type.
     float speed{};
     void determineState(Vector2 playerPixCenter){
@@ -39,7 +43,7 @@ struct enemy{
             currentState = state::Walking;
         }
         else currentState = state::Idle;
-        //Check if diagonals are faster, then left/right, up/down.
+        // Check if diagonals are faster, then left/right, up/down.
         if(dx >= 1.0f && dy >= 1.0f){ 
             bool right = Emid.x < playerPixCenter.x;
             bool down  = Emid.y < playerPixCenter.y;
@@ -65,24 +69,36 @@ struct enemy{
         if(inRangeX && inRangeY) return true;
         else return false;
     }
+    void draw(){
+        DrawTexturePro(tex, {0,0,float(tex.width)/4,float(tex.height)}, Hbox, {0,0}, 0, WHITE);
+    }
     enemy(Vector2 pos, int hp, Type t, float s)
     : Hbox{}, MAXHP(hp), HP(hp), kind(t)
 {
     const size_t idx = static_cast<size_t>(kind);
     // Constant LUT 
-    static constexpr float   speedLUT[]  = { 90.f,  20.f,  50.f };
-    static constexpr Vector2 sizeLUT []  = { {10.f,10.f}, {20.f,20.f}, {25.f,25.f} };
-    static constexpr float   delayLUT[]  = { 30.f,  40.f,  50.f };
-    static constexpr float   rangeLUT[]  = { 50.f, 100.f,  25.f };
-
+    static constexpr float   speedLUT     [] = {90.f, 20.f, 50.f};
+    static constexpr Vector2 sizeLUT      [] = {{10.f,10.f}, {20.f,20.f}, {25.f,25.f}};
+    static constexpr float   delayLUT     [] = {30.f, 40.f, 50.f};
+    static constexpr float   rangeLUT     [] = {50.f, 100.f, 25.f};
+    static constexpr float   animDelayLUT [] = {10.f, 20.f, 30.f};
+    static constexpr int     framesLUT    [] = {3, 4, 5};
     //Determined values from tables above
-    speed    = speedLUT[idx] * s;
-    cooldown = delayLUT[idx] * s;
-    range    = rangeLUT[idx] * s;
-
+    speed     = speedLUT[idx] * s;
+    cooldown  = delayLUT[idx] * s;
+    range     = rangeLUT[idx] * s;
+    animDelay = animDelayLUT[idx];
+    frames    = framesLUT[idx];
     // Hitbox calc
     Vector2 sz = { sizeLUT[idx].x * s, sizeLUT[idx].y * s };
     Hbox = { pos.x, pos.y, sz.x, sz.y };
+
+    // Texture determination:
+    switch(idx){
+        case 0:  break;
+        case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
+        case 2:  break;
+    }
 }
 };
 std::vector<enemy> enemies;
@@ -147,8 +163,8 @@ void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
 }
 void drawEnemies(){
     // Add in sprites and such.
-    for(const auto& e : enemies){
-        DrawRectangleRec(e.Hbox, RED);
+    for(auto& e : enemies){
+        e.draw();
     }
 }
 void enemyLogic(float dt, Level& lvl, Vector2 playerCenter){

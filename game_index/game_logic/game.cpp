@@ -59,7 +59,7 @@ Camera2D cam{};
 const int TILE = 16;
 void loadTileTextures(){
     const std::vector<std::pair<const char*, Texture2D*>> todo = {
-        {"assets/graphics/level_graphics/tiles/walls/Top_Walll.png",        &tiles.WallUp},
+        {"assets/graphics/level_graphics/tiles/walls/Top_Wall.png",        &tiles.WallUp},
         {"assets/graphics/level_graphics/tiles/walls/Bottom_Wall.png",      &tiles.WallDown},
         {"assets/graphics/level_graphics/tiles/walls/Top_Left_Wall.png",    &tiles.WallUpLeft},
         {"assets/graphics/level_graphics/tiles/walls/Top_Right_Wall.png",   &tiles.WallUpRight},
@@ -128,9 +128,7 @@ bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec){
     if(FirstRec.x < SecondRec.x + SecondRec.width &&
        FirstRec.x + FirstRec.width > SecondRec.x &&
        FirstRec.y < SecondRec.y + SecondRec.height &&
-       FirstRec.y + FirstRec.height > SecondRec.y){
-        return true;
-       }
+       FirstRec.y + FirstRec.height > SecondRec.y) return true;
     else return false;
 }
 bool isWall(float cx, float cy, Level& lvl){
@@ -176,13 +174,6 @@ void readlvlData(Level& lvl){
                 case('e'): lvl.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
             }
 }
-struct Enemy{
-    float ID;
-    Enemy(int ID)
-    : ID(ID) {}
-};
-Enemy generic(0);
-Enemy TurtleMaster(1);
 void drawLevel(Level& lvl, float s){
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
