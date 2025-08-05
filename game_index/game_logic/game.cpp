@@ -14,6 +14,9 @@
 #include "../include/global/scale_system.hpp"
 // Player stats, all in one place.
 #include "../include/game/global_player.hpp"
+
+// Local scaling helper.
+ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -49,7 +52,7 @@ weapon equipped;
 constexpr float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl, float);
-float scaleX, scaleY, scale = 1.0f;
+
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
 Texture2D playerTex;
@@ -371,10 +374,10 @@ float pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
-    if(rightZoom) cam.zoom = 8 * scale, equipped = blaster;
-    else cam.zoom = 5 * scale, equipped = sword;
     float dt = GetFrameTime();
-    playerPixCenter = {lvl.playerPos.x*TILE*scale+(TILE*scale)/2.0f, lvl.playerPos.y*TILE*scale+(TILE*scale)/2.0f};
+    const auto& si = scaleSys.info();
+    playerPixCenter = {toPx(lvl.playerPos.x, si) + si.tilePx/2,
+                       toPx(lvl.playerPos.y, si) + si.tilePx/2};
     cam.target = playerPixCenter;
     ClearBackground(BLACK);
     BeginMode2D(cam);
@@ -416,10 +419,9 @@ void gameLoop(Level& lvl){
 }
 void preLoadTasks(Level& lvl){
     readlvlData(lvl);
-    scaleX = GetScreenWidth()/(float)(lvl1.rows[0].size()*TILE);
-    scaleY = GetScreenHeight()/(float)(lvl1.rows.size()*TILE);
-    scale = (scaleX+scaleY)/2.0f;
+    scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
+    cam.zoom = 1.f;
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
