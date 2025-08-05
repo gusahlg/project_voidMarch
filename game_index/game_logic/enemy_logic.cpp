@@ -87,8 +87,9 @@ struct enemy{
                 break;
         }
         float frameW = (float)tex.width / frames; 
-        Rectangle src = { currentFrame * frameW, 0, frameW, (float)tex.height };
-        DrawTexturePro(tex, src, Hbox, {0,0}, 0, WHITE);
+        Rectangle src = {currentFrame * frameW, 0, frameW, (float)tex.height};
+        Rectangle dst = {Hbox.x, Hbox.y, frameW*scale, tex.height*scale};
+        DrawTexturePro(tex, src, dst, {0,0}, 0, WHITE);
     }
     enemy(Vector2 pos, int hp, Type t, float s)
     : Hbox{}, MAXHP(hp), HP(hp), kind(t)
@@ -113,9 +114,9 @@ struct enemy{
 
     // Texture determination:
     switch(idx){
-        case 0:  break;
+        case 0: tex = LoadTexture(""); break;
         case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
-        case 2:  break;
+        case 2: tex = LoadTexture(""); break;
     }
 }
 };
