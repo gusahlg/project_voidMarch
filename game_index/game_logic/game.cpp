@@ -14,9 +14,6 @@
 #include "../include/global/scale_system.hpp"
 // Player stats, all in one place.
 #include "../include/game/global_player.hpp"
-
-// Local scaling helper.
-ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;

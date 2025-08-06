@@ -93,7 +93,7 @@ struct enemy{
         Rectangle dst = {Hbox.x, Hbox.y, frameW*scaleSys.info().scale, tex.height*scaleSys.info().scale};
         DrawTexturePro(tex, src, dst, {0,0}, 0, WHITE);
     }
-    enemy(Vector2 pos, int hp, Type t, float s)
+    enemy(Vector2 pos, int hp, Type t)
     : Hbox{}, MAXHP(hp), HP(hp), kind(t)
 {
     const size_t idx = static_cast<size_t>(kind);
@@ -105,13 +105,13 @@ struct enemy{
     static constexpr float   animDelayLUT [] = {0.1f, 0.25f, 5.f};
     static constexpr int     framesLUT    [] = {3, 4, 5};
     //Determined values from tables above
-    speed     = speedLUT[idx] * s;
-    cooldown  = delayLUT[idx] * s;
-    range     = rangeLUT[idx] * s;
+    speed     = speedLUT[idx] * scaleSys.info().scale;
+    cooldown  = delayLUT[idx] * scaleSys.info().scale;
+    range     = rangeLUT[idx] * scaleSys.info().scale;
     animDelay = animDelayLUT[idx];
     frames    = framesLUT[idx];
     // Hitbox calc
-    Vector2 sz = { sizeLUT[idx].x * s, sizeLUT[idx].y * s };
+    Vector2 sz = { sizeLUT[idx].x * scaleSys.info().scale, sizeLUT[idx].y * scaleSys.info().scale};
     Hbox = { pos.x, pos.y, sz.x, sz.y };
 
     // Texture determination:
@@ -123,8 +123,8 @@ struct enemy{
 }
 };
 std::vector<enemy> enemies;
-void spawnEnemy(Vector2 pos, int HP, enemy::Type t, float s){ //Add into level initialization and other stuff.
-    enemies.emplace_back(pos, HP, t, s);
+void spawnEnemy(Vector2 pos, int HP, enemy::Type t){ //Add into level initialization and other stuff.
+    enemies.emplace_back(pos, HP, t);
 }
 void spawnLogic(Vector2 pos, int HP, int ID){
     enemy::Type t;
