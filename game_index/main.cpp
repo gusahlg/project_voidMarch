@@ -29,6 +29,9 @@ int main(){
         mousePos = GetMousePosition();
         BeginDrawing();
         ClearBackground(BLACK);
+        if(IsKeyPressed(KEY_F11)){
+            ToggleFullscreen();
+        }
         switch(currentScreen){
             case screen::Main: 
                 // Do da load main stuff.
@@ -45,6 +48,3 @@ int main(){
     CloseWindow();
     return 0;
 }
-/*if(IsKeyPressed(KEY_F11)){
-            ToggleFullscreen();
-        }*/

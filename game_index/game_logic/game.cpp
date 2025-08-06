@@ -14,6 +14,7 @@
 #include "../include/global/scale_system.hpp"
 // Player stats, all in one place.
 #include "../include/game/global_player.hpp"
+ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -223,7 +224,6 @@ bool rollWalkSwitch = false;
 float pPixX;
 float pPixY;
 bool projActive;
-bool rightZoom = false;
 void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
@@ -275,10 +275,10 @@ void inputEventHandler(Level& lvl, float dt){
         }
     }
     if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-        rightZoom = true;
+        equipped = weapon::blaster;
     }
     else{
-        rightZoom = false;
+        equipped = weapon::sword;
     }
     static float w = 5.0f;
     static float h = 5.0f;
@@ -334,8 +334,8 @@ void DrawSword(){
     DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
 }
 void DrawBlaster(){
-    float w = 10.0f;
-    float h = 10.0f;
+    float w = blasterTex.width*scaleSys.info().scale;
+    float h = blasterTex.height*scaleSys.info().scale;
     float WEAPON_OFFSET = 12.5f * scaleSys.info().scale;
     float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
     bool flip = rotation > 90 || rotation < -90;
@@ -420,7 +420,7 @@ void preLoadTasks(Level& lvl){
     readlvlData(lvl);
     scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-    cam.zoom = 1.f;
+    cam.zoom = 9.f;
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();

@@ -90,8 +90,7 @@ struct enemy{
         }
         float frameW = (float)tex.width / frames; 
         Rectangle src = {currentFrame * frameW, 0, frameW, (float)tex.height};
-        Rectangle dst = {Hbox.x, Hbox.y, frameW*scaleSys.info().scale, tex.height*scaleSys.info().scale};
-        DrawTexturePro(tex, src, dst, {0,0}, 0, WHITE);
+        DrawTexturePro(tex, src, Hbox, {0,0}, 0, WHITE);
     }
     enemy(Vector2 pos, int hp, Type t)
     : Hbox{}, MAXHP(hp), HP(hp), kind(t)
@@ -99,7 +98,6 @@ struct enemy{
     const size_t idx = static_cast<size_t>(kind);
     // Constant LUT 
     static constexpr float   speedLUT     [] = {90.f, 20.f, 50.f};
-    static constexpr Vector2 sizeLUT      [] = {{10.f,10.f}, {20.f,20.f}, {25.f,25.f}};
     static constexpr float   delayLUT     [] = {30.f, 40.f, 50.f};
     static constexpr float   rangeLUT     [] = {50.f, 100.f, 25.f};
     static constexpr float   animDelayLUT [] = {0.1f, 0.25f, 5.f};
@@ -110,9 +108,6 @@ struct enemy{
     range     = rangeLUT[idx] * scaleSys.info().scale;
     animDelay = animDelayLUT[idx];
     frames    = framesLUT[idx];
-    // Hitbox calc
-    Vector2 sz = { sizeLUT[idx].x * scaleSys.info().scale, sizeLUT[idx].y * scaleSys.info().scale};
-    Hbox = { pos.x, pos.y, sz.x, sz.y };
 
     // Texture determination:
     switch(idx){
@@ -120,6 +115,8 @@ struct enemy{
         case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
         case 2: tex = LoadTexture(""); break;
     }
+    // Hitbox calc
+    Hbox = {pos.x, pos.y, float(tex.width)*scaleSys.info().scale, float(tex.height)*scaleSys.info().scale};
 }
 };
 std::vector<enemy> enemies;

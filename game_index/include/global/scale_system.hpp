@@ -12,4 +12,4 @@ public:
 private:
     ScaleInfo si{};
 };
-ScaleSystem scaleSys;
+extern ScaleSystem scaleSys;
