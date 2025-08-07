@@ -1,6 +1,8 @@
 {
   "version": "2.0.0",
   "tasks": [
+
+    // ---------- 1-A  build the Rust static lib ----------
     {
       "label": "build-math-core",
       "type": "shell",
@@ -12,6 +14,8 @@
       ],
       "problemMatcher": []
     },
+
+    // ---------- 1-B  build + link the C++ / Raylib game ----------
     {
       "label": "build-game",
       "type": "shell",
@@ -20,18 +24,25 @@
         "-std=c++17",
         "-g",
 
-        // source files (adjust glob if you have sub-dirs)
-        "${workspaceFolder}/**/*.cpp",
-        // headers
-        "-I${workspaceFolder}/include",
+        // ---- source files ----
+        "${workspaceFolder}/game_index/*.cpp",
+        "${workspaceFolder}/game_index/game_logic/*.cpp",
+        "${workspaceFolder}/game_index/screen_logic/*.cpp",
 
-        // libs
-        "-L${workspaceFolder}/lib",
+        // ---- header search paths ----
+        "-I${workspaceFolder}/include",
+        "-I${workspaceFolder}/third_party/raylib/include",
+
+        // ---- library search paths ----
+        "-L${workspaceFolder}/lib",                     // Rust libmath_core.a
+        "-L${workspaceFolder}/third_party/raylib/lib",  // Raylib libraylib.a
+
+        // ---- link order ----
         "-lmath_core",
         "-lraylib",
         "-lopengl32", "-lgdi32", "-lwinmm",
 
-        // flags
+        // ---- exe flags ----
         "-static", "-mwindows",
         "-o", "${workspaceFolder}/main.exe"
       ],
@@ -41,3 +52,4 @@
     }
   ]
 }
+

@@ -9,7 +9,7 @@
       "program": "${workspaceFolder}/main.exe",
       "cwd":     "${workspaceFolder}",
 
-      "preLaunchTask": "build-raylib",  // ← must match the label above
+      "preLaunchTask": "build-game",  // ← must match the label above
       "args": [],                       // CLI args for your game
       "externalConsole": false,         // now uses the TERMINAL tab
 
