@@ -2,7 +2,7 @@
 //! Build type is `staticlib` (set in Cargo.toml), so the C++ linker sees a .lib.
 
 #[no_mangle]                          // exact symbol name "add_vectors"
-pub extern "C" fn add_vectors(
+pub unsafe extern "C" fn add_vectors(
     a_x: f32, a_y: f32,
     b_x: f32, b_y: f32,
     out_x: *mut f32,

@@ -1,7 +1,6 @@
 {
   "version": "2.0.0",
   "tasks": [
-    // ---------- 5-A  Build Rust for the GNU target ----------
     {
       "label": "build-math-core",
       "type": "shell",
@@ -13,8 +12,6 @@
       ],
       "problemMatcher": []
     },
-
-    // ---------- 5-B  Compile & link the game with g++ ----------
     {
       "label": "build-game",
       "type": "shell",
@@ -23,19 +20,18 @@
         "-std=c++17",
         "-g",
 
-        // ---- source files ----
-        "${workspaceFolder}/src/*.cpp",
-
-        // ---- headers ----
+        // source files (adjust glob if you have sub-dirs)
+        "${workspaceFolder}/**/*.cpp",
+        // headers
         "-I${workspaceFolder}/include",
 
-        // ---- libraries ----
+        // libs
         "-L${workspaceFolder}/lib",
         "-lmath_core",
         "-lraylib",
         "-lopengl32", "-lgdi32", "-lwinmm",
 
-        // ---- extras ----
+        // flags
         "-static", "-mwindows",
         "-o", "${workspaceFolder}/main.exe"
       ],
