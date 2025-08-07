@@ -1,0 +1,12 @@
+[package]
+name = "math_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[dev-dependencies]
+cbindgen = "0.29.0"
+
+[lib]
+create-type = ["staticlib"]
