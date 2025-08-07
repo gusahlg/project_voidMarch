@@ -1,16 +1,47 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build-raylib",
-            "type": "shell",
-            "command": "powershell",
-            "args": [
-                "-Command",
-                "g++ -std=c++17 -g (Get-ChildItem '${workspaceFolder}' -Recurse -Include '*.cpp' | ForEach-Object { $_.FullName }) -I'C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include' -L'C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/lib' -lraylib -lopengl32 -lgdi32 -lwinmm -mwindows -o '${workspaceFolder}/main.exe'"
-            ],
-            "problemMatcher": ["$gcc"],
-            "group": { "kind": "build", "isDefault": true }
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    // ---------- 5-A  Build Rust for the GNU target ----------
+    {
+      "label": "build-math-core",
+      "type": "shell",
+      "command": "cargo",
+      "args": [
+        "build", "--release",
+        "--manifest-path", "${workspaceFolder}/math_core/Cargo.toml",
+        "--target", "x86_64-pc-windows-gnu"
+      ],
+      "problemMatcher": []
+    },
+
+    // ---------- 5-B  Compile & link the game with g++ ----------
+    {
+      "label": "build-game",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",
+        "-g",
+
+        // ---- source files ----
+        "${workspaceFolder}/src/*.cpp",
+
+        // ---- headers ----
+        "-I${workspaceFolder}/include",
+
+        // ---- libraries ----
+        "-L${workspaceFolder}/lib",
+        "-lmath_core",
+        "-lraylib",
+        "-lopengl32", "-lgdi32", "-lwinmm",
+
+        // ---- extras ----
+        "-static", "-mwindows",
+        "-o", "${workspaceFolder}/main.exe"
+      ],
+      "dependsOn": ["build-math-core"],
+      "problemMatcher": ["$gcc"],
+      "group": { "kind": "build", "isDefault": true }
+    }
+  ]
 }

@@ -10,6 +10,8 @@
 #include "include/screen_load/select_main.hpp"
 // Gives easy access to all standard ui features:
 #include "include/standardUI/manager.hpp"
+// RUSTLANG INTEGRATION LIBRARY:
+#include "math_core.h"
 Vector2 mousePos;
 Color Ctext = {160, 160, 160, 255};
 Color spaceBlue = {25, 70, 240, 255};
