@@ -116,8 +116,11 @@ struct enemy{
         case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
         case 2: tex = LoadTexture(""); break;
     }
+    SetTextureFilter(tex, TEXTURE_FILTER_POINT);
+
     // Hitbox calc
-    Hbox = {pos.x, pos.y, float(tex.width)*scaleSys.info().scale, float(tex.height)*scaleSys.info().scale};
+    float frameW = (float)tex.width / frames;
+    Hbox = { pos.x, pos.y, frameW * scaleSys.info().scale, (float)tex.height * scaleSys.info().scale };
 }
 };
 std::vector<enemy> enemies;

@@ -75,7 +75,10 @@ void loadTileTextures(){
         {"assets/graphics/level_graphics/tiles/stdbackground.png",          &tiles.floor}
         // Add more textures here and in struct.
     };
-    for (auto [file, out] : todo) *out = LoadTexture(file);
+    for (auto [file, out] : todo){
+        *out = LoadTexture(file);
+        SetTextureFilter(*out, TEXTURE_FILTER_POINT);
+    }
 }
 struct void_crawler{
     Texture2D pos;
@@ -421,7 +424,7 @@ void preLoadTasks(Level& lvl){
     readlvlData(lvl);
     scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-    cam.zoom = 9.f;
+    cam.zoom = 1.f;
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
@@ -430,8 +433,9 @@ void preLoadTasks(Level& lvl){
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
     swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
     SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-    SetTextureFilter(tiles.floor, TEXTURE_FILTER_POINT);
-    bullets.reserve(1000);
+    SetTextureFilter(blasterTex,TEXTURE_FILTER_POINT);
+    SetTextureFilter(swordTex,TEXTURE_FILTER_POINT);
+    bullets.reserve(100);
     turtlesPos.reserve(300);
     genericPos.reserve(300);
 }
