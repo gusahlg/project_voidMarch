@@ -32,7 +32,8 @@ struct enemy{
     Type kind = Type::generic;
     // Bellow depends on type.
     float speed{};
-    void determineState(Vector2 playerPixCenter){
+    void update(Vector2 playerPixCenter){
+        // System below is for movement and updating state.
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
         bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
         bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
@@ -103,8 +104,8 @@ struct enemy{
     static constexpr float   animDelayLUT [] = {0.1f, 0.25f, 5.f};
     static constexpr int     framesLUT    [] = {3, 4, 5};
     //Determined values from tables above
-    speed     = speedLUT[idx] * scaleSys.info().scale;
-    cooldown  = delayLUT[idx] * scaleSys.info().scale;
+    speed     = speedLUT[idx]; //Delta time is updated in the determineState function.
+    cooldown  = delayLUT[idx];
     range     = rangeLUT[idx] * scaleSys.info().scale;
     animDelay = animDelayLUT[idx];
     frames    = framesLUT[idx];
@@ -137,7 +138,7 @@ void spawnLogic(Vector2 pos, int HP, int ID){
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
     float tileSize = scaleSys.info().tilePx;
     for(auto& e : enemies){
-        e.determineState(playerCenter);
+        e.update(playerCenter);
         Rectangle f = e.Hbox;
         switch(e.currentState){
             case(enemy::Walking):

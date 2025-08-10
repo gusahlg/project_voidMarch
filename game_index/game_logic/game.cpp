@@ -179,10 +179,11 @@ void readlvlData(Level& lvl){
             }
 }
 void drawLevel(Level& lvl){
+    const auto& si = scaleSys.info();
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
-            float px = x * TILE * scaleSys.info().scale;
-            float py = y * TILE * scaleSys.info().scale;
+            float px = toPx(x, si);
+            float py = toPx(y, si);
             float sz = (TILE * scaleSys.info().scale);
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             Rectangle srcTile = {0, 0, 16, 16};
