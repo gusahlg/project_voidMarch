@@ -1,9 +1,12 @@
 #pragma once
 #include <algorithm>
+#include <iostream>
 #include <cmath>
 #include "constants.hpp"
 inline float computeScaleFromHeight(int screenH, int levelHeightTiles){
-    return static_cast<float>(screenH)/(levelHeightTiles*TILE_SIZE);
+    float s = static_cast<float>(screenH)/(levelHeightTiles*TILE_SIZE);
+    s = std::max(1.0f, floorf(s));
+    return (int)s;
 }
 struct ScaleInfo{
     float scale;

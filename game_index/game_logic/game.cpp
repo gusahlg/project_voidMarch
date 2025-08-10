@@ -185,9 +185,9 @@ void drawLevel(Level& lvl){
     const auto& si = scaleSys.info();
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
-            float px = toPx(x, si);
-            float py = toPx(y, si);
-            float sz = (TILE * scaleSys.info().scale);
+            int px = toPx(x, si);
+            int py = toPx(y, si);
+            int sz = (TILE * scaleSys.info().scale);
             Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
             Rectangle srcTile = {0, 0, 16, 16};
             switch(lvl.rows[y][x]){
@@ -315,6 +315,7 @@ void inputEventHandler(Level& lvl, float dt){
     }
 }
 void DrawSword(){
+    static const int spriteWh = swordTex.width + swordTex.height / 2;
     Rectangle dest; Vector2 origin; float rotation;
     Rectangle src;
     float Xoffset; float Yoffset;
@@ -330,21 +331,21 @@ void DrawSword(){
         Xoffset = -7.6f * scaleSys.info().scale;
         Yoffset = -9.9f * scaleSys.info().scale;
     }
-    float wh = 32.0f * scaleSys.info().scale;
+    int wh = spriteWh * scaleSys.info().scale;
     dest.width = wh;
     dest.height = wh;
     dest.x = playerPixCenter.x + Xoffset; dest.y = playerPixCenter.y + Yoffset;
-    origin = {wh/2, wh/2};
+    origin = {(float)wh/2, (float)wh/2};
     DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
 }
 void DrawBlaster(){
-    float w = blasterTex.width*scaleSys.info().scale;
-    float h = blasterTex.height*scaleSys.info().scale;
-    float WEAPON_OFFSET = 12.5f * scaleSys.info().scale;
+    int w = blasterTex.width*scaleSys.info().scale;
+    int h = blasterTex.height*scaleSys.info().scale;
+    int WEAPON_OFFSET = 13 * scaleSys.info().scale;
     float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
     bool flip = rotation > 90 || rotation < -90;
-    float xOffset = 6.5f * scaleSys.info().scale;
-    float yOffset = 5.0f * scaleSys.info().scale;
+    int xOffset = 7 * scaleSys.info().scale;
+    int yOffset = 5 * scaleSys.info().scale;
     Rectangle src;
     if (flip) src = {0, 20, 20, -20};
     else      src = {0,  0, 20,  20};
@@ -355,8 +356,8 @@ void DrawBlaster(){
     Rectangle dest = {
         pivot.x - w * 0.5f,
         pivot.y - h * 0.5f,
-        w,
-        h
+        (float)w,
+        (float)h
     };
     Vector2 origin = {w * 0.5f, h * 0.5f};
     DrawTexturePro(blasterTex, src, dest, origin, rotation, WHITE);
@@ -372,8 +373,8 @@ void DrawEquip(){
             break;
     }
 }
-float pSizeW;
-float pSizeH;
+int pSizeW;
+int pSizeH;
 Rectangle src;
 Rectangle dst;
 void gameLoop(Level& lvl){
@@ -385,14 +386,14 @@ void gameLoop(Level& lvl){
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
-    const float spriteW=18;
-    const float spriteH=25;
+    const int spriteW=18;
+    const int spriteH=25;
     pSizeW = spriteW * scaleSys.info().scale;
     pSizeH = spriteH * scaleSys.info().scale;
     pPixX = toPx(lvl.playerPos.x, scaleSys.info()) + (scaleSys.info().tilePx - pSizeW)/2;
     pPixY = toPx(lvl.playerPos.y, scaleSys.info()) + scaleSys.info().tilePx - pSizeH;
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
-    dst = {pPixX, pPixY, pSizeW, pSizeH};
+    dst = {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
