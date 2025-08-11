@@ -25,3 +25,10 @@ inline float toPx(float tiles, const ScaleInfo& si){
 inline float toTiles(float px, const ScaleInfo& si){
     return px / si.tilePx;
 }
+//Snaps floats to closest int, used for drawing stuff on screen.
+inline void Snap(Rectangle& r){
+    r.x = floorf(r.x + 0.5f);
+    r.y = floorf(r.y + 0.5f);
+    r.width = floorf(r.width + 0.5f);
+    r.height = floorf(r.height + 0.5f);
+}

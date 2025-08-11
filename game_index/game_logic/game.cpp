@@ -425,7 +425,7 @@ void preLoadTasks(Level& lvl){
     readlvlData(lvl);
     scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-    cam.zoom = 6.f;
+    cam.zoom = 1.f;
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
