@@ -22,7 +22,7 @@ struct enemy{
     int MAXHP;      // Maximum HP.
     int HP;         // Actual HP, mutable.
     float cooldown; // Attack cooldown duration
-    float range;    // Detection range
+    int range;    // Detection range
     Texture2D tex;  // Enemy texture
     enum dir : std::uint8_t{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight};
     dir currentDir = Up;
@@ -35,8 +35,9 @@ struct enemy{
     void update(Vector2 playerPixCenter){
         // System below is for movement and updating state.
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
-        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
-        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
+        int Rscale = range * scaleSys.info().scale;
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= Rscale;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= Rscale;
         float distX = Emid.x < playerPixCenter.x ? playerPixCenter.x - Emid.x : Emid.x - playerPixCenter.x;
         float distY = Emid.y < playerPixCenter.y ? playerPixCenter.y - Emid.y : Emid.y - playerPixCenter.y;
         float dx = std::fabs(playerPixCenter.x - Emid.x);
@@ -65,10 +66,11 @@ struct enemy{
         }
     }
     // Determine if damage should be dealt to player.
-    bool playerInRange(float range, Vector2 playerPixCenter){
+    bool playerInRange(Vector2 playerPixCenter){
+        int Rscale = range * scaleSys.info().scale;
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
-        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
-        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= Rscale;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= Rscale;
         if(inRangeX && inRangeY) return true;
         else return false;
     }
@@ -98,15 +100,15 @@ struct enemy{
 {
     const size_t idx = static_cast<size_t>(kind);
     // Constant LUT 
-    static constexpr float   speedLUT     [] = {90.f, 20.f, 50.f};
-    static constexpr float   delayLUT     [] = {30.f, 40.f, 50.f};
-    static constexpr float   rangeLUT     [] = {50.f, 100.f, 25.f};
-    static constexpr float   animDelayLUT [] = {0.1f, 0.25f, 5.f};
-    static constexpr int     framesLUT    [] = {3, 4, 5};
+    static constexpr float   speedLUT          [] = {90.f, 20.f, 50.f};
+    static constexpr float   delayLUT          [] = {30.f, 40.f, 50.f};
+    static constexpr float   rangeTilesLUT     [] = {5 * TILE_SIZE, 10 * TILE_SIZE, 3 * TILE_SIZE};
+    static constexpr float   animDelayLUT      [] = {0.1f, 0.25f, 5.f};
+    static constexpr int     framesLUT         [] = {3, 4, 5};
     //Determined values from tables above
     speed     = speedLUT[idx]; //Delta time is updated in the determineState function.
     cooldown  = delayLUT[idx];
-    range     = rangeLUT[idx] * scaleSys.info().scale;
+    range     = rangeTilesLUT[idx];
     animDelay = animDelayLUT[idx];
     frames    = framesLUT[idx];
 

@@ -208,11 +208,11 @@ void drawLevel(Level& lvl){
 }
 void loadEnemies(Level& lvl){
     for(Vector2 e : genericPos){
-        Vector2 pos = {e.x * TILE * scaleSys.info().scale, e.y * TILE * scaleSys.info().scale};
+        Vector2 pos = {toPx(e.x, scaleSys.info()), toPx(e.y, scaleSys.info())};
         spawnLogic(pos, 10, 0);
     }
     for(Vector2 t : turtlesPos){
-        Vector2 pos = {t.x * TILE * scaleSys.info().scale, t.y * TILE * scaleSys.info().scale};
+        Vector2 pos = {toPx(t.x, scaleSys.info()), toPx(t.y, scaleSys.info())};
         spawnLogic(pos, 10, 1);
     }
 }
@@ -425,7 +425,7 @@ void preLoadTasks(Level& lvl){
     readlvlData(lvl);
     scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
-    cam.zoom = 1.f;
+    cam.zoom = 6.f;
     cam.rotation = 0.0f;
     spriteManager();
     loadTileTextures();
