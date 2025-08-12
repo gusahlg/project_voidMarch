@@ -4,7 +4,6 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include",
                 "C:/msys64/mingw64/include"
             ],
             "defines": [

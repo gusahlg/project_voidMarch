@@ -119,12 +119,12 @@ void updateRoll(Level& lvl, float dt){
 }
 //Weapons and their abilities are defined bellow.
 std::vector<projectile> bullets;
-void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed){
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner){
     projActive = true;
     bullets.emplace_back(
         startpos,
         Vector2Scale(dir, speed),
-        w, h
+        w, h, enemyOwner
     );
 }
 void updateProjectiles(Level& lvl, float dt){

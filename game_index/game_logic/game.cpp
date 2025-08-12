@@ -298,16 +298,16 @@ void inputEventHandler(Level& lvl, float dt){
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-            spawnProjectile(spawnPos, dir, w, h, speed); 
+            spawnProjectile(spawnPos, dir, w, h, speed, false); 
         }
         else{
             defineDamageArea(spawnPos, range, dir, ARCSIZE);
-            enemyCollisionCheck();
+            meleeAttack();
         }
     }
     if(projActive){
         updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
-        enemyCollisionCheck();
+        entityCollisionCheck();
     }
     if(attacking){
         // Put in an animtion into this function.
@@ -383,6 +383,10 @@ void gameLoop(Level& lvl){
     playerPixCenter = {toPx(lvl.playerPos.x, si) + pSizeW/2,
                        toPx(lvl.playerPos.y, si) + pSizeH/2};
     cam.target = playerPixCenter;
+    cam.target.x = floorf(cam.target.x + 0.5f);
+    cam.target.y = floorf(cam.target.y + 0.5f);
+    cam.offset.x = floorf(cam.offset.x + 0.5f);
+    cam.offset.y = floorf(cam.offset.y + 0.5f);
     ClearBackground(BLACK);
     BeginMode2D(cam);
     // draw player sprite (18×25 frame)
@@ -394,6 +398,8 @@ void gameLoop(Level& lvl){
     pPixY = toPx(lvl.playerPos.y, scaleSys.info()) + scaleSys.info().tilePx - pSizeH;
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
     dst = {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
+    // Used for collision and such:
+    Rectangle playerRect {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
@@ -436,9 +442,9 @@ void preLoadTasks(Level& lvl){
     SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
     SetTextureFilter(blasterTex,TEXTURE_FILTER_POINT);
     SetTextureFilter(swordTex,TEXTURE_FILTER_POINT);
-    bullets.reserve(100);
-    turtlesPos.reserve(300);
-    genericPos.reserve(300);
+    bullets.reserve(50);
+    turtlesPos.reserve(50);
+    genericPos.reserve(50);
 }
 void loadLvl1(){
     static bool loaded=false;

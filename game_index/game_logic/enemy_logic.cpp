@@ -100,11 +100,11 @@ struct enemy{
 {
     const size_t idx = static_cast<size_t>(kind);
     // Constant LUT 
-    static constexpr float   speedLUT          [] = {90.f, 20.f, 50.f};
-    static constexpr float   delayLUT          [] = {30.f, 40.f, 50.f};
-    static constexpr float   rangeTilesLUT     [] = {5 * TILE_SIZE, 10 * TILE_SIZE, 3 * TILE_SIZE};
-    static constexpr float   animDelayLUT      [] = {0.1f, 0.25f, 5.f};
-    static constexpr int     framesLUT         [] = {3, 4, 5};
+    static constexpr float   speedLUT      [] = {90.f, 20.f, 50.f};
+    static constexpr float   delayLUT      [] = {30.f, 40.f, 50.f};
+    static constexpr float   rangeTilesLUT [] = {5 * TILE_SIZE, 10 * TILE_SIZE, 3 * TILE_SIZE};
+    static constexpr float   animDelayLUT  [] = {0.1f, 0.25f, 5.f};
+    static constexpr int     framesLUT     [] = {3, 4, 5};
     //Determined values from tables above
     speed     = speedLUT[idx]; //Delta time is updated in the determineState function.
     cooldown  = delayLUT[idx];
@@ -195,15 +195,29 @@ void enemyLogic(float dt, Level& lvl, Vector2 playerCenter){
     updateEnemies(dt, lvl, playerCenter);
     drawEnemies();
 }
-void enemyCollisionCheck(){
+void meleeAttack(){
     for(auto& e : enemies){
         if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
             e.HP -= 1;
         }
-        // Add in bullet coll.
-        for(auto& b : bullets){
-            if(R2CollCheck(e.Hbox, {b.pos.x, b.pos.y, b.w, b.h})){
-                e.HP -= 1;
+    }
+}
+// This handles collision concerning bullet interactions.
+void entityCollisionCheck(){
+    // check if the owner of the bullet is player or enemy.
+    // If enemy do normal coll, if player do coll of player hitbox, not enemy
+    for(auto& b : bullets){
+        if(!b.enemyOwner){
+            for(auto& e : enemies){
+                if(R2CollCheck(e.Hbox, {b.pos.x, b.pos.y, b.w, b.h})){
+                    e.HP -= 1;
+                    b.alive = false;
+                }
+            }
+        }
+        else{
+            if(R2CollCheck(playerRect, {b.pos.x, b.pos.y, b.w, b.h})){
+                //Add in player damage
                 b.alive = false;
             }
         }

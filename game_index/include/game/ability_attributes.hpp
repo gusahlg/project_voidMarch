@@ -11,10 +11,11 @@ struct Level{
 struct projectile {
     Vector2 pos;
     Vector2 vel;
-    float   w, h;
-    bool    alive;
-    projectile(Vector2 p, Vector2 v, float w_, float h_)
-      : pos(p), vel(v), w(w_), h(h_), alive(true) {}
+    float w, h;
+    bool alive;
+    bool enemyOwner; // If true, it deals damage to player and has no collision for enemies.
+    projectile(Vector2 p, Vector2 v, float w_, float h_, bool enemyOwner)
+      : pos(p), vel(v), w(w_), h(h_), alive(true), enemyOwner(enemyOwner) {}
 };
 extern std::vector<projectile> bullets;
 extern bool rolling;
@@ -33,7 +34,7 @@ void updateRoll(Level& lvl, float dt);
 extern Texture2D playerTex;
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);
-void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed);
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner);
 extern bool projActive;
 enum Direction : std::uint8_t{
     Up,
