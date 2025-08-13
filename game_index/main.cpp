@@ -22,7 +22,7 @@ int screenWidth = 1280;
 int screenHeight = 720;
 int main(){
     InitWindow(screenWidth, screenHeight, "PROJECT: VOIDMARCH");
-    SetTargetFPS(150);
+    SetTargetFPS(60);
     Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
     SetWindowIcon(icon);
     UnloadImage(icon);

@@ -377,6 +377,7 @@ int pSizeW;
 int pSizeH;
 Rectangle src;
 Rectangle dst;
+Rectangle playerRect;
 void gameLoop(Level& lvl){
     float dt = GetFrameTime();
     const auto& si = scaleSys.info();
@@ -399,7 +400,7 @@ void gameLoop(Level& lvl){
     src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
     dst = {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
     // Used for collision and such:
-    Rectangle playerRect {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
+    playerRect = {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
     drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
