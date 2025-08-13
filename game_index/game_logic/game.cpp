@@ -229,6 +229,11 @@ float pPixX;
 float pPixY;
 bool projActive;
 void inputEventHandler(Level& lvl, float dt){
+    /*TEMPORARY*/
+    int wheel = GetMouseWheelMove();
+    if(wheel > 0) scaleSys.nudgeZoom(+1);
+    else if(wheel < 0) scaleSys.nudgeZoom(-1);
+
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
@@ -380,6 +385,7 @@ Rectangle dst;
 Rectangle playerRect;
 void gameLoop(Level& lvl){
     float dt = GetFrameTime();
+    scaleSys.update(lvl);
     const auto& si = scaleSys.info();
     playerPixCenter = {toPx(lvl.playerPos.x, si) + pSizeW/2,
                        toPx(lvl.playerPos.y, si) + pSizeH/2};

@@ -13,10 +13,11 @@ struct ScaleInfo{
     float tilePx;
     int visTilesX;
 };
-inline ScaleInfo makeScaleInfo(int screenW, int screenH, int lvlW, int lvlH){
-    float s = computeScaleFromHeight(screenH, lvlH);
+inline ScaleInfo makeScaleInfo(int screenW, int screenH, int lvlW, int lvlH, int zoomMul){
+    float base = computeScaleFromHeight(screenH, lvlH);           // integer-ish base, >=1
+    float s    = base * std::max(1, zoomMul);                     // user zoom on top
     float tilePx = TILE_SIZE * s;
-    int visX = static_cast<int>(std::ceil(screenW/tilePx));
+    int visX   = static_cast<int>(std::ceil(screenW / tilePx));
     return {s, tilePx, visX};
 }
 inline float toPx(float tiles, const ScaleInfo& si){

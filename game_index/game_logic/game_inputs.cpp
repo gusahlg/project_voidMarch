@@ -130,13 +130,14 @@ void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float spee
 void updateProjectiles(Level& lvl, float dt){
     for(auto& b : bullets){
         if(!b.alive) continue;
+
         b.pos.x += b.vel.x * dt;
         b.pos.y += b.vel.y * dt;
         auto& si = scaleSys.info();
         float gx = toTiles(b.pos.x, si);
         float gy = toTiles(b.pos.y, si);
-        float gw = toTiles(b.w, si);
-        float gh = toTiles(b.h, si);
+        float gw = toTiles((b.w*si.scale), si);
+        float gh = toTiles((b.h*si.scale), si);
         if(collisionRect(gx, gy, gw, gh, lvl)){
             b.alive = false;
         }
