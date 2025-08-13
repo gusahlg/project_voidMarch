@@ -2,6 +2,11 @@
 #include <array>
 #include <cstdint>
 #include <algorithm>
+/* PLAN: 
+I make a system that looks for the number of sections in the json file
+being loaded then the number of them get stored here with their values
+then I can use this to 
+*/
 enum class Stat : uint8_t {HP, MP, STR, AGI, INT, _COUNT};
 struct Stats{
     // So that the size adapts to the number of enum values.
