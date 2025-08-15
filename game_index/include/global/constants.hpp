@@ -8,3 +8,9 @@ extern int pSizeH;
 extern float pPixX;
 extern float pPixY;
 extern Rectangle playerRect;
+
+// Scalesystem:
+extern ScaleSystem scaleSys;
+
+// Player data:
+extern Player gPlayer;

@@ -22,4 +22,3 @@ private:
     int zoomMul = 1;
     ScaleInfo si{};
 };
-extern ScaleSystem scaleSys;

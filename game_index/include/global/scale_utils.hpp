@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cmath>
+#include "raylib.h"
 #include "constants.hpp"
 inline float computeScaleFromHeight(int screenH, int levelHeightTiles){
     float s = static_cast<float>(screenH)/(levelHeightTiles*TILE_SIZE);

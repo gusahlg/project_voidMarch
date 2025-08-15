@@ -9,7 +9,6 @@
 #include <random>
 #include <chrono>
 #include <cstdint>
-#include "../include/game/global_player.hpp" // Player stats, all in one place.
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"

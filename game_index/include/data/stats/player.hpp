@@ -1,29 +1,31 @@
 #pragma once
 #include "../json_helpers/data_communicator.hpp"
 #include <utility>
+#include <string_view>
 class Player {
 public:
+    enum info{HP, INT, COOLNESS};
     void takeDamage(int d){
-        stats_.damage(d);
+        data.set(info::HP, (int)data.get(info::HP)-d);
     }
-    bool isDead() const{
-        return stats_.isDead();
+    bool isDead(){
+        if(data.get(info::HP) <= 0) return true;
+        else return false;
     }
-    int hp() const{
-        return stats_.get(Stat::HP); 
+    int HP(){
+        return data.get(info::HP);
     }
-    int mp() const{
-        return stats_.get(Stat::MP); 
+    int INT(){
+        return data.get(info::INT);
     }
-    int str() const{
-        return stats_.get(Stat::STR); 
+    int COOLNESS(){
+        return data.get(info::COOLNESS);
     }
-    const Stats& raw() const{
-        return stats_;
+    Player()
+    : data{} {
+        data = createStats("game_index/save/player.json");
     }
-    Player(Stats s)
-    : stats_(std::move(s)) {}
 private:
-    Stats stats_;
+    Stats data;
 };
 //Gives easy access to stats.

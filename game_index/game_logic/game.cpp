@@ -12,8 +12,9 @@
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
-// Player stats, all in one place.
-#include "../include/game/global_player.hpp"
+// Gives access to player data.
+#include "../include/data/stats/player.hpp"
+Player gPlayer;
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
