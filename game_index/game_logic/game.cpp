@@ -14,7 +14,7 @@
 #include "../include/global/scale_system.hpp"
 // Gives access to player data.
 #include "../include/data/stats/player.hpp"
-Player gPlayer;
+inline Player gPlayer;
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;

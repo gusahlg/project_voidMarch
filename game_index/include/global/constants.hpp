@@ -1,4 +1,7 @@
 #pragma once
+#include <raylib.h>
+#include "scale_system.hpp"
+#include "../data/stats/player.hpp"
 constexpr int TILE_SIZE = 16;
 constexpr float PLAYER_WALK_SPEED = 5.f;
 
@@ -13,4 +16,4 @@ extern Rectangle playerRect;
 extern ScaleSystem scaleSys;
 
 // Player data:
-extern Player gPlayer;
+extern inline Player gPlayer;

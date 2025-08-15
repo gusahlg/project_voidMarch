@@ -4,22 +4,22 @@
 #include <string_view>
 class Player {
 public:
-    enum info{HP, INT, COOLNESS};
+    enum info{Hp, Int, Coolness};
     void takeDamage(int d){
-        data.set(info::HP, (int)data.get(info::HP)-d);
+        data.set(info::Hp, (int)data.get(info::Hp)-d);
     }
     bool isDead(){
-        if(data.get(info::HP) <= 0) return true;
+        if(data.get(info::Hp) <= 0) return true;
         else return false;
     }
     int HP(){
-        return data.get(info::HP);
+        return data.get(info::Hp);
     }
     int INT(){
-        return data.get(info::INT);
+        return data.get(info::Int);
     }
     int COOLNESS(){
-        return data.get(info::COOLNESS);
+        return data.get(info::Coolness);
     }
     Player()
     : data{} {
