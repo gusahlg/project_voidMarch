@@ -121,7 +121,7 @@ struct enemy{
 
     // Hitbox calc
     float frameW = (float)tex.width / frames;
-    Hbox = { pos.x, pos.y, frameW * scaleSys.info().scale, (float)tex.height * scaleSys.info().scale };
+    Hbox = Rectangle{ pos.x, pos.y, frameW * scaleSys.info().scale, (float)tex.height * scaleSys.info().scale };
 }
 };
 std::vector<enemy> enemies;

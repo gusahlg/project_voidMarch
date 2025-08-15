@@ -16,4 +16,4 @@ extern Rectangle playerRect;
 extern ScaleSystem scaleSys;
 
 // Player data:
-extern inline Player gPlayer;
+inline Player gPlayer{};

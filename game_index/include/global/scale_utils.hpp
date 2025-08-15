@@ -5,7 +5,7 @@
 #include "raylib.h"
 #include "constants.hpp"
 inline float computeScaleFromHeight(int screenH, int levelHeightTiles){
-    float s = static_cast<float>(screenH)/(levelHeightTiles*TILE_SIZE);
+    float s = static_cast<float>(screenH)/(levelHeightTiles*16);
     s = std::max(1.0f, floorf(s));
     return (int)s;
 }
@@ -17,7 +17,7 @@ struct ScaleInfo{
 inline ScaleInfo makeScaleInfo(int screenW, int screenH, int lvlW, int lvlH, int zoomMul){
     float base = computeScaleFromHeight(screenH, lvlH);           // integer-ish base, >=1
     float s    = base * std::max(1, zoomMul);                     // user zoom on top
-    float tilePx = TILE_SIZE * s;
+    float tilePx = 16 * s;
     int visX   = static_cast<int>(std::ceil(screenW / tilePx));
     return {s, tilePx, visX};
 }

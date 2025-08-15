@@ -14,7 +14,6 @@
 #include "../include/global/scale_system.hpp"
 // Gives access to player data.
 #include "../include/data/stats/player.hpp"
-inline Player gPlayer;
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
@@ -434,6 +433,8 @@ void gameLoop(Level& lvl){
         }
     }
     EndMode2D();
+    if(gPlayer.HP() == 100) DrawRectangle(0,0,500,500,YELLOW);
+    gPlayer.setInt(10);
 }
 void preLoadTasks(Level& lvl){
     readlvlData(lvl);
