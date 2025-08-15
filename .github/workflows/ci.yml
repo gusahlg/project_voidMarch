@@ -25,9 +25,13 @@ jobs:
       - name: Build
         shell: msys2 {0}
         run: |
+          set -e
           mkdir -p build
-          g++ -std=c++17 -O2 $(/usr/bin/find . -name "*.cpp" -not -path "./third_party/*") -o build/main.exe -lraylib -lopengl32 -lgdi32 -lwinmm -mwindows
-      - uses: actions/upload-artifact@v4
+          SRC=$(find . -name "*.cpp" -not -path "./third_party/*")
+          echo "Compiling: $SRC"
+          g++ -std=c++17 -O2 $SRC -o build/main.exe $(pkg-config --cflags --libs raylib) -mwindows
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: win-build
           path: build/main.exe
