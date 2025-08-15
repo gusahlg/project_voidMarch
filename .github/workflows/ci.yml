@@ -1,0 +1,36 @@
+﻿name: CI
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-windows-msys2:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: recursive
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-raylib
+      - name: Build
+        shell: msys2 {0}
+        run: >
+          mkdir -p build &&
+          g++ -std=c++17 -O2
+          
+          -o build/main.exe
+          -lraylib -lopengl32 -lgdi32 -lwinmm -mwindows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win-build
+          path: build/main.exe
