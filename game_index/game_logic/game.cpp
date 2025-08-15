@@ -384,6 +384,7 @@ Rectangle src;
 Rectangle dst;
 Rectangle playerRect;
 void gameLoop(Level& lvl){
+    if(gPlayer.isDead()) return;// Do something cool
     float dt = GetFrameTime();
     scaleSys.update(lvl);
     const auto& si = scaleSys.info();
@@ -433,8 +434,6 @@ void gameLoop(Level& lvl){
         }
     }
     EndMode2D();
-    if(gPlayer.HP() == 100) DrawRectangle(0,0,500,500,YELLOW);
-    gPlayer.setInt(10);
 }
 void preLoadTasks(Level& lvl){
     readlvlData(lvl);

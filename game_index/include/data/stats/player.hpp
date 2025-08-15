@@ -4,9 +4,8 @@
 #include <string_view>
 class Player {
 public:
-    enum info{Hp, Int, Coolness};
     void takeDamage(int d){
-        data.set(info::Hp, (int)data.get(info::Hp)-d);
+        data.set(info::Hp, data.get(info::Hp)-d);
     }
     void setHp(int newValue){
         data.set(Hp, newValue);
@@ -34,6 +33,7 @@ public:
         data = createStats("game_index/save/player.json");
     }
 private:
+    enum info{Hp, Int, Coolness};
     Stats data;
 };
 //Gives easy access to stats.
