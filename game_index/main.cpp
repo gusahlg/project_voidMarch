@@ -1,7 +1,9 @@
 #include "raylib.h"
 #include <iostream>
 #include <cstdint>
-#include <vector>
+#include "include/screen_load/home_screen.hpp"
+// Provides access to screen enum for other files:
+#include "include/screen_load/screen_constants.hpp"
 // Provides standard ui to other files:
 #include "include/standardUI/globalC.hpp"
 // Provides gameloop functions to int main:
@@ -16,8 +18,7 @@ Vector2 mousePos;
 Color Ctext = {160, 160, 160, 255};
 Color spaceBlue = {25, 70, 240, 255};
 // Use to determine what to load:
-enum class screen : std::uint8_t {Main, Select, Game};
-screen currentScreen = screen::Game;
+screen currentScreen = screen::Main;
 int screenWidth = 1280;
 int screenHeight = 720;
 int main(){
@@ -36,7 +37,7 @@ int main(){
         }
         switch(currentScreen){
             case screen::Main: 
-                // Do da load main stuff.
+                loadMainScreen(mousePos, screenWidth, screenHeight);
                 break;
             case screen::Select:
                 loadSelectScreen(mousePos, screenWidth, screenHeight);
