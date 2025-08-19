@@ -5,7 +5,6 @@
 #include "load_save.hpp"
 #include <string_view>
 #include <vector>
-#include "../nlohmann/json.hpp"
 // This is a full data handler API that speaks with json files and stores values.
 // What you want to set and what you want to set it to
 struct Stats{
