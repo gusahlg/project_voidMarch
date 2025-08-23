@@ -133,10 +133,11 @@ void loadHuman(){
     HfacingDownRight.pos = LoadTexture("assets/graphics/human/human3.png");
 }
 bool shouldLevelProgress(Level& lvl){
-    if(lvl.playerPos.x < 0 || lvl.playerPos.y >= (int)lvl.rows.size()) return true;
-    else if(lvl.playerPos.x < 0 || lvl.playerPos.x >= (int)lvl.rows[lvl.playerPos.y].size()) return true;
-    if(lvl.rows[lvl.playerPos.y][lvl.playerPos.x] == 'g') return true;
-    else return false;
+    int py = (int)lvl.playerPos.y;
+    if(py < 0 || py >= (int)lvl.rows.size()) return true;
+    int px = (int)lvl.playerPos.x;
+    if(px < 0 || px >= (int)lvl.rows[py].size()) return true;
+    return (lvl.rows[py][px] == 'g');
 }
 bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec){
     if(FirstRec.x < SecondRec.x + SecondRec.width &&
@@ -385,6 +386,10 @@ Rectangle src;
 Rectangle dst;
 Rectangle playerRect;
 void gameLoop(Level& lvl){
+    if(shouldLevelProgress(lvl)){
+        gWorld.saveWorldData(lvl.playerPos.x, lvl.playerPos.y, ++lvl.ID);
+        lvl.readlvlData();
+    }
     if(gPlayer.isDead()) return;// Do something cool
     float dt = GetFrameTime();
     scaleSys.update(lvl);
@@ -465,18 +470,13 @@ void preLoadTasks(Level& lvl){
 void loadLvl(){
     static bool loaded=false;
     Level& lvl = (gWorld.currentLevel() == 1) ? lvl1 : lvl2;
-    if(shouldLevelProgress(lvl)){
-        gWorld.saveWorldData(lvl.playerPos.x, lvl.playerPos.y, ++lvl.ID);
-    }
     if(!loaded){
         preLoadTasks(lvl);
         loaded=true;
     }
     gameLoop(lvl);
 }
-// Will determine what level gets loaded and more.
 void gameStateEventHandler(){
-    // For now only loads lvl 1 for simplicity
     loadLvl();
 }
 void movementEventHandler(Level& lvl, float dt){
