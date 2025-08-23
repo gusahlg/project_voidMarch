@@ -1,6 +1,5 @@
 #include "raylib.h"
 #include <iostream>
-#include <cstdint>
 #include "include/screen_load/home_screen.hpp"
 // Provides access to screen enum for other files:
 #include "include/screen_load/screen_constants.hpp"

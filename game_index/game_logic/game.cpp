@@ -5,6 +5,7 @@
 #include <cmath>
 #include <raymath.h>
 #include <cstdint>
+#include <string_view>
 #include "../include/game/loadGame.hpp"
 #include "../include/game/player_stats.hpp"
 #include "../include/game/ability_attributes.hpp"
@@ -14,6 +15,8 @@
 #include "../include/global/scale_system.hpp"
 // Gives access to player data.
 #include "../include/data/stats/player.hpp"
+// Saving and loading world data.
+#include "../include/data/stats/world.hpp"
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
@@ -43,8 +46,6 @@ float PLAYERHEIGHT = 0.4;
 Vector2 spawnPos;
 constexpr float WALK_SPEED = 5.0f;
 constexpr float SQRT2 = 0.70710678119;
-Level lvl1;
-Level lvl2;
 Direction currentDir;
 weapon equipped;
 constexpr float STEP_DELAY = 0.005f;
@@ -131,6 +132,12 @@ void loadHuman(){
     HfacingDownLeft.pos = LoadTexture("assets/graphics/human/human4.png");
     HfacingDownRight.pos = LoadTexture("assets/graphics/human/human3.png");
 }
+bool shouldLevelProgress(Level& lvl){
+    if(lvl.playerPos.x < 0 || lvl.playerPos.y >= (int)lvl.rows.size()) return true;
+    else if(lvl.playerPos.x < 0 || lvl.playerPos.x >= (int)lvl.rows[lvl.playerPos.y].size()) return true;
+    if(lvl.rows[lvl.playerPos.y][lvl.playerPos.x] == 'g') return true;
+    else return false;
+}
 bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec){
     if(FirstRec.x < SecondRec.x + SecondRec.width &&
        FirstRec.x + FirstRec.width > SecondRec.x &&
@@ -168,19 +175,6 @@ bool wallBellow(float cx, float cy, Level& lvl){
 }
 std::vector<Vector2> turtlesPos;
 std::vector<Vector2> genericPos;
-void readlvlData(Level& lvl){
-    std::ifstream in("assets/levels/level1.txt");
-    for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
-    for(size_t y=0;y<lvl.rows.size();++y)
-        for(size_t x=0;x<lvl.rows[y].size();++x)
-        //Making it so that enemies and such are interperated once and then painted as floor.
-            switch(lvl.rows[y][x]){
-                case('p'): lvl.playerPos = {(float)x, (float)y}; lvl.rows[y][x]='.'; break;
-                //Enemies below
-                case('t'): lvl.rows[y][x] = '.'; turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
-                case('e'): lvl.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
-            }
-}
 void drawLevel(Level& lvl){
     const auto& si = scaleSys.info();
     for(size_t y=0;y<lvl.rows.size();++y)
@@ -378,6 +372,13 @@ void DrawEquip(){
             break;
     }
 }
+void updateJson(float dt, Level& lvl){
+    static float Delay = 10.f;
+    Delay -= dt;
+    if(Delay > 0) return;
+    gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
+    Delay = 10.f;
+}
 int pSizeW;
 int pSizeH;
 Rectangle src;
@@ -434,9 +435,14 @@ void gameLoop(Level& lvl){
         }
     }
     EndMode2D();
+    updateJson(dt, lvl);
 }
+Level lvl1("assets/levels/level1.txt");
+Level lvl2("assets/levels/level1.txt");
 void preLoadTasks(Level& lvl){
-    readlvlData(lvl);
+    lvl1.ID = 1;
+    lvl2.ID = 2;
+    lvl.readlvlData(lvl);
     scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
     cam.zoom = 1.f;
@@ -453,27 +459,29 @@ void preLoadTasks(Level& lvl){
     bullets.reserve(50);
     turtlesPos.reserve(50);
     genericPos.reserve(50);
+    gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
 }
-void loadLvl1(){
+// Possible solution: Have two different preloadtask functions so that lvl isn't needed until it is.
+void loadLvl(){
     static bool loaded=false;
+    Level lvl;
+    switch(gWorld.currentLevel()){
+        case 1: lvl = lvl1; break;
+        case 2: lvl = lvl2; break;
+    }
+    if(shouldLevelProgress(lvl)){
+        gWorld.saveWorldData(lvl.playerPos.x, lvl.playerPos.y, ++lvl.ID);
+    }
     if(!loaded){
         preLoadTasks(lvl1);
         loaded=true;
     }
     gameLoop(lvl1);
 }
-void loadLvl2(){
-    static bool loaded=false;
-    if(!loaded){
-        preLoadTasks(lvl2);
-        loaded=true;
-    }
-    gameLoop(lvl2);
-}
 // Will determine what level gets loaded and more.
 void gameStateEventHandler(){
     // For now only loads lvl 1 for simplicity
-    loadLvl1();
+    loadLvl();
 }
 void movementEventHandler(Level& lvl, float dt){
     float x = 0.0f;

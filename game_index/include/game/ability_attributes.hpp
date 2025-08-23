@@ -4,9 +4,31 @@
 #include <iostream>
 #include <cstdint>
 #include "player_stats.hpp"
-struct Level{
+#include <fstream>
+#include <string_view>
+class Level{
+public:
     std::vector<std::string> rows;
     Vector2 playerPos;
+    int ID;
+    void readlvlData(){
+        for(std::string line;std::getline(in,line);) *this.rows.push_back(line);
+        for(size_t y=0;y<*this.rows.size();++y)
+            for(size_t x=0;x<*this.rows[y].size();++x)
+            //Making it so that enemies and such are interperated once and then painted as floor.
+                switch(*this.rows[y][x]){
+                    case('p'): *this.playerPos = {(float)x, (float)y}; *this.rows[y][x]='.'; break;
+                    //Enemies below
+                    case('t'): *this.rows[y][x] = '.'; turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                    case('e'): *this.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                }
+    }
+    Level(std::string_view file)
+    : in(file) {}
+    Level()
+    : in(){}
+private:
+    std::ifstream in{};
 };
 struct projectile {
     Vector2 pos;

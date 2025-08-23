@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include "scale_system.hpp"
 #include "../data/stats/player.hpp"
+#include "../data/stats/world.hpp"
 constexpr int TILE_SIZE = 16;
 constexpr float PLAYER_WALK_SPEED = 5.f;
 
@@ -17,3 +18,4 @@ extern ScaleSystem scaleSys;
 
 // Player data:
 inline Player gPlayer{};
+inline World gWorld{};

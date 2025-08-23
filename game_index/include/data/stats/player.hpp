@@ -2,6 +2,7 @@
 #include "../json_helpers/data_communicator.hpp"
 #include <utility>
 #include <raylib.h>
+#include <cstdint>
 #include <string_view>
 class Player {
 public:
@@ -43,7 +44,7 @@ public:
         data = createStats("game_index/save/player.json");
     }
 private:
-    enum info{Hp, Int, Coolness, CordX, CordY};
+    enum info : std::uint8_t{Hp, Int, Coolness, CordX, CordY};
     Stats data;
 };
 //Gives easy access to stats.
