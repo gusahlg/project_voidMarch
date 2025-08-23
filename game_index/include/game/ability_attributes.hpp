@@ -3,32 +3,61 @@
 #include <vector>
 #include <iostream>
 #include <cstdint>
+#include <string>
 #include "player_stats.hpp"
 #include <fstream>
 #include <string_view>
-class Level{
+extern std::vector<Vector2> turtlesPos;
+extern std::vector<Vector2> genericPos;
+class Level {
 public:
     std::vector<std::string> rows;
-    Vector2 playerPos;
-    int ID;
-    void readlvlData(){
-        for(std::string line;std::getline(in,line);) *this.rows.push_back(line);
-        for(size_t y=0;y<*this.rows.size();++y)
-            for(size_t x=0;x<*this.rows[y].size();++x)
+    Vector2 playerPos{0,0};
+    int ID = 0;
+    explicit Level(std::string_view file)
+    : path(file) {}
+    Level() = default;
+    /*
+    This is the old code, compare what old/new code does to debug.
+    void readlvlData(Level& lvl){
+        for(std::string line;std::getline(in,line);) lvl.rows.push_back(line);
+        for(size_t y=0;y<rows.size();++y)
+            for(size_t x=0;x<lvl.rows[y].size();++x)
             //Making it so that enemies and such are interperated once and then painted as floor.
-                switch(*this.rows[y][x]){
-                    case('p'): *this.playerPos = {(float)x, (float)y}; *this.rows[y][x]='.'; break;
+                switch(lvl.rows[y][x]){
+                    case('p'): lvl.playerPos = {(float)x, (float)y}; lvl.rows[y][x]='.'; break;
                     //Enemies below
-                    case('t'): *this.rows[y][x] = '.'; turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
-                    case('e'): *this.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                    case('t'): lvl.rows[y][x] = '.'; turtlesPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
+                    case('e'): lvl.rows[y][x] = '.'; genericPos.emplace_back(Vector2{static_cast<float>(x),static_cast<float>(y)}); break;
                 }
     }
-    Level(std::string_view file)
-    : in(file) {}
-    Level()
-    : in(){}
+                */
+    // Read the level text, capture p/e/t markers, convert them to '.' in the tilemap.
+    inline void readlvlData(){
+        rows.clear();
+        playerPos = {0,0};
+        turtlesPos.clear();
+        genericPos.clear();
+        std::ifstream in(path);
+        std::string line;
+        size_t y = 0;
+        while(std::getline(in, line)){
+            if(line.find('C') != std::string::npos) break;
+            std::string row; row.reserve(line.size());
+            for(size_t x = 0; x < line.size(); ++x){
+                char c = line[x];
+                switch(c){
+                    case 'p': playerPos = {float(x), float(y)}; row.push_back('.'); break;
+                    case 't': turtlesPos.push_back(Vector2{float(x), float(y)}); row.push_back('.'); break;
+                    case 'e': genericPos.push_back(Vector2{float(x), float(y)}); row.push_back('.'); break;
+                }
+            }
+            rows.push_back(std::move(row));
+            ++y;
+        }
+    }
 private:
-    std::ifstream in{};
+    std::string path;
 };
 struct projectile {
     Vector2 pos;

@@ -175,7 +175,7 @@ bool wallBellow(float cx, float cy, Level& lvl){
 }
 std::vector<Vector2> turtlesPos;
 std::vector<Vector2> genericPos;
-void drawLevel(Level& lvl){
+void drawLevel(const Level& lvl){
     const auto& si = scaleSys.info();
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
@@ -438,11 +438,11 @@ void gameLoop(Level& lvl){
     updateJson(dt, lvl);
 }
 Level lvl1("assets/levels/level1.txt");
-Level lvl2("assets/levels/level1.txt");
+Level lvl2("assets/levels/level2.txt");
 void preLoadTasks(Level& lvl){
     lvl1.ID = 1;
     lvl2.ID = 2;
-    lvl.readlvlData(lvl);
+    lvl.readlvlData();
     scaleSys.update(lvl);
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
     cam.zoom = 1.f;
@@ -464,19 +464,15 @@ void preLoadTasks(Level& lvl){
 // Possible solution: Have two different preloadtask functions so that lvl isn't needed until it is.
 void loadLvl(){
     static bool loaded=false;
-    Level lvl;
-    switch(gWorld.currentLevel()){
-        case 1: lvl = lvl1; break;
-        case 2: lvl = lvl2; break;
-    }
+    Level& lvl = (gWorld.currentLevel() == 1) ? lvl1 : lvl2;
     if(shouldLevelProgress(lvl)){
         gWorld.saveWorldData(lvl.playerPos.x, lvl.playerPos.y, ++lvl.ID);
     }
     if(!loaded){
-        preLoadTasks(lvl1);
+        preLoadTasks(lvl);
         loaded=true;
     }
-    gameLoop(lvl1);
+    gameLoop(lvl);
 }
 // Will determine what level gets loaded and more.
 void gameStateEventHandler(){
