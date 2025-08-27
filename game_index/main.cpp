@@ -23,7 +23,7 @@ int screenHeight = 720;
 int main(){
     InitWindow(screenWidth, screenHeight, "PROJECT: VOIDMARCH");
     SetTargetFPS(60);
-    Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
+    static Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
     SetWindowIcon(icon);
     UnloadImage(icon);
     // Loop that the entire game runs within
@@ -43,6 +43,9 @@ int main(){
                 break;
             case screen::Game: 
                 gameStateEventHandler();
+                break;
+            case screen::LevelSelect:
+                loadLevelSelect(mousePos, screenWidth, screenHeight);
                 break;
         }
         EndDrawing();

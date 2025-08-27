@@ -20,7 +20,7 @@ void levelSelectPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
     const float btnX = screenWidth/2.f-Idle.width/2.f;
     const float btnY = screenHeight/2.f-Idle.height/2.f;
-    levelSelectManager.emplaceButton(Rectangle{btnX,btnY,float(Idle.width),float(Idle.height)},Idle,Hover,Pressed,[]{currentScreen=screen::Select;});
+    levelSelectManager.emplaceButton(Rectangle{btnX,btnY,float(Idle.width),float(Idle.height)},Idle,Hover,Pressed,[]{currentScreen=screen::Game;});
 }
 void loadLevelSelect(Vector2 mousePos, float screenWidth, float screenHeight){
     static bool loaded = false;

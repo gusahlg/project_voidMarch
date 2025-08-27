@@ -31,6 +31,10 @@ void selectPreLoadTasks(float screenWidth, float screenHeight){
     selectManager.emplaceButton(Rectangle{50, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Craftsman;profSelect=true;});
     selectManager.emplaceButton(Rectangle{100, 50, float(Idle.width), float(Idle.height)}, Idle, Hover, Pressed,[]{currentProf = Prof::Wizard;profSelect=true;});
     selectManager.emplaceButton(Rectangle{150, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Dualist;profSelect=true;});
+    // Button progresses to level select
+    const float btnX = screenWidth/2.f-Idle.width/2.f;
+    const float btnY = screenHeight/2.f-Idle.height/2.f;
+    selectManager.emplaceButton(Rectangle{btnX, btnY, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{if(raceSelect && profSelect) currentScreen = screen::LevelSelect;});
     // Create background:
     selectManager.setupHelper(Idle);
     selectManager.Helper.setupScale(screenWidth, screenHeight);
@@ -44,5 +48,4 @@ void loadSelectScreen(Vector2 mousePos, float screenWidth, float screenHeight){
     selectManager.updateAll(mousePos);
     selectManager.drawAll();
     selectManager.Helper.draw();
-    if(raceSelect && profSelect) currentScreen = screen::Game;
 }
