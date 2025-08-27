@@ -6,10 +6,11 @@
 #include <string>
 #include "player_stats.hpp"
 #include <fstream>
+#include <limits>
 #include <string_view>
 extern std::vector<Vector2> turtlesPos;
 extern std::vector<Vector2> genericPos;
-class Level {
+class Level{
 public:
     std::vector<std::string> rows;
     Vector2 playerPos{0,0};
@@ -22,10 +23,35 @@ public:
         playerPos = {0,0};
         turtlesPos.clear();
         genericPos.clear();
+        // Check for smallest filler width in entire file, then remove filler
+        // and load each new line into rows.
+        int minWidth = std::numeric_limits<int>::max();     
+        int maxWidth = std::numeric_limits<int>::max();
         std::ifstream in(path);
-        for(std::string line; std::getline(in, line); ){
-            rows.push_back(line);
+        // Might work, need to include for scenarios of hollow maps though.
+        bool shouldStop = false;
+        for(std::string line; std::getline(in, line);){
+            for(int i=0; i < line.size(); ++i){
+                if(line[i]=='C') shouldStop = true;
+            }
+            if(shouldStop) break;
+            size_t first = line.find_first_not_of(" -");
+            int left = (first == std::string::npos) ? static_cast<int>(line.size()) : static_cast<int>(first);
+            size_t last = line.find_last_not_of(" -");
+            int right = (last == std::string::npos) ? static_cast<int>(line.size()) : static_cast<int>((line.size() - 1) - last);
+            if(left  < minWidth) minWidth = left;   
+            if(right < maxWidth) maxWidth = right; 
         }
+        in.clear();
+        in.seekg(0);
+        for(std::string line; std::getline(in, line);){
+            const size_t start = std::min<size_t>(minWidth, line.size());
+            size_t end = line.size() - std::min<size_t>(maxWidth, line.size());
+            if(end < start) end = start;
+            // Cut off excess filler with substr:
+            rows.emplace_back(line.substr(start, end - start));
+        }
+        // Searches for enemies etc.
         for(size_t y = 0; y < rows.size(); ++y){
             for(size_t x = 0; x < rows[y].size(); ++x){
                 switch(rows[y][x]){

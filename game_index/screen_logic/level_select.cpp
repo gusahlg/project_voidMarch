@@ -13,14 +13,14 @@
 // Gives easy access to all standard ui features:
 #include "../include/standardUI/manager.hpp"
 // The files' local ui manager:
-ui::Manager mainManager;
+ui::Manager levelSelectManager;
 void levelSelectPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
     static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
     static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
     const float btnX = screenWidth/2.f-Idle.width/2.f;
     const float btnY = screenHeight/2.f-Idle.height/2.f;
-    mainManager.emplaceButton(Rectangle{btnX,btnY,float(Idle.width),float(Idle.height)},Idle,Hover,Pressed,[]{currentScreen=screen::Select;});
+    levelSelectManager.emplaceButton(Rectangle{btnX,btnY,float(Idle.width),float(Idle.height)},Idle,Hover,Pressed,[]{currentScreen=screen::Select;});
 }
 void loadLevelSelect(Vector2 mousePos, float screenWidth, float screenHeight){
     static bool loaded = false;
@@ -28,7 +28,7 @@ void loadLevelSelect(Vector2 mousePos, float screenWidth, float screenHeight){
         levelSelectPreLoadTasks(screenWidth, screenHeight);
         loaded = true;
     }
-    mainManager.updateAll(mousePos);
-    mainManager.drawAll();
+    levelSelectManager.updateAll(mousePos);
+    levelSelectManager.drawAll();
 }
 
