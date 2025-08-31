@@ -10,6 +10,7 @@ public:
         data.set(info::PlayerX, playerX);
         data.set(info::PlayerY, playerY);
         data.set(info::CurrentLevel, currentLevel);
+        data.save();
     }
     Vector2 playerPos() const{
         Vector2 value = {(float)data.get(info::PlayerX), (float)data.get(info::PlayerY)};
