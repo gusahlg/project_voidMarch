@@ -10,6 +10,8 @@
 struct Stats{
     void set(const int& valueType, const int& newValue){
         values[valueType] = newValue;
+    }
+    void save(){
         save_json(file, *this);
     }
     int get(const int& valueType) const{
