@@ -8,11 +8,10 @@ class Button{
     public:
         using Action = std::function<void()>;
         enum class DisplayDependency : std::uint8_t {None, OnHover, OnClick};
-        Button(Rectangle bounds,
-            Texture2D idle, Texture2D hover, Texture2D pressed,
+        Button(Rectangle bounds, Texture2D tex, 
             Action onClick = nullptr, std::string name = {}, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None, std::string targetName = {})
-        : bounds(bounds), idle(idle), hover(hover), pressed(pressed), 
-          onClick(std::move(onClick)), name(name), DependencyType(dependency), targetName(targetName) {}
+        : bounds(bounds), tex(tex), 
+          onClick(std::move(onClick)), name(name), DependencyType(dependency), targetName(targetName) {bounds.x=tex.width/3;}
 
         void update(Vector2 mouse){
             bool inside = CheckCollisionPointRec(mouse, bounds);
@@ -27,7 +26,7 @@ class Button{
             else state = State::Hover;
         }
         void draw() const{
-            const Texture2D tex = state == State::Hover ? hover : state == State::Pressed ? pressed : idle;
+            int x = state == State::Hover ? 0 : state == State::Pressed ? bounds.width : bounds.width*2;
             DrawTextureRec(tex, {0,0, bounds.width, bounds.height}, {bounds.x, bounds.y}, WHITE);
         }
         void drawOutline() const{
@@ -41,7 +40,7 @@ class Button{
         bool toggled = false;
     private:
         Rectangle bounds;
-        Texture2D idle, hover, pressed;
+        Texture2D tex;
         Action onClick;
 };
 

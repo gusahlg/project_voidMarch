@@ -59,7 +59,7 @@ class Manager{
             }
         }
         // For more easily seing borders, great for debugging.
-        void highlightOutlines(){
+        void highlightOutlines() const{
             for(const auto& b : buttons) b.drawOutline();
         }
         void clearAll(){

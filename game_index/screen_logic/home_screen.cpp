@@ -37,8 +37,12 @@ struct Star{
     : tex(tex), src(src), drawBox(drawBox), tint(tint), clock(clock) {}
 };/*794*/
 std::vector<Star> stars;
+// PLEASE FIX STARS ONCE IT'S ALL IN SAME SPRITESHEET!!!
 void generateStars(int screenWidth, int screenHeight){
-    static Texture2D fullStarSheet = LoadTexture("assets/UI/screen_interface/backgrounds/star.png");
+    static Texture2D Star1 = LoadTexture("assets/UI/screen_interface/backgrounds/StarSheet1.png");
+    static Texture2D Star2 = LoadTexture("assets/UI/screen_interface/backgrounds/StarSheet2.png");
+    static Texture2D Star3 = LoadTexture("assets/UI/screen_interface/backgrounds/StarSheet3.png");
+    static Texture2D fullStarSheet = LoadTexture("assets/UI/screen_interface/backgrounds/StarSheet3.png");
     // Generate new stars until maximum star amount is reached:
     for(int i = 0; i < (int)(500 - stars.size()); ++i){
         Texture2D tex = fullStarSheet;
@@ -80,13 +84,12 @@ void drawStars(){
         DrawTexturePro(s.tex, s.src, s.drawBox, {0,0}, 0, s.tint);
     }
 }
+// TODO: Fix UI system so that it works well with ONE spritesheet!
 void mainPreLoadTasks(float screenWidth, float screenHeight){
-    static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
-    static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
-    static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
-    const float btnX = screenWidth/2.f-Idle.width/2.f;
-    const float btnY = screenHeight/2.f-Idle.height/2.f;
-    mainManager.emplaceButton(Rectangle{btnX,btnY,float(Idle.width),float(Idle.height)},Idle,Hover,Pressed,[]{currentScreen=screen::Select;});
+    static Texture2D button = LoadTexture("assets/ui/screen_interface/buttons/blueButton.png");
+    const float btnX = screenWidth/2.f-button.width/3/2.f;
+    const float btnY = screenHeight/2.f-button.height/3/2.f;
+    mainManager.emplaceButton(Rectangle{btnX,btnY,float(button.width),float(button.height)},button,[]{currentScreen=screen::Select;});
 }
 void loadMainScreen(Vector2 mousePos, float screenWidth, float screenHeight){
     static bool loaded = false;

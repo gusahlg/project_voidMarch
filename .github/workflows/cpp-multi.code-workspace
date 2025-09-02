@@ -1,9 +1,11 @@
 {
 	"folders": [
 		{
+			"name": "project_voidMarch",
 			"path": "../.."
 		},
 		{
+			"name": "VK_project",
 			"path": "../../../VK_project"
 		}
 	],
