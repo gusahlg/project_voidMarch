@@ -87,9 +87,9 @@ void drawStars(){
 // TODO: Fix UI system so that it works well with ONE spritesheet!
 void mainPreLoadTasks(float screenWidth, float screenHeight){
     static Texture2D button = LoadTexture("assets/ui/screen_interface/buttons/blueButton.png");
-    const float btnX = screenWidth/2.f-button.width/3/2.f;
-    const float btnY = screenHeight/2.f-button.height/3/2.f;
-    mainManager.emplaceButton(Rectangle{btnX,btnY,float(button.width),float(button.height)},button,[]{currentScreen=screen::Select;});
+    const float btnX = screenWidth/2.f;
+    const float btnY = screenHeight/2.f;
+    mainManager.emplaceButton(Vector2{btnX,btnY},button,[]{currentScreen=screen::Select;});
 }
 void loadMainScreen(Vector2 mousePos, float screenWidth, float screenHeight){
     static bool loaded = false;

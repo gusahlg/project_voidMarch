@@ -21,7 +21,8 @@ screen currentScreen = screen::Main;
 int screenWidth = 1280;
 int screenHeight = 720;
 int main(){
-    InitWindow(screenWidth, screenHeight, "PROJECT: VOIDMARCH");
+    InitWindow(GetScreenWidth(), GetScreenHeight(), "PROJECT: VOIDMARCH");
+    SetWindowState(FLAG_WINDOW_UNDECORATED | FLAG_WINDOW_MAXIMIZED);
     SetTargetFPS(60);
     static Image icon = LoadImage("assets/graphics/logos/VoidMarchLogo.png");
     SetWindowIcon(icon);
