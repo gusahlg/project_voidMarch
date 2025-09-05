@@ -42,7 +42,6 @@ void updateRoll(Level& lvl, float dt){
             yofset -= 1.0f;
             playerTex = up.pos;
             break;
-
         case Down:
             if (y >= Oy + rollDistance) {
                 rolling = false;
@@ -50,7 +49,6 @@ void updateRoll(Level& lvl, float dt){
             yofset += 1.0f;
             playerTex = down.pos;
             break;
-
         case Left:
             if (x <= Ox - rollDistance) {
                 rolling = false;
@@ -58,7 +56,6 @@ void updateRoll(Level& lvl, float dt){
             xofset -= 1.0f;
             playerTex = left.pos;
             break;
-
         case UpLeft:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
                 rolling = false;
@@ -67,7 +64,6 @@ void updateRoll(Level& lvl, float dt){
             yofset -= 1.0f;
             playerTex = up.pos;
             break;
-
         case UpRight:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
                 rolling = false;
@@ -76,7 +72,6 @@ void updateRoll(Level& lvl, float dt){
             yofset -= 1.0f;
             playerTex = up.pos;
             break;
-
         case DownLeft:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
                 rolling = false;
@@ -85,7 +80,6 @@ void updateRoll(Level& lvl, float dt){
             yofset += 1.0f;
             playerTex = down.pos;
             break;
-
         case DownRight:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
                 rolling = false;
@@ -94,19 +88,16 @@ void updateRoll(Level& lvl, float dt){
             yofset += 1.0f;
             playerTex = down.pos;
             break;
-
         default: // Right
-            if (x >= Ox + rollDistance) {
+            if(x >= Ox + rollDistance) {
                 rolling = false;
             }
             xofset += 1.0f;
             playerTex = right.pos;
             break;
     }
-
     float newX = x + xofset * ROLL_SPEED * dt;
     float newY = y + yofset * ROLL_SPEED * dt;
-
     if (!collisionRect(newX, newY, PLAYERWIDTH, PLAYERHEIGHT, lvl)) {
         lvl.playerPos.x = newX;
         lvl.playerPos.y = newY;

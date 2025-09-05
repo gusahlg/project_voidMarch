@@ -18,6 +18,7 @@
 // Saving and loading world data.
 #include "../include/data/stats/world.hpp"
 ScaleSystem scaleSys;
+PlayerTexManager playerTex;
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -54,7 +55,8 @@ void movementEventHandler(Level& lvl, float);
 
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
-Texture2D playerTex;
+//Not needed!
+//Texture2D playerTex;
 Texture2D swordTex;
 Texture2D blasterTex;
 const float ANIM_SPEED = 0.12f;
