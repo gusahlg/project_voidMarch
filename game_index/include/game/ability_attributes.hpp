@@ -101,7 +101,8 @@ enum Direction : std::uint8_t{
     UpLeft,
     UpRight,
     DownLeft,
-    DownRight
+    DownRight,
+    _COUNT
 };
 extern Direction currentDir;
 enum weapon : std::uint8_t{
