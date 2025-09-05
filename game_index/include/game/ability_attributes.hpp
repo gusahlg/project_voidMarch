@@ -89,7 +89,6 @@ extern float PLAYERHEIGHT;
 void loadRollTex();
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl, Rectangle dest, Vector2 origin, float rotation);
 void updateRoll(Level& lvl, float dt);
-extern Texture2D playerTex;
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner);

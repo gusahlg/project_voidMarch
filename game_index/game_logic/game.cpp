@@ -18,7 +18,6 @@
 // Saving and loading world data.
 #include "../include/data/stats/world.hpp"
 ScaleSystem scaleSys;
-PlayerTexManager playerTex;
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -55,8 +54,6 @@ void movementEventHandler(Level& lvl, float);
 
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
-//Not needed!
-//Texture2D playerTex;
 Texture2D swordTex;
 Texture2D blasterTex;
 const float ANIM_SPEED = 0.12f;
@@ -457,10 +454,9 @@ void preLoadTasks(Level& lvl){
     spriteManager();
     loadTileTextures();
     loadEnemies(lvl);
-    playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
+    PlayerTexManager::instance().loadWalkFor(currentRace);
     blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
     swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
-    SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
     SetTextureFilter(blasterTex,TEXTURE_FILTER_POINT);
     SetTextureFilter(swordTex,TEXTURE_FILTER_POINT);
     bullets.reserve(50);
