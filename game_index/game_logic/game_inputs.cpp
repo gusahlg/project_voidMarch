@@ -10,19 +10,6 @@
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
-struct void_crawler_roll{
-    Texture2D pos;
-};
-void_crawler_roll up;
-void_crawler_roll down;
-void_crawler_roll left;
-void_crawler_roll right;
-void loadRollTex(){
-    up.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll4.png");
-    down.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
-    left.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll2.png");
-    right.pos = LoadTexture("assets/graphics/void_crawler/animations/roll/void_crawler_roll1.png");
-}
 bool rolling;
 float Ox;
 float Oy;
@@ -40,21 +27,18 @@ void updateRoll(Level& lvl, float dt){
                 rolling = false;
             }
             yofset -= 1.0f;
-            playerTex = up.pos;
             break;
         case Down:
             if (y >= Oy + rollDistance) {
                 rolling = false;
             }
             yofset += 1.0f;
-            playerTex = down.pos;
             break;
         case Left:
             if (x <= Ox - rollDistance) {
                 rolling = false;
             }
             xofset -= 1.0f;
-            playerTex = left.pos;
             break;
         case UpLeft:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
@@ -62,7 +46,6 @@ void updateRoll(Level& lvl, float dt){
             }
             xofset -= 1.0f;
             yofset -= 1.0f;
-            playerTex = up.pos;
             break;
         case UpRight:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
@@ -70,7 +53,6 @@ void updateRoll(Level& lvl, float dt){
             }
             xofset += 1.0f;
             yofset -= 1.0f;
-            playerTex = up.pos;
             break;
         case DownLeft:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
@@ -78,7 +60,6 @@ void updateRoll(Level& lvl, float dt){
             }
             xofset -= 1.0f;
             yofset += 1.0f;
-            playerTex = down.pos;
             break;
         case DownRight:
             if (sqrtf((x - Ox)*(x - Ox) + (y - Oy)*(y - Oy)) >= rollDistance) {
@@ -86,14 +67,12 @@ void updateRoll(Level& lvl, float dt){
             }
             xofset += 1.0f;
             yofset += 1.0f;
-            playerTex = down.pos;
             break;
         default: // Right
             if(x >= Ox + rollDistance) {
                 rolling = false;
             }
             xofset += 1.0f;
-            playerTex = right.pos;
             break;
     }
     float newX = x + xofset * ROLL_SPEED * dt;
