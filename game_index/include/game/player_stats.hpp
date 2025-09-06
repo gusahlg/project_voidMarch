@@ -1,6 +1,7 @@
 // game_index/include/game/player_stats.hpp
 // for game.cpp and sprites.
 #pragma once
+#include "ability_attributes.hpp"
 #include <cstdint>
 #include <array>
 #include <raylib.h>

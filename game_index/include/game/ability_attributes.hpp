@@ -86,7 +86,6 @@ extern Texture2D swordTex;
 extern float PLAYERWIDTH;
 extern const float SQRT2;
 extern float PLAYERHEIGHT;
-void loadRollTex();
 void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl, Rectangle dest, Vector2 origin, float rotation);
 void updateRoll(Level& lvl, float dt);
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);

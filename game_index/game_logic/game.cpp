@@ -200,20 +200,9 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         currentFrame=0;animTimer=0.0f;
         if(currentDir == Direction::Left || currentDir == Direction::DownLeft || currentDir == Direction::UpLeft){
-            switch(currentRace){
-                case(Race::Spacelizard):
-                case(Race::Voidcrawler):
-                case(Race::Human):
-                //Add mechasapien
-            }
+        
         }
         else{
-            switch(currentRace){
-                case(Race::Spacelizard):
-                case(Race::Voidcrawler):
-                case(Race::Human):
-                //Add mechasapien
-            }
         }
     }
     if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
@@ -447,136 +436,6 @@ void movementEventHandler(Level& lvl, float dt){
     if(x != 0.0f && y != 0.0f){
         x *= SQRT2;
         y *= SQRT2;
-    }
-    switch(currentDir){
-        case(Up):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingUp.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        case(Down):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDown.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        case(Left):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownLeft.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        case(Right):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownRight.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        case(UpLeft):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingUpLeft.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        case(UpRight):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-           
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingUpRight.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        case(DownLeft):
-            switch(currentRace){
-                case(Race::Voidcrawler):
- 
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownLeft.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
-        default:
-            switch(currentRace){
-                case(Race::Voidcrawler):
-
-                    break;
-                case(Race::Spacelizard):
-
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownRight.pos;
-                    break;
-                default:
-
-                    break;
-            }
-            break;
     }
     float newX = lvl.playerPos.x + x * WALK_SPEED * dt;
     float newY = lvl.playerPos.y + y * WALK_SPEED * dt;
