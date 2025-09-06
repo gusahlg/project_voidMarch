@@ -93,6 +93,22 @@ public:
             setFilterPoint_();
             rollLoaded_ = true;
         }
+        else if(r == Race::Spacelizard){
+            roll_[0] = LoadTexture("assets/graphics/space_lizard/animations/roll/spacelizardRollRight.png"); // Up
+            roll_[1] = LoadTexture("assets/graphics/space_lizard/animations/roll/spacelizardRollLeft.png"); // Down
+            roll_[2] = LoadTexture("assets/graphics/space_lizard/animations/roll/spacelizardRollLeft.png"); // Left
+            roll_[3] = LoadTexture("assets/graphics/space_lizard/animations/roll/spacelizardRollRight.png"); // Right
+            setFilterPoint_();
+            rollLoaded_ = true; 
+        }
+        else if(r == Race::Human){
+            roll_[0] = LoadTexture("assets/graphics/human/animations/roll/HumanRollUpLeft.png"); // Up
+            roll_[1] = LoadTexture("assets/graphics/human/animations/roll/HumanDownRight.png"); // Down
+            roll_[2] = LoadTexture("assets/graphics/human/animations/roll/HumanDownLeft.png"); // Left
+            roll_[3] = LoadTexture("assets/graphics/human/animations/roll/HumanDownRight.png"); // Right
+            setFilterPoint_();
+            rollLoaded_ = true;
+        }
     }
 
     // Accessors used by gameplay/draw
