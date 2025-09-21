@@ -10,6 +10,10 @@
 #include "../include/game/player_stats.hpp"
 #include "../include/game/ability_attributes.hpp"
 #include "../include/game/enemy_data.hpp"
+// Everything weapon/inventory related.
+#include "../game_logic/inventory/weapon.hpp"
+#include "../game_logic/inventory/melee_bindings.hpp"
+#include "../game_logic/inventory/sector_hit.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
