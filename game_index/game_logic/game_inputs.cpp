@@ -117,12 +117,13 @@ void updateProjectiles(Level& lvl, float dt){
 }
 void drawProjectiles(){
     for(const auto& b : bullets){
-        DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.w, (int)b.h, RED);
+        auto& si = scaleSys.info();
+        float gw = toTiles((b.w*si.scale), si);
+        float gh = toTiles((b.h*si.scale), si);
+        DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)gw, (int)gh, RED);
     }
 }
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl){
-    /* Gonna add in stuff for drawing in the actual weapon as well. 
-    DrawTexturePro()*/
     updateProjectiles(lvl, dt);
     drawProjectiles();
 }

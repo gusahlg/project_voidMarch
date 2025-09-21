@@ -211,9 +211,9 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         equipped = weapon::sword;
     }
-    static float w = 5.0f;
-    static float h = 5.0f;
-    static float speed = 300.0f;
+    static float w = 50.0f;
+    static float h = 50.0f;
+    static float speed = 10.0f;
     static float ARCSIZE = 50.0f;
     static float range = 50.0f;
     Rectangle dest; Vector2 origin; float rotation;

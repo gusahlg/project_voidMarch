@@ -32,7 +32,7 @@ struct Star{
     int stages=0;
     Rectangle drawBox;
     Color tint;
-    float clock;
+    int clock;
     Star(Texture2D tex, Rectangle src, Rectangle drawBox, Color tint, float clock)
     : tex(tex), src(src), drawBox(drawBox), tint(tint), clock(clock) {}
 };
@@ -40,12 +40,12 @@ std::vector<Star> stars;
 void generateStars(int screenWidth, int screenHeight){
     static Texture2D fullStarSheet = LoadTexture("assets/UI/screen_interface/backgrounds/fullStarSheet.png");
     // Generate new stars until maximum star amount is reached:
-    for(int i = 0; i < (int)(500000000 - stars.size()); ++i){
+    for(int i = 0; i < (int)(100000 - stars.size()); ++i){
         Texture2D tex = fullStarSheet;
         int x = rng_int(0, screenWidth);
         int y = rng_int(0, screenHeight);
-        int width  = rng_int(0, 1);
-        int height = rng_int(0, 1);
+        int width  = rng_int(0.1, 1);
+        int height = rng_int(0.1, 1);
         if(rng_int(0,1) == 1){
             width = rng_int(1, 2);
             height = rng_int(1, 2);
@@ -54,11 +54,12 @@ void generateStars(int screenWidth, int screenHeight){
             width = rng_int(2, 4);
             height = rng_int(2, 4);
         }
-        Color tint = WHITE;
-        if(rng_int(1,3) != 1){
+        Color tint;
+        if(rng_int(1,3) == 1){
             tint = {(unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255)};
         } 
-        float clock = rng_float(0.6, 2.5);
+        else{tint = WHITE;}
+        int clock = rng_int(0, 5);
         static const int rows = fullStarSheet.height / 5;
         int row  = rng_int(0, std::max(0, rows - 1));
         Rectangle src = {0.f, float(row * 5), 5.f, 5.f};
@@ -77,7 +78,7 @@ void updateStars(){
             case 3: s.src.x = 20.f; break;
         }
         ++s.stages;
-        s.clock = rng_float(3, 8);
+        s.clock = rng_int(500, 10000);
 }
     stars.erase(
         std::remove_if(
