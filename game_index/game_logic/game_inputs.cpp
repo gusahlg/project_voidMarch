@@ -97,24 +97,44 @@ void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float spee
     );
 }
 void updateProjectiles(Level& lvl, float dt){
-    for(auto& b : bullets){
-        if(!b.alive) continue;
-
-        b.pos.x += b.vel.x * dt;
-        b.pos.y += b.vel.y * dt;
-        auto& si = scaleSys.info();
-        float gx = toTiles(b.pos.x, si);
-        float gy = toTiles(b.pos.y, si);
-        float gw = toTiles((b.w*si.scale), si);
-        float gh = toTiles((b.h*si.scale), si);
-        if(collisionRect(gx, gy, gw, gh, lvl)){
-            b.alive = false;
-        }
-    }
-    bullets.erase(std::remove_if(bullets.begin(), bullets.end(), [](const projectile& p){return !p.alive;}), bullets.end());
     if(bullets.empty()){
         projActive = false;
+        return;
     }
+    auto& si = scaleSys.info();
+    for(auto& b : bullets){
+        if (!b.alive) continue;
+        b.pos.x += b.vel.x * dt;
+        b.pos.y += b.vel.y * dt;
+        Rectangle brect{
+            b.pos.x, b.pos.y,
+            toTiles((b.w * si.scale), si),
+            toTiles((b.h * si.scale), si)
+        };
+        if(collisionRect(brect.x, brect.y, brect.width, brect.height, lvl)){
+            b.alive = false;
+            continue;
+        }
+        if(!b.enemyOwner && b.alive){
+            item_sys::for_each_enemy([&](std::uint64_t id, Rectangle enemyAABB){
+                if(!b.alive) return; 
+                if(CheckCollisionRecs(brect, enemyAABB)) {
+                    item_sys::damage_enemy(id, b.damage);
+                    b.alive = false;  
+                }
+            });
+        }
+
+        // TODO: if (b.enemyOwner) handle player collision here
+    }
+
+    // Remove dead bullets
+    bullets.erase(
+        std::remove_if(bullets.begin(), bullets.end(),
+            [](const projectile& p) { return !p.alive; }),
+        bullets.end()
+    );
+    projActive = !bullets.empty();
 }
 void drawProjectiles(){
     for(const auto& b : bullets){

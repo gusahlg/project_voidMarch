@@ -86,6 +86,8 @@ extern float PLAYERWIDTH;
 extern const float SQRT2;
 extern float PLAYERHEIGHT;
 void updateRoll(Level& lvl, float dt);
+void drawProjectiles();
+void updateProjectiles(Level& lvl, float dt);
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);
 void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner, int damage);
