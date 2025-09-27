@@ -24,7 +24,7 @@ public:
     float       cooldown() const { return attackCooldown_; }
     int         range()    const { return range_; }
     const char* name()     const { return name_.c_str(); }
-    Texture2D   sprite()   const { return sprite_; }
+    Texture2D   sprite_;
 protected:
     Weapon(Texture2D spriteSheet, int dmg, float attackInterval, int rangeFromPlayer, std::string weaponName)
     : damage_(dmg)
@@ -42,7 +42,6 @@ private:
     const int         damage_;
     const float       attackCooldown_;
     float             timer_;
-    const Texture2D   sprite_;
     const int         range_;
     const std::string name_;
 };

@@ -8,4 +8,5 @@ extern MeleeWeapon sword;
 extern RangedWeapon blaster;
 enum class WeaponSwitch {meleeToggle, rangedToggle};
 extern WeaponSwitch equipped;
+void loadTextures();
 }
