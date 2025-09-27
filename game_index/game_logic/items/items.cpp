@@ -21,5 +21,7 @@ RangedWeapon blaster = item_sys::createRangedWeapon(
 void loadTextures(){
     sword.sprite_ = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
     blaster.sprite_ = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
+    sword.setSpriteSheet(3, 1, 0, {1,2}, 0.15f);
+    blaster.setSpriteSheet(3, 1, 0, {1,2}, 0.12f);
 }
 }

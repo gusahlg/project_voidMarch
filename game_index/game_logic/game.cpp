@@ -222,8 +222,14 @@ void attackInputHandler(Level& lvl, float dt){
     }
     Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
     item_sys::resolve_melee_hits(Weapon::sword.damage());
-    Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
-    
+    Weapon::sword.tickAnim(dt);
+    Weapon::blaster.tickAnim(dt);
+    if (Weapon::equipped == Weapon::WeaponSwitch::meleeToggle) {
+    Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);  // no rotation
+    } 
+    else {    
+    Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale); // rotates
+    }
     
 }
 void updateJson(float dt, Level& lvl){
