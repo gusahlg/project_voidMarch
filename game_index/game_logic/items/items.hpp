@@ -1,5 +1,5 @@
 #pragma once
-#include "../game_logic/inventory/weapon.hpp"
+#include "../inventory/weapon.hpp"
 // Add in new weapons here and define them in the .cpp file
 namespace Weapon{
 using MeleeWeapon = item_sys::MeleeWeapon;
@@ -7,5 +7,5 @@ using RangedWeapon = item_sys::RangedWeapon;
 extern MeleeWeapon sword;
 extern RangedWeapon blaster;
 enum class WeaponSwitch {meleeToggle, rangedToggle};
-WeaponSwitch equipped;
+extern WeaponSwitch equipped;
 }

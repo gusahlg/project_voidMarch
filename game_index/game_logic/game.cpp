@@ -23,6 +23,7 @@
 #include "../include/data/stats/world.hpp"
 // Weapon definitions.
 #include "items/items.hpp"
+void bindEnemyAdapter();
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
@@ -208,46 +209,19 @@ void inputEventHandler(Level& lvl, float dt){
         else{
         }
     }
-    static float w = 50.0f;
-    static float h = 50.0f;
-    static float speed = 10.0f;
-    static float ARCSIZE = 50.0f;
-    static float range = 50.0f;
-    Rectangle dest; Vector2 origin; float rotation;
-    mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
-    dir = Vector2Normalize(
-        Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
-    );
-    const static float WEAPON_OFFSET = 15.0f;
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-            spawnProjectile(spawnPos, dir, w, h, speed, false); 
-        }
-    }
-    if(projActive){
-        updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
-        entityCollisionCheck();
-    }
-    if(attacking){
-        // Put in an animtion into this function.
-        updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
-    }
 }
 /* Checks for if there's any attack input and if so executes
 appropriate actions */
 void attackInputHandler(Level& lvl, float dt){
-    if(IsKeyPressed(KEY_ONE)){
-        Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
-    }
-    else if(IsKeyPressed(KEY_TWO)){
-        Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
-    }
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
         item_sys::start_melee_swing(playerPixCenter, mouseWorld, Weapon::sword.range(), Weapon::sword.arcDegrees());
+        Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
     }
-    else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && Weapon::blaster.attackReady(dt)){
-
+    else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && Weapon::blaster.attackReady(dt)){
+        Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
+    }
+    if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
+        item_sys::resolve_melee_hits(Weapon::sword.damage());
     }
 }
 void updateJson(float dt, Level& lvl){
@@ -294,6 +268,7 @@ void gameLoop(Level& lvl){
     drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
+    attackInputHandler(lvl, dt);
     const Texture2D& ptex = rolling
         ? PlayerTexManager::instance().roll(currentDir)
         : PlayerTexManager::instance().walk(currentDir);
@@ -340,7 +315,7 @@ void preLoadTasks(Level& lvl){
     bullets.reserve(50);
     turtlesPos.reserve(50);
     genericPos.reserve(50);
-    item_sys::bind_enemy_access(&forEachEnemyBinding, &damageEnemyBinding);
+    bindEnemyAdapter();
     gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
 }
 // Possible solution: Have two different preloadtask functions so that lvl isn't needed until it is.

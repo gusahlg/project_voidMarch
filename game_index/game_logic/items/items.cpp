@@ -1,6 +1,7 @@
 #include "items.hpp"
 namespace Weapon{
-static MeleeWeapon sword = item_sys::createMeleeWeapon(
+WeaponSwitch equipped = WeaponSwitch::meleeToggle;
+MeleeWeapon sword = item_sys::createMeleeWeapon(
     LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png"),
     /*dmg      */ 20,
     /*cooldown */ 0.35f,
@@ -8,8 +9,8 @@ static MeleeWeapon sword = item_sys::createMeleeWeapon(
     /*arc      */ 70,
     /*name     */ "Sword"
 );
-static RangedWeapon blaster = item_sys::createRangedWeapon(
-    LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png"),
+RangedWeapon blaster = item_sys::createRangedWeapon(
+    LoadTexture("assets/graphics/abilities/utilities/equipables/melee/blaster.png"),
     /*dmg              */ 20,
     /*cooldown         */ 0.35f,
     /*range            */ 50,

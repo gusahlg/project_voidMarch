@@ -77,7 +77,6 @@ struct projectile {
 extern std::vector<projectile> bullets;
 extern bool rolling;
 extern bool moving;
-void defineDamageArea(Vector2 centerpos, float radius, Vector2 dir, float ARCSIZE);
 extern float Ox;
 extern float Oy;
 extern bool attacking;
@@ -85,7 +84,6 @@ extern Texture2D swordTex;
 extern float PLAYERWIDTH;
 extern const float SQRT2;
 extern float PLAYERHEIGHT;
-void updateMeleeAttack(Vector2 pos, Vector2 dir, float ARCSIZE, float radius, Level& lvl, Rectangle dest, Vector2 origin, float rotation);
 void updateRoll(Level& lvl, float dt);
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);

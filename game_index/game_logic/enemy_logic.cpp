@@ -15,6 +15,7 @@
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
+void bindEnemyAdapter();
 struct enemy{
     int frames;
     int currentFrame = 0;
@@ -116,9 +117,9 @@ struct enemy{
 
     // Texture determination:
     switch(idx){
-        case 0: tex = LoadTexture(""); break;
+        case 0: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
         case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
-        case 2: tex = LoadTexture(""); break;
+        case 2: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
     }
     SetTextureFilter(tex, TEXTURE_FILTER_POINT);
 
@@ -142,6 +143,9 @@ static void damageEnemyBinding(std::uint64_t id, int dmg){
             break;
         }
     }
+}
+void bindEnemyAdapter() {
+    item_sys::bind_enemy_access(&forEachEnemyBinding, &damageEnemyBinding);
 }
 void spawnEnemy(Vector2 pos, int HP, enemy::Type t){ //Add into level initialization and other stuff.
     enemies.emplace_back(pos, HP, t);
