@@ -19,7 +19,21 @@ public:
         return true;
     }
     virtual void attack(Vector2 playerCenter, Vector2 aimWorld) = 0;
-    virtual void draw() const {}
+    virtual void draw(Vector2 playerCenter, Vector2 aimWorld, float scale = 1.0f) const{
+        if(sprite_.id == 0) return; // texture not loaded
+        const int frameW = sprite_.width;   // if it's a single image; else sprite_.width / 3
+        const int frameH = sprite_.height;
+        Rectangle src{0, 0, (float)frameW, (float)frameH};
+        Rectangle dst{
+            playerCenter.x, playerCenter.y,
+            frameW * scale, frameH * scale
+        };
+        Vector2 dir = Vector2Subtract(aimWorld, playerCenter);
+        float angleDeg = 0.0f;
+        if (dir.x != 0.0f || dir.y != 0.0f) angleDeg = atan2f(dir.y, dir.x) * (180.0f / 3.14159265f);
+        Vector2 origin{ dst.width * 0.5f, dst.height * 0.5f };
+        DrawTexturePro(sprite_, src, dst, origin, angleDeg, WHITE);
+    }
     int         damage()   const { return damage_; }
     float       cooldown() const { return attackCooldown_; }
     int         range()    const { return range_; }

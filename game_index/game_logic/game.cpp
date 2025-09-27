@@ -220,9 +220,11 @@ void attackInputHandler(Level& lvl, float dt){
     else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && Weapon::blaster.attackReady(dt)){
         Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
     }
-    if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
-        item_sys::resolve_melee_hits(Weapon::sword.damage());
-    }
+    Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
+    item_sys::resolve_melee_hits(Weapon::sword.damage());
+    Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    
+    
 }
 void updateJson(float dt, Level& lvl){
     static float Delay = 10.f;

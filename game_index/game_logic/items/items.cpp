@@ -19,7 +19,7 @@ RangedWeapon blaster = item_sys::createRangedWeapon(
     /*name             */ "Blaster"
 );
 void loadTextures(){
-    sword.sprite_ = LoadTexture("../../../assets/graphics/abilities/utilities/equipables/melee/sword.png");
-    blaster.sprite_ = LoadTexture("../../../assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
+    sword.sprite_ = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
+    blaster.sprite_ = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
 }
 }
