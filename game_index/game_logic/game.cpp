@@ -209,7 +209,7 @@ void inputEventHandler(Level& lvl, float dt){
 appropriate actions */
 void attackInputHandler(Level& lvl, float dt){
     // MELEE on LEFT click — hit once on click, then animate
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
+    if(!IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
         item_sys::start_melee_swing(playerPixCenter, mouseWorld,
                                     Weapon::sword.range(), Weapon::sword.arcDegrees());
         item_sys::resolve_melee_hits(Weapon::sword.damage());  // <-- hit once now
@@ -265,18 +265,6 @@ void gameLoop(Level& lvl){
     cam.offset.y = floorf(cam.offset.y + 0.5f);
     ClearBackground(BLACK);
     BeginMode2D(cam);
-    Weapon::sword.tickAnim(dt);
-    Weapon::blaster.tickAnim(dt);
-    updateProjectiles(lvl, dt);
-    drawProjectiles();
-    // Draw equipped weapon (melee = no rotation; ranged = rotates in its override)
-    if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
-        Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
-    } 
-    else{
-        Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
-    }
-    updateRangedAttack(playerPixCenter, mouseWorld, 0, 0, 0, dt, lvl);
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;
@@ -318,6 +306,18 @@ void gameLoop(Level& lvl){
             }
         }
     }
+    Weapon::sword.tickAnim(dt);
+    Weapon::blaster.tickAnim(dt);
+    updateProjectiles(lvl, dt);
+    drawProjectiles();
+    // Draw equipped weapon (melee = no rotation; ranged = rotates in its override)
+    if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
+        Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    } 
+    else{
+        Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    }
+    updateRangedAttack(playerPixCenter, mouseWorld, 0, 0, 0, dt, lvl);
     EndMode2D();
     updateJson(dt, lvl);
 }

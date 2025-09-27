@@ -141,7 +141,7 @@ void drawProjectiles(){
         auto& si = scaleSys.info();
         float gw = toTiles((b.w*si.scale), si);
         float gh = toTiles((b.h*si.scale), si);
-        DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)gw, (int)gh, RED);
+        DrawRectangle(b.pos.x, b.pos.y, gw, gh, RED);
     }
 }
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl){
