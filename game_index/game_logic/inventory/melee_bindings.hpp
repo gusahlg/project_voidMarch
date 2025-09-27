@@ -13,6 +13,10 @@ void start_melee_swing(Vector2 playerCenter, Vector2 aimWorld,
 // Internally ensures “hit once per enemy per swing”.
 void resolve_melee_hits(int damage);
 
+bool for_each_enemy(const std::function<void(std::uint64_t, Rectangle)>& f); // returns false if not bound
+void damage_enemy(std::uint64_t id, int damage);
+
+
 // Optional: visualize the sector for debugging.
 void draw_melee_debug();
 

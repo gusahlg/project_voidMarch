@@ -71,8 +71,9 @@ struct projectile {
     float w, h;
     bool alive;
     bool enemyOwner; // If true, it deals damage to player and has no collision for enemies.
-    projectile(Vector2 p, Vector2 v, float w_, float h_, bool enemyOwner)
-      : pos(p), vel(v), w(w_), h(h_), alive(true), enemyOwner(enemyOwner) {}
+    int damage;
+    projectile(Vector2 p, Vector2 v, float w_, float h_, bool enemyOwner, int dmg)
+      : pos(p), vel(v), w(w_), h(h_), alive(true), enemyOwner(enemyOwner), damage(dmg) {}
 };
 extern std::vector<projectile> bullets;
 extern bool rolling;
@@ -87,7 +88,7 @@ extern float PLAYERHEIGHT;
 void updateRoll(Level& lvl, float dt);
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);
-void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner);
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner, int damage);
 extern bool projActive;
 enum Direction : std::uint8_t{
     Up,

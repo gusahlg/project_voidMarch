@@ -213,24 +213,35 @@ void inputEventHandler(Level& lvl, float dt){
 /* Checks for if there's any attack input and if so executes
 appropriate actions */
 void attackInputHandler(Level& lvl, float dt){
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
-        item_sys::start_melee_swing(playerPixCenter, mouseWorld, Weapon::sword.range(), Weapon::sword.arcDegrees());
+    // MELEE on LEFT click — hit once on click, then animate
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)) {
+        item_sys::start_melee_swing(playerPixCenter, mouseWorld,
+                                    Weapon::sword.range(), Weapon::sword.arcDegrees());
+        item_sys::resolve_melee_hits(Weapon::sword.damage());  // <-- hit once now
+        Weapon::sword.beginAttackAnim();
         Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
     }
-    else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && Weapon::blaster.attackReady(dt)){
+
+    // RANGED on RIGHT click — spawn a projectile that damages on impact, then animate
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && Weapon::blaster.attackReady(dt)) {
+        Vector2 dir = Vector2Subtract(mouseWorld, playerPixCenter);
+        float len2 = dir.x*dir.x + dir.y*dir.y;
+        if (len2 > 1e-8f) {
+            float inv = 1.0f / sqrtf(len2);
+            dir = {dir.x*inv, dir.y*inv};
+        } else {
+            dir = {1.f, 0.f};
+        }
+        const float projW = 6.f, projH = 2.f, projSpeed = 900.f;
+        spawnProjectile(playerPixCenter, dir, projW, projH, projSpeed,
+                        /*enemyOwner*/ false, Weapon::blaster.damage()); // <-- damage param (step 3)
+
+        Weapon::blaster.beginAttackAnim();
         Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
     }
-    Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
-    item_sys::resolve_melee_hits(Weapon::sword.damage());
-    Weapon::sword.tickAnim(dt);
-    Weapon::blaster.tickAnim(dt);
-    if (Weapon::equipped == Weapon::WeaponSwitch::meleeToggle) {
-    Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);  // no rotation
-    } 
-    else {    
-    Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale); // rotates
-    }
-    
+
+    // Do NOT draw weapons here.
+    // Do NOT call resolve_melee_hits() here per-frame.
 }
 void updateJson(float dt, Level& lvl){
     static float Delay = 10.f;
@@ -262,6 +273,15 @@ void gameLoop(Level& lvl){
     cam.offset.y = floorf(cam.offset.y + 0.5f);
     ClearBackground(BLACK);
     BeginMode2D(cam);
+    Weapon::sword.tickAnim(dt);
+    Weapon::blaster.tickAnim(dt);
+    // Draw equipped weapon (melee = no rotation; ranged = rotates in its override)
+    if (Weapon::equipped == Weapon::WeaponSwitch::meleeToggle) {
+        Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    } 
+    else {
+        Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    }
     // draw player sprite (18×25 frame)
     const int spriteW=18;
     const int spriteH=25;

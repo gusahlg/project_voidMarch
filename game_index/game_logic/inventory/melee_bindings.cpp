@@ -48,5 +48,14 @@ void resolve_melee_hits(int damage) {
 void draw_melee_debug() {
     combat::debugDraw(g_melee);
 }
+bool for_each_enemy(const std::function<void(std::uint64_t, Rectangle)>& f) {
+    if (!g_forEachEnemy) return false;
+    g_forEachEnemy(f);
+    return true;
+}
+void damage_enemy(std::uint64_t id, int damage) {
+    if (!g_damageEnemy) return;
+    g_damageEnemy(id, damage);
+}
 
 } // namespace item_sys

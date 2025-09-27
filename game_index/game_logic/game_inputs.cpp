@@ -7,6 +7,7 @@
 #include <cmath>
 #include <raymath.h>
 #include <algorithm>
+#include "../game_logic/inventory/melee_bindings.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
@@ -87,12 +88,12 @@ void updateRoll(Level& lvl, float dt){
 }
 //Weapons and their abilities are defined bellow.
 std::vector<projectile> bullets;
-void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner){
+void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner, int damage){
     projActive = true;
     bullets.emplace_back(
         startpos,
         Vector2Scale(dir, speed),
-        w, h, enemyOwner
+        w, h, enemyOwner, damage
     );
 }
 void updateProjectiles(Level& lvl, float dt){
