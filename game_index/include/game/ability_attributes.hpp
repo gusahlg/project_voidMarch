@@ -103,9 +103,4 @@ enum Direction : std::uint8_t{
     _COUNT
 };
 extern Direction currentDir;
-enum weapon : std::uint8_t{
-    sword,
-    blaster
-};
-extern weapon equipped;
 bool R2CollCheck(Rectangle FirstRec, Rectangle SecondRec);

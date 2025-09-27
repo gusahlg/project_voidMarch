@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <string>
+#include <utility>
+#include <cmath> 
 
 namespace item_sys {
 class Weapon {

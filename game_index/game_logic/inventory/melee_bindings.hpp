@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include <cstdint>
-
+#include <functional>
 namespace item_sys {
 void bind_enemy_access(void(*forEachEnemy)(const std::function<void(std::uint64_t, Rectangle)>&),
                        void(*damageEnemy)(std::uint64_t, int));

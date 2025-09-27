@@ -10,8 +10,8 @@
       "cwd":     "${workspaceFolder}",
 
       "preLaunchTask": "build-game",  // ← must match the label above
-      "args": [],                       // CLI args for your game
-      "externalConsole": false,         // now uses the TERMINAL tab
+      "args": [],                     //   CLI args for your game
+      "externalConsole": false,       //   now uses the TERMINAL tab
 
       "MIMode": "gdb",
       "miDebuggerPath": "gdb"

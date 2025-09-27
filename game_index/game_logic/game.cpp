@@ -21,6 +21,8 @@
 #include "../include/data/stats/player.hpp"
 // Saving and loading world data.
 #include "../include/data/stats/world.hpp"
+// Weapon definitions.
+#include "items/items.hpp"
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
@@ -50,14 +52,11 @@ Vector2 spawnPos;
 constexpr float WALK_SPEED = 5.0f;
 constexpr float SQRT2 = 0.70710678119;
 Direction currentDir;
-weapon equipped;
 constexpr float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl, float);
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
-Texture2D swordTex;
-Texture2D blasterTex;
 const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
 float animTimer = 0.0f;
@@ -209,12 +208,6 @@ void inputEventHandler(Level& lvl, float dt){
         else{
         }
     }
-    if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-        equipped = weapon::blaster;
-    }
-    else{
-        equipped = weapon::sword;
-    }
     static float w = 50.0f;
     static float h = 50.0f;
     static float speed = 10.0f;
@@ -231,10 +224,6 @@ void inputEventHandler(Level& lvl, float dt){
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
             spawnProjectile(spawnPos, dir, w, h, speed, false); 
         }
-        else{
-            defineDamageArea(spawnPos, range, dir, ARCSIZE);
-            meleeAttack();
-        }
     }
     if(projActive){
         updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
@@ -245,63 +234,20 @@ void inputEventHandler(Level& lvl, float dt){
         updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
     }
 }
-void DrawSword(){
-    static const int spriteWh = swordTex.width + swordTex.height / 2;
-    Rectangle dest; Vector2 origin; float rotation;
-    Rectangle src;
-    float Xoffset; float Yoffset;
-    if(currentDir == Direction::Left || currentDir == Direction::UpLeft || currentDir == Direction::DownLeft){
-        rotation = 180;
-        src = {0, 32, 32, -32};
-        Xoffset = -9.9f * scaleSys.info().scale;
-        Yoffset = -7.6f * scaleSys.info().scale;
+/* Checks for if there's any attack input and if so executes
+appropriate actions */
+void attackInputHandler(Level& lvl, float dt){
+    if(IsKeyPressed(KEY_ONE)){
+        Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
     }
-    else{
-        src = {0, 0, 32, 32};
-        rotation = 0;
-        Xoffset = -7.6f * scaleSys.info().scale;
-        Yoffset = -9.9f * scaleSys.info().scale;
+    else if(IsKeyPressed(KEY_TWO)){
+        Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
     }
-    int wh = spriteWh * scaleSys.info().scale;
-    dest.width = wh;
-    dest.height = wh;
-    dest.x = playerPixCenter.x + Xoffset; dest.y = playerPixCenter.y + Yoffset;
-    origin = {(float)wh/2, (float)wh/2};
-    DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
-}
-void DrawBlaster(){
-    int w = blasterTex.width*scaleSys.info().scale;
-    int h = blasterTex.height*scaleSys.info().scale;
-    int WEAPON_OFFSET = 13 * scaleSys.info().scale;
-    float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
-    bool flip = rotation > 90 || rotation < -90;
-    int xOffset = 7 * scaleSys.info().scale;
-    int yOffset = 5 * scaleSys.info().scale;
-    Rectangle src;
-    if (flip) src = {0, 20, 20, -20};
-    else      src = {0,  0, 20,  20};
-    Vector2 pivot = {
-        playerPixCenter.x + xOffset + dir.x * WEAPON_OFFSET,
-        playerPixCenter.y + yOffset + dir.y * WEAPON_OFFSET
-    };
-    Rectangle dest = {
-        pivot.x - w * 0.5f,
-        pivot.y - h * 0.5f,
-        (float)w,
-        (float)h
-    };
-    Vector2 origin = {w * 0.5f, h * 0.5f};
-    DrawTexturePro(blasterTex, src, dest, origin, rotation, WHITE);
-}
-void DrawEquip(){
-    // Weapon drawing logic for idle performance.
-    switch(equipped){
-        case(blaster):
-            DrawBlaster();
-            break;
-        case(sword):
-            DrawSword();
-            break;
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
+        item_sys::start_melee_swing(playerPixCenter, mouseWorld, Weapon::sword.range(), Weapon::sword.arcDegrees());
+    }
+    else if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && Weapon::blaster.attackReady(dt)){
+
     }
 }
 void updateJson(float dt, Level& lvl){
@@ -352,7 +298,6 @@ void gameLoop(Level& lvl){
         ? PlayerTexManager::instance().roll(currentDir)
         : PlayerTexManager::instance().walk(currentDir);
     DrawTexturePro(ptex, src, dst, {0,0}, 0.0f, WHITE);
-    DrawEquip();
     if(currentDir == Direction::UpLeft || currentDir == Direction::UpRight || currentDir == Direction::Up){
         DrawTexturePro(ptex, src, dst, {0,0}, 0.0f, WHITE);
     }
@@ -392,13 +337,10 @@ void preLoadTasks(Level& lvl){
     loadEnemies(lvl);
     PlayerTexManager::instance().loadWalkFor(currentRace);
     PlayerTexManager::instance().loadRollFor(currentRace);
-    blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
-    swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
-    SetTextureFilter(blasterTex,TEXTURE_FILTER_POINT);
-    SetTextureFilter(swordTex,TEXTURE_FILTER_POINT);
     bullets.reserve(50);
     turtlesPos.reserve(50);
     genericPos.reserve(50);
+    item_sys::bind_enemy_access(&forEachEnemyBinding, &damageEnemyBinding);
     gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
 }
 // Possible solution: Have two different preloadtask functions so that lvl isn't needed until it is.

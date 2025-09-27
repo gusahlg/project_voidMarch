@@ -25,9 +25,10 @@
         "-g",
 
         // ---- source files ----
-        "${workspaceFolder}/game_index/*.cpp",
-        "${workspaceFolder}/game_index/game_logic/*.cpp",
-        "${workspaceFolder}/game_index/screen_logic/*.cpp",
+    "${workspaceFolder}/game_index/*.cpp",
+    "${workspaceFolder}/game_index/game_logic/*.cpp",
+    "${workspaceFolder}/game_index/game_logic/inventory/*.cpp",
+    "${workspaceFolder}/game_index/screen_logic/*.cpp",
 
         // ---- header search paths ----
         "-I${workspaceFolder}/include",

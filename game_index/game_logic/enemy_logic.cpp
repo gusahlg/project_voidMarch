@@ -9,6 +9,9 @@
 #include <random>
 #include <chrono>
 #include <cstdint>
+#include <functional>
+// Weapon and Inventory.
+#include "../game_logic/inventory/melee_bindings.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
@@ -125,6 +128,21 @@ struct enemy{
 }
 };
 std::vector<enemy> enemies;
+// Uses enemy address as its ID:
+static void forEachEnemyBinding(const std::function<void(std::uint64_t, Rectangle)>& f){
+    for(auto& e : enemies){
+        f(reinterpret_cast<std::uint64_t>(&e), e.Hbox);
+    }
+}
+// Checks for enemy address for varification:
+static void damageEnemyBinding(std::uint64_t id, int dmg){
+    for(auto& e : enemies){
+        if(reinterpret_cast<std::uint64_t>(&e) == id){
+            e.HP -= dmg;
+            break;
+        }
+    }
+}
 void spawnEnemy(Vector2 pos, int HP, enemy::Type t){ //Add into level initialization and other stuff.
     enemies.emplace_back(pos, HP, t);
 }
