@@ -216,13 +216,6 @@ void enemyLogic(float dt, Level& lvl, Vector2 playerCenter){
     updateEnemies(dt, lvl, playerCenter);
     drawEnemies();
 }
-void meleeAttack(){
-    for(auto& e : enemies){
-        if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
-            e.HP -= 1;
-        }
-    }
-}
 // This handles collision concerning bullet interactions.
 void entityCollisionCheck(){
     // check if the owner of the bullet is player or enemy.
