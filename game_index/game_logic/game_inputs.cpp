@@ -97,51 +97,59 @@ void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float spee
     );
 }
 void updateProjectiles(Level& lvl, float dt){
-    if(bullets.empty()){
-        projActive = false;
-        return;
-    }
-    auto& si = scaleSys.info();
-    for(auto& b : bullets){
+    if(bullets.empty()){projActive = false; return;}
+    const auto& si = scaleSys.info();
+
+    for (auto& b : bullets){
         if (!b.alive) continue;
+
+        // Integrate in pixels
         b.pos.x += b.vel.x * dt;
         b.pos.y += b.vel.y * dt;
-        Rectangle brect{
-            b.pos.x, b.pos.y,
-            toTiles((b.w * si.scale), si),
-            toTiles((b.h * si.scale), si)
+
+        // 1) World collision (TILES)
+        Rectangle brectTiles{
+            (float)toTiles(b.pos.x,            si),
+            (float)toTiles(b.pos.y,            si),
+            (float)toTiles(b.w * si.scale,     si),
+            (float)toTiles(b.h * si.scale,     si)
         };
-        if(collisionRect(brect.x, brect.y, brect.width, brect.height, lvl)){
+        if (collisionRect(brectTiles.x, brectTiles.y,
+                          brectTiles.width, brectTiles.height, lvl)) {
             b.alive = false;
             continue;
         }
-        if(!b.enemyOwner && b.alive){
+
+        // 2) Enemy collision (PIXELS)
+        Rectangle brectPx{
+            b.pos.x,
+            b.pos.y,
+            b.w * si.scale,
+            b.h * si.scale
+        };
+        if (!b.enemyOwner && b.alive) {
             item_sys::for_each_enemy([&](std::uint64_t id, Rectangle enemyAABB){
-                if(!b.alive) return; 
-                if(CheckCollisionRecs(brect, enemyAABB)) {
+                if (!b.alive) return;
+                if (CheckCollisionRecs(brectPx, enemyAABB)) {
                     item_sys::damage_enemy(id, b.damage);
-                    b.alive = false;  
+                    b.alive = false;
                 }
             });
         }
-
-        // TODO: if (b.enemyOwner) handle player collision here
     }
 
-    // Remove dead bullets
     bullets.erase(
         std::remove_if(bullets.begin(), bullets.end(),
-            [](const projectile& p) { return !p.alive; }),
+            [](const projectile& p){ return !p.alive; }),
         bullets.end()
     );
     projActive = !bullets.empty();
 }
+
 void drawProjectiles(){
-    for(const auto& b : bullets){
-        auto& si = scaleSys.info();
-        float gw = toTiles((b.w*si.scale), si);
-        float gh = toTiles((b.h*si.scale), si);
-        DrawRectangle(b.pos.x, b.pos.y, gw, gh, RED);
+    const auto& si = scaleSys.info();
+    for (const auto& b : bullets){
+        DrawRectangleV(b.pos, Vector2{ b.w * si.scale, b.h * si.scale }, RED);
     }
 }
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl){

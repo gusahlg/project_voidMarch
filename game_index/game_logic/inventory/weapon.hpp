@@ -177,6 +177,7 @@ public:
         Vector2 origin{ dst.width * 0.5f, dst.height * 0.5f };
         Vector2 dir = Vector2Subtract(aimWorld, playerCenter);
         float ang = (dir.x || dir.y) ? (atan2f(dir.y, dir.x) * (180.0f / 3.14159265f)) : 0.f;
+        if(dir.x < 0){src={src.x, -src.y, src.width, -src.height};}
         DrawTexturePro(sprite(), src, dst, origin, ang, WHITE);
     }
 

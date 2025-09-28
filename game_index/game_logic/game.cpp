@@ -216,18 +216,17 @@ void attackInputHandler(Level& lvl, float dt){
         Weapon::sword.beginAttackAnim();
         Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
     }
-
-    // RANGED on RIGHT click — spawn a projectile that damages on impact, then animate
     if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::blaster.attackReady(dt)){
         Vector2 dir = Vector2Subtract(mouseWorld, playerPixCenter);
         float len2 = dir.x*dir.x + dir.y*dir.y;
-        if (len2 > 1e-8f) {
+        if(len2 > 1e-8f){
             float inv = 1.0f / sqrtf(len2);
             dir = {dir.x*inv, dir.y*inv};
-        } else {
+        } 
+        else{
             dir = {1.f, 0.f};
         }
-        const float projW = 6.f, projH = 2.f, projSpeed = 900.f;
+        const float projW = 5.f, projH = 5.f, projSpeed = 1000.f;
         spawnProjectile(playerPixCenter, dir, projW, projH, projSpeed,
                         /*enemyOwner*/ false, Weapon::blaster.damage()); // <-- damage param (step 3)
 
@@ -253,6 +252,7 @@ void gameLoop(Level& lvl){
         lvl.readlvlData();
     }
     if(gPlayer.isDead()) return;// Do something cool
+    mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
     float dt = GetFrameTime();
     scaleSys.update(lvl);
     const auto& si = scaleSys.info();
@@ -342,7 +342,6 @@ void preLoadTasks(Level& lvl){
     bindEnemyAdapter();
     gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
 }
-// Possible solution: Have two different preloadtask functions so that lvl isn't needed until it is.
 void loadLvl(){
     static bool loaded=false;
     Level& lvl = (gWorld.currentLevel() == 1) ? lvl1 : lvl2;

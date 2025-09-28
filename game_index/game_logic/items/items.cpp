@@ -5,15 +5,15 @@ WeaponSwitch equipped = WeaponSwitch::meleeToggle;
 MeleeWeapon sword = item_sys::createMeleeWeapon(
     Texture2D{},
     /*dmg      */ 20,
-    /*cooldown */ 0.0f,
-    /*range    */ 100,
-    /*arc      */ 110,
+    /*cooldown */ 0.2f,
+    /*range    */ 50,
+    /*arc      */ 80,
     /*name     */ "Sword"
 );
 RangedWeapon blaster = item_sys::createRangedWeapon(
     Texture2D{},
     /*dmg              */ 20,
-    /*cooldown         */ 0.0,
+    /*cooldown         */ 0.2,
     /*range            */ 50,
     /*projectile speed */ 1,
     /*name             */ "Blaster"

@@ -16,10 +16,7 @@ static inline Vector2 normalizeSafe(Vector2 v) {
     float inv = 1.0f / std::sqrt(len2);
     return Vector2{ v.x*inv, v.y*inv };
 }
-
-// Core uniform test: sector (center, dir, radius, full arcDeg) vs AABB (enemy)
-static inline bool sectorHitsAABB(Vector2 center, Vector2 dir, float radiusPx,
-                                  float fullArcDeg, const Rectangle& enemy)
+static inline bool sectorHitsAABB(Vector2 center, Vector2 dir, float radiusPx, float fullArcDeg, const Rectangle& enemy)
 {
     dir = normalizeSafe(dir);
 
