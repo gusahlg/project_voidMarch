@@ -5,12 +5,8 @@
 #include <utility>
 #include <vector>
 #include <cmath>
-
+// This is for defining items.
 namespace item_sys {
-
-// -----------------------------------------------------------------------------
-// Base Weapon: cooldown + animation + non-rotating draw
-// -----------------------------------------------------------------------------
 class Weapon {
 public:
     virtual ~Weapon() = default;
