@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include <iostream>
+#include "include/game/player_stats.hpp"
 #include "include/screen_load/home_screen.hpp"
 // Provides access to screen enum for other files:
 #include "include/screen_load/screen_constants.hpp"
@@ -50,6 +51,7 @@ int main(){
         }
         EndDrawing();
     }
+    PlayerTexManager::instance().unloadAll();
     CloseWindow();
     return 0;
 }

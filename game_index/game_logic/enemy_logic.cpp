@@ -9,9 +9,13 @@
 #include <random>
 #include <chrono>
 #include <cstdint>
+#include <functional>
+// Weapon and Inventory.
+#include "../game_logic/inventory/melee_bindings.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
+void bindEnemyAdapter();
 struct enemy{
     int frames;
     int currentFrame = 0;
@@ -113,9 +117,9 @@ struct enemy{
 
     // Texture determination:
     switch(idx){
-        case 0: tex = LoadTexture(""); break;
+        case 0: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
         case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
-        case 2: tex = LoadTexture(""); break;
+        case 2: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
     }
     SetTextureFilter(tex, TEXTURE_FILTER_POINT);
 
@@ -125,6 +129,24 @@ struct enemy{
 }
 };
 std::vector<enemy> enemies;
+// Uses enemy address as its ID:
+static void forEachEnemyBinding(const std::function<void(std::uint64_t, Rectangle)>& f){
+    for(auto& e : enemies){
+        f(reinterpret_cast<std::uint64_t>(&e), e.Hbox);
+    }
+}
+// Checks for enemy address for varification:
+static void damageEnemyBinding(std::uint64_t id, int dmg){
+    for(auto& e : enemies){
+        if(reinterpret_cast<std::uint64_t>(&e) == id){
+            e.HP -= dmg;
+            break;
+        }
+    }
+}
+void bindEnemyAdapter() {
+    item_sys::bind_enemy_access(&forEachEnemyBinding, &damageEnemyBinding);
+}
 void spawnEnemy(Vector2 pos, int HP, enemy::Type t){ //Add into level initialization and other stuff.
     enemies.emplace_back(pos, HP, t);
 }
@@ -193,13 +215,6 @@ void drawEnemies(){
 void enemyLogic(float dt, Level& lvl, Vector2 playerCenter){
     updateEnemies(dt, lvl, playerCenter);
     drawEnemies();
-}
-void meleeAttack(){
-    for(auto& e : enemies){
-        if(CircleSectorColl(Mradius, Mcenter, e.Hbox, Mdir, MarcSize)){
-            e.HP -= 1;
-        }
-    }
 }
 // This handles collision concerning bullet interactions.
 void entityCollisionCheck(){

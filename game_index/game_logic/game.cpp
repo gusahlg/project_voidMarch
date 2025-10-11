@@ -10,6 +10,10 @@
 #include "../include/game/player_stats.hpp"
 #include "../include/game/ability_attributes.hpp"
 #include "../include/game/enemy_data.hpp"
+// Everything weapon/inventory related.
+#include "../game_logic/inventory/weapon.hpp"
+#include "../game_logic/inventory/melee_bindings.hpp"
+#include "../game_logic/inventory/sector_hit.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_system.hpp"
@@ -17,6 +21,9 @@
 #include "../include/data/stats/player.hpp"
 // Saving and loading world data.
 #include "../include/data/stats/world.hpp"
+// Weapon definitions.
+#include "items/items.hpp"
+void bindEnemyAdapter();
 ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
@@ -36,7 +43,6 @@ struct TileSet{
       WallDownRight(WallDownRight), WallLeft(WallLeft), WallRight(WallRight), WallFull(WallFull), floor(floor) {}
 };
 TileSet tiles{/*wall =*/ {}, /*floor =*/ {}, {}, {}, {}, {}, {}, {}, {}, {}};
-
 bool attacking = false;
 Vector2 mouseWorld;
 Vector2 playerPixCenter;
@@ -47,16 +53,11 @@ Vector2 spawnPos;
 constexpr float WALK_SPEED = 5.0f;
 constexpr float SQRT2 = 0.70710678119;
 Direction currentDir;
-weapon equipped;
 constexpr float STEP_DELAY = 0.005f;
 float stepTimer = 0.0f;
 void movementEventHandler(Level& lvl, float);
-
 // sprite-sheet data
 int PLAYER_FRAMES = 3;
-Texture2D playerTex;
-Texture2D swordTex;
-Texture2D blasterTex;
 const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
 float animTimer = 0.0f;
@@ -64,7 +65,7 @@ Camera2D cam{};
 const int TILE = 16;
 void loadTileTextures(){
     const std::vector<std::pair<const char*, Texture2D*>> todo = {
-        {"assets/graphics/level_graphics/tiles/walls/Top_Wall.png",        &tiles.WallUp},
+        {"assets/graphics/level_graphics/tiles/walls/Top_Wall.png",         &tiles.WallUp},
         {"assets/graphics/level_graphics/tiles/walls/Bottom_Wall.png",      &tiles.WallDown},
         {"assets/graphics/level_graphics/tiles/walls/Top_Left_Wall.png",    &tiles.WallUpLeft},
         {"assets/graphics/level_graphics/tiles/walls/Top_Right_Wall.png",   &tiles.WallUpRight},
@@ -80,57 +81,6 @@ void loadTileTextures(){
         *out = LoadTexture(file);
         SetTextureFilter(*out, TEXTURE_FILTER_POINT);
     }
-}
-struct void_crawler{
-    Texture2D pos;
-};
-void_crawler VfacingUp;
-void_crawler VfacingDown;
-void_crawler VfacingUpLeft;
-void_crawler VfacingUpRight;
-void_crawler VfacingDownLeft;
-void_crawler VfacingDownRight;
-struct Space_lizard{
-    Texture2D pos;
-};
-Space_lizard SfacingUp;
-Space_lizard SfacingDown;
-Space_lizard SfacingUpLeft;
-Space_lizard SfacingUpRight;
-Space_lizard SfacingDownLeft;
-Space_lizard SfacingDownRight;
-struct Human{
-    Texture2D pos;
-};
-Human HfacingUp;
-Human HfacingDown;
-Human HfacingUpLeft;
-Human HfacingUpRight;
-Human HfacingDownLeft;
-Human HfacingDownRight;
-void loadVoid_crawler(){
-    VfacingUp.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-    VfacingDown.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
-    VfacingUpLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler4.png");
-    VfacingUpRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-    VfacingDownLeft.pos = LoadTexture("assets/graphics/void_crawler/void_crawler2.png");
-    VfacingDownRight.pos = LoadTexture("assets/graphics/void_crawler/void_crawler1.png");
-}
-void loadSpaceLizard(){
-    SfacingUp.pos = LoadTexture("assets/graphics/space_lizard/LizardUpRight.png");
-    SfacingDown.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardLeft.png");
-    SfacingUpLeft.pos = LoadTexture("assets/graphics/space_lizard/LizardUpLeft.png");
-    SfacingUpRight.pos = LoadTexture("assets/graphics/space_lizard/LizardUpRight.png");
-    SfacingDownLeft.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardLeft.png");
-    SfacingDownRight.pos = LoadTexture("assets/graphics/space_lizard/SpaceLizardRight.png");
-}
-void loadHuman(){
-    HfacingUp.pos = LoadTexture("assets/graphics/human/human2.png");
-    HfacingDown.pos = LoadTexture("assets/graphics/human/human3.png");
-    HfacingUpLeft.pos = LoadTexture("assets/graphics/human/human1.png");
-    HfacingUpRight.pos = LoadTexture("assets/graphics/human/human2.png");
-    HfacingDownLeft.pos = LoadTexture("assets/graphics/human/human4.png");
-    HfacingDownRight.pos = LoadTexture("assets/graphics/human/human3.png");
 }
 bool shouldLevelProgress(Level& lvl){
     int py = (int)lvl.playerPos.y;
@@ -211,14 +161,6 @@ void loadEnemies(Level& lvl){
         spawnLogic(pos, 10, 1);
     }
 }
-void spriteManager(){
-    switch(currentRace){
-        case Race::Spacelizard: loadSpaceLizard(); break;
-        case Race::Voidcrawler: loadVoid_crawler();loadRollTex(); break;
-        case Race::Mecha_sapien: break;
-        case Race::Human: loadHuman(); break;
-    }
-}
 bool rollWalkSwitch = false;
 float pPixX;
 float pPixY;
@@ -261,116 +203,35 @@ void inputEventHandler(Level& lvl, float dt){
     }
     else{
         currentFrame=0;animTimer=0.0f;
-        if(currentDir == Direction::Left || currentDir == Direction::DownLeft || currentDir == Direction::UpLeft){
-            switch(currentRace){
-                case(Race::Spacelizard): playerTex = SfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
-                case(Race::Voidcrawler): playerTex = VfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
-                case(Race::Human): playerTex = HfacingDownLeft.pos; currentDir = Direction::DownLeft; break;
-                //Add mechasapien
-            }
-        }
+    }
+}
+/* Checks for if there's any attack input and if so executes
+appropriate actions */
+void attackInputHandler(Level& lvl, float dt){
+    // MELEE on LEFT click — hit once on click, then animate
+    if(!IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
+        item_sys::start_melee_swing(playerPixCenter, mouseWorld,
+                                    Weapon::sword.range(), Weapon::sword.arcDegrees());
+        item_sys::resolve_melee_hits(Weapon::sword.damage());  // <-- hit once now
+        Weapon::sword.beginAttackAnim();
+        Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
+    }
+    if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::blaster.attackReady(dt)){
+        Vector2 dir = Vector2Subtract(mouseWorld, playerPixCenter);
+        float len2 = dir.x*dir.x + dir.y*dir.y;
+        if(len2 > 1e-8f){
+            float inv = 1.0f / sqrtf(len2);
+            dir = {dir.x*inv, dir.y*inv};
+        } 
         else{
-            switch(currentRace){
-                case(Race::Spacelizard): playerTex = SfacingDownRight.pos; currentDir = Direction::DownRight; break;
-                case(Race::Voidcrawler): playerTex = VfacingDownRight.pos; currentDir = Direction::DownRight; break;
-                case(Race::Human): playerTex = HfacingDownRight.pos; currentDir = Direction::DownRight; break;
-                //Add mechasapien
-            }
+            dir = {1.f, 0.f};
         }
-    }
-    if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-        equipped = weapon::blaster;
-    }
-    else{
-        equipped = weapon::sword;
-    }
-    static float w = 5.0f;
-    static float h = 5.0f;
-    static float speed = 300.0f;
-    static float ARCSIZE = 50.0f;
-    static float range = 50.0f;
-    Rectangle dest; Vector2 origin; float rotation;
-    mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
-    dir = Vector2Normalize(
-        Vector2Subtract(mouseWorld, {playerPixCenter.x - w/2, playerPixCenter.y - h/2}) 
-    );
-    const static float WEAPON_OFFSET = 15.0f;
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        spawnPos = Vector2Add({playerPixCenter.x - w/2, playerPixCenter.y - h/2}, Vector2Scale(dir, WEAPON_OFFSET));
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-            spawnProjectile(spawnPos, dir, w, h, speed, false); 
-        }
-        else{
-            defineDamageArea(spawnPos, range, dir, ARCSIZE);
-            meleeAttack();
-        }
-    }
-    if(projActive){
-        updateRangedAttack(spawnPos, dir, w, h, speed, dt, lvl);
-        entityCollisionCheck();
-    }
-    if(attacking){
-        // Put in an animtion into this function.
-        updateMeleeAttack(spawnPos, dir, ARCSIZE, range, lvl, dest, origin, rotation);
-    }
-}
-void DrawSword(){
-    static const int spriteWh = swordTex.width + swordTex.height / 2;
-    Rectangle dest; Vector2 origin; float rotation;
-    Rectangle src;
-    float Xoffset; float Yoffset;
-    if(currentDir == Direction::Left || currentDir == Direction::UpLeft || currentDir == Direction::DownLeft){
-        rotation = 180;
-        src = {0, 32, 32, -32};
-        Xoffset = -9.9f * scaleSys.info().scale;
-        Yoffset = -7.6f * scaleSys.info().scale;
-    }
-    else{
-        src = {0, 0, 32, 32};
-        rotation = 0;
-        Xoffset = -7.6f * scaleSys.info().scale;
-        Yoffset = -9.9f * scaleSys.info().scale;
-    }
-    int wh = spriteWh * scaleSys.info().scale;
-    dest.width = wh;
-    dest.height = wh;
-    dest.x = playerPixCenter.x + Xoffset; dest.y = playerPixCenter.y + Yoffset;
-    origin = {(float)wh/2, (float)wh/2};
-    DrawTexturePro(swordTex, src, dest, origin, rotation, WHITE);
-}
-void DrawBlaster(){
-    int w = blasterTex.width*scaleSys.info().scale;
-    int h = blasterTex.height*scaleSys.info().scale;
-    int WEAPON_OFFSET = 13 * scaleSys.info().scale;
-    float rotation = atan2f(dir.y, dir.x) * RAD2DEG;
-    bool flip = rotation > 90 || rotation < -90;
-    int xOffset = 7 * scaleSys.info().scale;
-    int yOffset = 5 * scaleSys.info().scale;
-    Rectangle src;
-    if (flip) src = {0, 20, 20, -20};
-    else      src = {0,  0, 20,  20};
-    Vector2 pivot = {
-        playerPixCenter.x + xOffset + dir.x * WEAPON_OFFSET,
-        playerPixCenter.y + yOffset + dir.y * WEAPON_OFFSET
-    };
-    Rectangle dest = {
-        pivot.x - w * 0.5f,
-        pivot.y - h * 0.5f,
-        (float)w,
-        (float)h
-    };
-    Vector2 origin = {w * 0.5f, h * 0.5f};
-    DrawTexturePro(blasterTex, src, dest, origin, rotation, WHITE);
-}
-void DrawEquip(){
-    // Weapon drawing logic for idle performance.
-    switch(equipped){
-        case(blaster):
-            DrawBlaster();
-            break;
-        case(sword):
-            DrawSword();
-            break;
+        const float projW = 5.f, projH = 5.f, projSpeed = 1000.f;
+        spawnProjectile(playerPixCenter, dir, projW, projH, projSpeed,
+                        /*enemyOwner*/ false, Weapon::blaster.damage()); // <-- damage param (step 3)
+
+        Weapon::blaster.beginAttackAnim();
+        Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
     }
 }
 void updateJson(float dt, Level& lvl){
@@ -391,6 +252,7 @@ void gameLoop(Level& lvl){
         lvl.readlvlData();
     }
     if(gPlayer.isDead()) return;// Do something cool
+    mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
     float dt = GetFrameTime();
     scaleSys.update(lvl);
     const auto& si = scaleSys.info();
@@ -417,9 +279,14 @@ void gameLoop(Level& lvl){
     drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
-    DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
-    DrawEquip();
-    if(currentDir == Direction::UpLeft || currentDir == Direction::UpRight || currentDir == Direction::Up) DrawTexturePro(playerTex, src, dst, {0,0}, 0.0f, WHITE);
+    attackInputHandler(lvl, dt);
+    const Texture2D& ptex = rolling
+        ? PlayerTexManager::instance().roll(currentDir)
+        : PlayerTexManager::instance().walk(currentDir);
+    DrawTexturePro(ptex, src, dst, {0,0}, 0.0f, WHITE);
+    if(currentDir == Direction::UpLeft || currentDir == Direction::UpRight || currentDir == Direction::Up){
+        DrawTexturePro(ptex, src, dst, {0,0}, 0.0f, WHITE);
+    }
     if(wallBellow(lvl.playerPos.x, lvl.playerPos.y, lvl)){
         Rectangle srcTile = { 0, 0, 16, 16 };
         for(int y = 0; y < (int)lvl.rows.size(); ++y){
@@ -439,6 +306,18 @@ void gameLoop(Level& lvl){
             }
         }
     }
+    Weapon::sword.tickAnim(dt);
+    Weapon::blaster.tickAnim(dt);
+    updateProjectiles(lvl, dt);
+    drawProjectiles();
+    // Draw equipped weapon (melee = no rotation; ranged = rotates in its override)
+    if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
+        Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    } 
+    else{
+        Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+    }
+    updateRangedAttack(playerPixCenter, mouseWorld, 0, 0, 0, dt, lvl);
     EndMode2D();
     updateJson(dt, lvl);
 }
@@ -449,24 +328,20 @@ void preLoadTasks(Level& lvl){
     lvl2.ID = 2;
     lvl.readlvlData();
     scaleSys.update(lvl);
+    Weapon::loadTextures();
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
     cam.zoom = 1.f;
     cam.rotation = 0.0f;
-    spriteManager();
     loadTileTextures();
     loadEnemies(lvl);
-    playerTex = LoadTexture("assets/graphics/void_crawler/void_crawler3.png");
-    blasterTex = LoadTexture("assets/graphics/abilities/utilities/equipables/ranged/blaster.png");
-    swordTex = LoadTexture("assets/graphics/abilities/utilities/equipables/melee/sword.png");
-    SetTextureFilter(playerTex,TEXTURE_FILTER_POINT);
-    SetTextureFilter(blasterTex,TEXTURE_FILTER_POINT);
-    SetTextureFilter(swordTex,TEXTURE_FILTER_POINT);
+    PlayerTexManager::instance().loadWalkFor(currentRace);
+    PlayerTexManager::instance().loadRollFor(currentRace);
     bullets.reserve(50);
     turtlesPos.reserve(50);
     genericPos.reserve(50);
+    bindEnemyAdapter();
     gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
 }
-// Possible solution: Have two different preloadtask functions so that lvl isn't needed until it is.
 void loadLvl(){
     static bool loaded=false;
     Level& lvl = (gWorld.currentLevel() == 1) ? lvl1 : lvl2;
@@ -505,136 +380,6 @@ void movementEventHandler(Level& lvl, float dt){
     if(x != 0.0f && y != 0.0f){
         x *= SQRT2;
         y *= SQRT2;
-    }
-    switch(currentDir){
-        case(Up):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingUp.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingUp.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingUp.pos;
-                    break;
-                default:
-                    playerTex = HfacingUp.pos;
-                    break;
-            }
-            break;
-        case(Down):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingDown.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingDown.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDown.pos;
-                    break;
-                default:
-                    playerTex = HfacingDown.pos;
-                    break;
-            }
-            break;
-        case(Left):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingDownLeft.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingDownLeft.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownLeft.pos;
-                    break;
-                default:
-                    playerTex = HfacingDownLeft.pos;
-                    break;
-            }
-            break;
-        case(Right):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingDownRight.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingDownRight.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownRight.pos;
-                    break;
-                default:
-                    playerTex = HfacingDownRight.pos;
-                    break;
-            }
-            break;
-        case(UpLeft):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingUpLeft.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingUpLeft.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingUpLeft.pos;
-                    break;
-                default:
-                    playerTex = HfacingUpLeft.pos;
-                    break;
-            }
-            break;
-        case(UpRight):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingUpRight.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingUpRight.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingUpRight.pos;
-                    break;
-                default:
-                    playerTex = HfacingUpRight.pos;
-                    break;
-            }
-            break;
-        case(DownLeft):
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingDownLeft.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingDownLeft.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownLeft.pos;
-                    break;
-                default:
-                    playerTex = HfacingDownLeft.pos;
-                    break;
-            }
-            break;
-        default:
-            switch(currentRace){
-                case(Race::Voidcrawler):
-                    playerTex = VfacingDownRight.pos;
-                    break;
-                case(Race::Spacelizard):
-                    playerTex = SfacingDownRight.pos;
-                    break;
-                case(Race::Mecha_sapien):
-                    //playerTex = MfacingDownRight.pos;
-                    break;
-                default:
-                    playerTex = HfacingDownRight.pos;
-                    break;
-            }
-            break;
     }
     float newX = lvl.playerPos.x + x * WALK_SPEED * dt;
     float newY = lvl.playerPos.y + y * WALK_SPEED * dt;

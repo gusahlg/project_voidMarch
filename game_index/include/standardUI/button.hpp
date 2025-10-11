@@ -8,11 +8,8 @@ class Button{
     public:
         using Action = std::function<void()>;
         enum class DisplayDependency : std::uint8_t {None, OnHover, OnClick};
-        Button(Rectangle bounds,
-            Texture2D idle, Texture2D hover, Texture2D pressed,
-            Action onClick = nullptr, std::string name = {}, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None, std::string targetName = {})
-        : bounds(bounds), idle(idle), hover(hover), pressed(pressed), 
-          onClick(std::move(onClick)), name(name), DependencyType(dependency), targetName(targetName) {}
+        Button(Vector2 pos, Texture2D tex, Action onClick = nullptr, std::string name = {}, ui::Button::DisplayDependency dependency = ui::Button::DisplayDependency::None, std::string targetName = {})
+        : tex(tex), onClick(std::move(onClick)), name(name), DependencyType(dependency), targetName(targetName) {bounds=Rectangle{pos.x,pos.y,(float)tex.width/3,(float)tex.height};}
 
         void update(Vector2 mouse){
             bool inside = CheckCollisionPointRec(mouse, bounds);
@@ -27,8 +24,17 @@ class Button{
             else state = State::Hover;
         }
         void draw() const{
-            const Texture2D tex = state == State::Hover ? hover : state == State::Pressed ? pressed : idle;
-            DrawTextureRec(tex, {0,0, bounds.width, bounds.height}, {bounds.x, bounds.y}, WHITE);
+            float frameW = bounds.width;
+            float srcX = 0.0f;
+            switch(state){
+                case State::Idle:    srcX = 0.0f;           break;
+                case State::Hover:   srcX = frameW;         break;
+                case State::Pressed:
+                case State::Clicked: srcX = frameW * 2.0f;  break;
+            }
+            Rectangle src{ srcX, 0.0f, frameW, bounds.height };
+            Vector2   dst{ bounds.x, bounds.y };
+            DrawTextureRec(tex, src, dst, WHITE);
         }
         void drawOutline() const{
             DrawRectangleLines(bounds.x, bounds.y, bounds.width, bounds.height, RED);
@@ -41,7 +47,7 @@ class Button{
         bool toggled = false;
     private:
         Rectangle bounds;
-        Texture2D idle, hover, pressed;
+        Texture2D tex;
         Action onClick;
 };
 

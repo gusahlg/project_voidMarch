@@ -29,26 +29,37 @@ float rng_float(float low, float high){
 struct Star{
     Texture2D tex;
     Rectangle src;
-    int stages{};
+    int stages=0;
     Rectangle drawBox;
     Color tint;
-    float clock;
+    int clock;
     Star(Texture2D tex, Rectangle src, Rectangle drawBox, Color tint, float clock)
     : tex(tex), src(src), drawBox(drawBox), tint(tint), clock(clock) {}
-};/*794*/
+};
 std::vector<Star> stars;
 void generateStars(int screenWidth, int screenHeight){
-    static Texture2D fullStarSheet = LoadTexture("assets/UI/screen_interface/backgrounds/star.png");
+    static Texture2D fullStarSheet = LoadTexture("assets/UI/screen_interface/backgrounds/fullStarSheet.png");
     // Generate new stars until maximum star amount is reached:
-    for(int i = 0; i < (int)(500 - stars.size()); ++i){
+    for(int i = 0; i < (int)(100000 - stars.size()); ++i){
         Texture2D tex = fullStarSheet;
         int x = rng_int(0, screenWidth);
         int y = rng_int(0, screenHeight);
-        int width  = rng_int(0.01, 20);
-        int height = rng_int(0.01, 20);
-        Color tint = WHITE;
-        if(rng_int(1,3) != 1) tint = {(unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255)};
-        float clock = rng_float(0.6, 2.5);
+        int width  = rng_int(0.1, 1);
+        int height = rng_int(0.1, 1);
+        if(rng_int(0,1) == 1){
+            width = rng_int(1, 2);
+            height = rng_int(1, 2);
+        }
+        else if(rng_int(0,1) == 1){
+            width = rng_int(2, 4);
+            height = rng_int(2, 4);
+        }
+        Color tint;
+        if(rng_int(1,3) == 1){
+            tint = {(unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255), (unsigned char)rng_int(0,255)};
+        } 
+        else{tint = WHITE;}
+        int clock = rng_int(0, 5);
         static const int rows = fullStarSheet.height / 5;
         int row  = rng_int(0, std::max(0, rows - 1));
         Rectangle src = {0.f, float(row * 5), 5.f, 5.f};
@@ -61,16 +72,18 @@ void updateStars(){
         s.clock -= GetFrameTime();
         if(s.clock > 0) continue;
         switch(s.stages){
-            case 0: s.src.x = 5.f;  s.src.y = float(5 * rng_int(0, (s.tex.height/5) - 1)); break;
-            case 1: s.src.x = 10.f; s.src.y = float(5 * rng_int(0, (s.tex.height/5) - 1)); break;
+            case 0: s.src.x = 5.f; break;
+            case 1: s.src.x = 10.f; break;
+            case 2: s.src.x = 15.f; break;
+            case 3: s.src.x = 20.f; break;
         }
         ++s.stages;
-        s.clock = rng_float(3, 8);
+        s.clock = rng_int(500, 10000);
 }
     stars.erase(
         std::remove_if(
             stars.begin(), stars.end(), [](auto& s){
-                return s.stages >= 2;
+                return s.stages >= 3;
             }
         ),
         stars.end());
@@ -81,12 +94,10 @@ void drawStars(){
     }
 }
 void mainPreLoadTasks(float screenWidth, float screenHeight){
-    static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
-    static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
-    static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
-    const float btnX = screenWidth/2.f-Idle.width/2.f;
-    const float btnY = screenHeight/2.f-Idle.height/2.f;
-    mainManager.emplaceButton(Rectangle{btnX,btnY,float(Idle.width),float(Idle.height)},Idle,Hover,Pressed,[]{currentScreen=screen::Select;});
+    static Texture2D button = LoadTexture("assets/ui/screen_interface/buttons/blueButton.png");
+    const float btnX = screenWidth/2.f;
+    const float btnY = screenHeight/2.f;
+    mainManager.emplaceButton(Vector2{btnX,btnY},button,[]{currentScreen=screen::Select;});
 }
 void loadMainScreen(Vector2 mousePos, float screenWidth, float screenHeight){
     static bool loaded = false;

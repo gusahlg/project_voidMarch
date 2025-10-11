@@ -18,25 +18,24 @@ Prof currentProf;
 bool raceSelect=false;
 bool profSelect=false;
 void selectPreLoadTasks(float screenWidth, float screenHeight){
-    static Texture2D Idle = LoadTexture("assets/ui/screen_interface/buttons/Idle.png");
-    static Texture2D Hover = LoadTexture("assets/ui/screen_interface/buttons/Hover.png");
-    static Texture2D Pressed = LoadTexture("assets/ui/screen_interface/buttons/Pressed.png");
+    static Texture2D button = LoadTexture("assets/ui/screen_interface/buttons/blueButton.png");
     // Race select buttons
-    selectManager.emplaceButton(Rectangle{0, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Spacelizard;raceSelect=true;});
-    selectManager.emplaceButton(Rectangle{50, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Voidcrawler;raceSelect=true;});
-    selectManager.emplaceButton(Rectangle{100, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Mecha_sapien;raceSelect=true;});
-    selectManager.emplaceButton(Rectangle{150, 0, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentRace = Race::Human;raceSelect=true;});
-    // Profession select buttons
-    selectManager.emplaceButton(Rectangle{0, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Necromancer;profSelect=true;});
-    selectManager.emplaceButton(Rectangle{50, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Craftsman;profSelect=true;});
-    selectManager.emplaceButton(Rectangle{100, 50, float(Idle.width), float(Idle.height)}, Idle, Hover, Pressed,[]{currentProf = Prof::Wizard;profSelect=true;});
-    selectManager.emplaceButton(Rectangle{150, 50, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{currentProf = Prof::Dualist;profSelect=true;});
+    selectManager.emplaceButton(Vector2{0, 0},button,[]{currentRace = Race::Spacelizard;raceSelect=true;});
+    selectManager.emplaceButton(Vector2{50, 0},button,[]{currentRace = Race::Voidcrawler;raceSelect=true;});
+    selectManager.emplaceButton(Vector2{100, 0},button,[]{currentRace = Race::Mecha_sapien;raceSelect=true;});
+    selectManager.emplaceButton(Vector2{150, 0},button,[]{currentRace = Race::Human;raceSelect=true;});
+    // Proffesion select buttons
+    selectManager.emplaceButton(Vector2{0, 50},button,[]{currentProf = Prof::Necromancer;profSelect=true;});
+    selectManager.emplaceButton(Vector2{50, 50},button,[]{currentProf = Prof::Craftsman;profSelect=true;});
+    selectManager.emplaceButton(Vector2{100, 50},button,[]{currentProf = Prof::Wizard;profSelect=true;});
+    selectManager.emplaceButton(Vector2{150, 50},button,[]{currentProf = Prof::Dualist;profSelect=true;});
+
     // Button progresses to level select
-    const float btnX = screenWidth/2.f-Idle.width/2.f;
-    const float btnY = screenHeight/2.f-Idle.height/2.f;
-    selectManager.emplaceButton(Rectangle{btnX, btnY, float(Idle.width), float(Idle.height)},Idle, Hover, Pressed,[]{if(raceSelect && profSelect) currentScreen = screen::LevelSelect;});
+    const float btnX = screenWidth/2.f;
+    const float btnY = screenHeight/2.f;
+    selectManager.emplaceButton(Vector2{btnX, btnY},button,[]{if(raceSelect && profSelect) currentScreen = screen::LevelSelect;});
     // Create background:
-    selectManager.setupHelper(Idle);
+    selectManager.setupHelper(button);
     selectManager.Helper.setupScale(screenWidth, screenHeight);
 }
 void loadSelectScreen(Vector2 mousePos, float screenWidth, float screenHeight){
