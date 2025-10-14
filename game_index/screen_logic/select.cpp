@@ -29,6 +29,7 @@ void selectPreLoadTasks(float screenWidth, float screenHeight){
     selectManager.emplaceButton(Vector2{50, 50},button,[]{currentProf = Prof::Craftsman;profSelect=true;});
     selectManager.emplaceButton(Vector2{100, 50},button,[]{currentProf = Prof::Wizard;profSelect=true;});
     selectManager.emplaceButton(Vector2{150, 50},button,[]{currentProf = Prof::Dualist;profSelect=true;});
+
     // Button progresses to level select
     const float btnX = screenWidth/2.f;
     const float btnY = screenHeight/2.f;
