@@ -1,4 +1,5 @@
 ﻿# Build
+math_core/target/
 /build/
 /out/
 /bin/

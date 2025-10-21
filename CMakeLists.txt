@@ -5,14 +5,20 @@ project(void_march VERSION 0.1.0 LANGUAGES C CXX)
 
 set(SOURCES
     game_index/main.cpp
-    game_index/game_logic/enemy_logic.cpp
-    game_index/game_logic/game.cpp
-    game_index/game_logic/game_inputs.cpp
-    game_index/game_logic/on_screen.cpp
-    game_index/game_logic/player_event_handler.cpp
+
     game_index/screen_logic/home_screen.cpp
     game_index/screen_logic/level_select.cpp
     game_index/screen_logic/select.cpp
+
+    game_index/game_logic/enemy_logic.cpp
+    game_index/game_logic/game_inputs.cpp
+    game_index/game_logic/game.cpp
+    game_index/game_logic/on_screen.cpp
+    game_index/game_logic/player_event_handler.cpp
+
+    game_index/game_logic/inventory/melee_bindings.cpp
+
+    game_index/game_logic/items/items.cpp
 )
 
 # Include directories

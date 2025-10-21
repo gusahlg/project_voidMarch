@@ -5,12 +5,12 @@
 #include <vector>
 
 namespace item_sys{
-
-
 class Inventory{
-    public:
-
-    private:
+public:
+    std::vector<Weapon> Weapons;
+    std::vector<RangedWeapon> RangedWeapons;
+    std::vector<MeleeWeapon> MeleeWeapons;
+private:
     
 };
 }

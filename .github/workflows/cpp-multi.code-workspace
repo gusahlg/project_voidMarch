@@ -7,6 +7,9 @@
 		{
 			"name": "VK_project",
 			"path": "../../../VK_project"
+		},
+		{
+			"path": "../../../Rust play space"
 		}
 	],
 	"settings": {
