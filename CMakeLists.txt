@@ -35,35 +35,62 @@ target_include_directories(void_march
 
 target_link_libraries(void_march PRIVATE raylib)
 
-# ---- Rust (math_core) integration ----
-# Build with host toolchain (no --target). Cross-compiling can be added later.
+# ---- Rust (math_core) integration: stable & cross-platform ----
 
-# Where Cargo will output the static lib for a --release build (host target)
-set(RUST_LIB_DIR  "${PROJECT_SOURCE_DIR}/math_core/target/x86_64-pc-windows-gnu/release")
+# 0) Locate cargo/rustc from MSYS2 on Windows (avoid Windows rustup MSVC)
+if(WIN32)
+  # Prefer the MSYS2 MinGW toolchain explicitly
+  find_program(CARGO_EXECUTABLE cargo HINTS /mingw64/bin)
+  find_program(RUSTC_EXECUTABLE rustc HINTS /mingw64/bin)
+else()
+  find_program(CARGO_EXECUTABLE cargo)
+  find_program(RUSTC_EXECUTABLE rustc)
+endif()
+
+if(NOT CARGO_EXECUTABLE OR NOT RUSTC_EXECUTABLE)
+  message(FATAL_ERROR "cargo and/or rustc not found. Install Rust (MSYS2 on Windows).")
+endif()
+
+# 1) Decide the Rust target triple to build for
+#    - If we are on Windows+GCC (MinGW), force 'x86_64-pc-windows-gnu'
+#    - Otherwise, detect host triple via 'rustc -vV'
+if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(RUST_TARGET "x86_64-pc-windows-gnu")
+else()
+  execute_process(
+    COMMAND ${RUSTC_EXECUTABLE} -vV
+    OUTPUT_VARIABLE RUSTC_VV
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  string(REGEX MATCH "host: ([^\n\r]+)" _match "${RUSTC_VV}")
+  if(NOT CMAKE_MATCH_1)
+    message(FATAL_ERROR "Failed to detect rustc host triple from:\n${RUSTC_VV}")
+  endif()
+  set(RUST_TARGET "${CMAKE_MATCH_1}")
+endif()
+
+# 2) Define where the static lib should appear for that target/config
+set(RUST_LIB_DIR  "${PROJECT_SOURCE_DIR}/math_core/target/${RUST_TARGET}/release")
 set(RUST_LIB_PATH "${RUST_LIB_DIR}/libmath_core.a")
 
-# Tell Ninja EXACTLY which file is produced and HOW to build it
+# 3) Explicit build rule that produces the archive at that exact path
 add_custom_command(
   OUTPUT "${RUST_LIB_PATH}"
-  COMMAND ${CMAKE_COMMAND} -E env CARGO_TERM_COLOR=always cargo build --release
+  COMMAND ${CMAKE_COMMAND} -E env CARGO_TERM_COLOR=always
+          ${CARGO_EXECUTABLE} build --release --target ${RUST_TARGET}
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/math_core"
-  COMMENT "Cargo: building math_core (host) -> ${RUST_LIB_PATH}"
+  COMMENT "Cargo: building math_core for ${RUST_TARGET} -> ${RUST_LIB_PATH}"
   VERBATIM
 )
 
-# A target that depends on that output file
+# 4) A phony target that depends on the output file
 add_custom_target(math_core_build ALL
   DEPENDS "${RUST_LIB_PATH}"
 )
 
-# Import the produced archive as an imported static library
+# 5) Import the produced archive and make the C++ exe wait for it
 add_library(math_core STATIC IMPORTED GLOBAL)
-set_target_properties(math_core PROPERTIES
-  IMPORTED_LOCATION "${RUST_LIB_PATH}"
-)
+set_target_properties(math_core PROPERTIES IMPORTED_LOCATION "${RUST_LIB_PATH}")
 
-# Ensure build order: build Rust before linking the exe
 add_dependencies(void_march math_core_build)
-
-# Link Rust lib into the C++ exe
 target_link_libraries(void_march PRIVATE math_core)
