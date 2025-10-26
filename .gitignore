@@ -1,6 +1,7 @@
 ﻿# Build
 math_core/target/
-/build/
+/build-windows/
+/build-linux/
 /out/
 /bin/
 /obj/
@@ -14,10 +15,11 @@ CMakeCache.txt
 *.exe
 *.log
 
+# Data
+game_index/save/
+
 # IDE
 .vscode/
-.vs/
-.idea/
 
 # OS
 .DS_Store
