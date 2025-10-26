@@ -1,53 +1,69 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.20)
 project(void_march VERSION 0.1.0 LANGUAGES C CXX)
 
-# Gather all source files
+# ---- C++ standard ----
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(SOURCES
-    game_index/main.cpp
+# ---- Options ----
+# Single-config generators (Ninja/Unix Makefiles) use CMAKE_BUILD_TYPE; Multi-config (MSVC) use configs.
+if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
 
-    game_index/screen_logic/home_screen.cpp
-    game_index/screen_logic/level_select.cpp
-    game_index/screen_logic/select.cpp
+# ---- Raylib ----
+# Prefer package config provided by MSYS2/distro installs
+#   MSYS2: pacman -S mingw-w64-x86_64-raylib
+#   Ubuntu: apt install libraylib-dev (package name may vary)
+find_package(raylib CONFIG REQUIRED)
 
-    game_index/game_logic/enemy_logic.cpp
-    game_index/game_logic/game_inputs.cpp
-    game_index/game_logic/game.cpp
-    game_index/game_logic/on_screen.cpp
-    game_index/game_logic/player_event_handler.cpp
+# ---- Sources ----
+# Keep it maintainable: auto-collect .cpp under game_index
+file(GLOB_RECURSE VM_SOURCES
+     CONFIGURE_DEPENDS
+     "${PROJECT_SOURCE_DIR}/game_index/*.cpp")
 
-    game_index/game_logic/inventory/melee_bindings.cpp
+add_executable(void_march ${VM_SOURCES})
 
-    game_index/game_logic/items/items.cpp
+target_include_directories(void_march
+  PRIVATE
+    "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/game_index"
+    "${PROJECT_SOURCE_DIR}/game_index/include"
 )
 
-# Include directories
-include_directories(
-    ${PROJECT_SOURCE_DIR}/game_index/include
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/third_party/raylib/include
+target_link_libraries(void_march PRIVATE raylib)
+
+# ---- Rust (math_core) integration ----
+# Build with host toolchain (no --target). Cross-compiling can be added later.
+
+# Where Cargo will output the static lib for a --release build (host target)
+set(RUST_LIB_DIR  "${PROJECT_SOURCE_DIR}/math_core/target/x86_64-pc-windows-gnu/release")
+set(RUST_LIB_PATH "${RUST_LIB_DIR}/libmath_core.a")
+
+# Tell Ninja EXACTLY which file is produced and HOW to build it
+add_custom_command(
+  OUTPUT "${RUST_LIB_PATH}"
+  COMMAND ${CMAKE_COMMAND} -E env CARGO_TERM_COLOR=always cargo build --release
+  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/math_core"
+  COMMENT "Cargo: building math_core (host) -> ${RUST_LIB_PATH}"
+  VERBATIM
 )
 
-# Add executable
-add_executable(void_march ${SOURCES})
-
-# Link raylib (static library)
-target_link_libraries(void_march
-    PRIVATE
-    ${PROJECT_SOURCE_DIR}/third_party/raylib/lib/libraylib.a
-    m  # math
-    pthread
-    dl
-    rt
-    X11
+# A target that depends on that output file
+add_custom_target(math_core_build ALL
+  DEPENDS "${RUST_LIB_PATH}"
 )
 
-# Link Rust static library
-target_link_libraries(void_march PRIVATE ${PROJECT_SOURCE_DIR}/lib/libmath_core.a)
+# Import the produced archive as an imported static library
+add_library(math_core STATIC IMPORTED GLOBAL)
+set_target_properties(math_core PROPERTIES
+  IMPORTED_LOCATION "${RUST_LIB_PATH}"
+)
 
-include(CTest)
-enable_testing()
+# Ensure build order: build Rust before linking the exe
+add_dependencies(void_march math_core_build)
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+# Link Rust lib into the C++ exe
+target_link_libraries(void_march PRIVATE math_core)
