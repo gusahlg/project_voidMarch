@@ -14,7 +14,7 @@
 #include "../game_logic/inventory/melee_bindings.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
-#include "../include/global/scale_system.hpp"
+#include "../include/global/scale_utils.hpp"
 void bindEnemyAdapter();
 struct enemy{
     int frames;
@@ -38,9 +38,8 @@ struct enemy{
     void update(Vector2 playerPixCenter){
         // System below is for movement and updating state.
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
-        int Rscale = range * scaleSys.info().scale;
-        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= Rscale;
-        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= Rscale;
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
         float distX = Emid.x < playerPixCenter.x ? playerPixCenter.x - Emid.x : Emid.x - playerPixCenter.x;
         float distY = Emid.y < playerPixCenter.y ? playerPixCenter.y - Emid.y : Emid.y - playerPixCenter.y;
         float dx = std::fabs(playerPixCenter.x - Emid.x);
@@ -70,10 +69,9 @@ struct enemy{
     }
     // Determine if damage should be dealt to player.
     bool playerInRange(Vector2 playerPixCenter){
-        int Rscale = range * scaleSys.info().scale;
         Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
-        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= Rscale;
-        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= Rscale;
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
         if(inRangeX && inRangeY) return true;
         else return false;
     }
@@ -125,7 +123,7 @@ struct enemy{
 
     // Hitbox calc
     float frameW = (float)tex.width / frames;
-    Hbox = Rectangle{ pos.x, pos.y, frameW * scaleSys.info().scale, (float)tex.height * scaleSys.info().scale };
+    Hbox = Rectangle{ pos.x, pos.y, frameW, (float)tex.height};
 }
 };
 std::vector<enemy> enemies;
@@ -162,7 +160,6 @@ void spawnLogic(Vector2 pos, int HP, int ID){
 }
 // Idea: Add in types, speed and stuff in enemies struct
 void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
-    float tileSize = scaleSys.info().tilePx;
     for(auto& e : enemies){
         e.update(playerCenter);
         Rectangle f = e.Hbox;
@@ -189,11 +186,7 @@ void updateEnemies(float dt, Level& lvl, Vector2 playerCenter){
                 
                 break;
         }
-        float tileX = f.x / tileSize;
-        float tileY = f.y / tileSize;
-        float tileW = f.width  / tileSize;
-        float tileH = f.height / tileSize;
-        if(!collisionRect(tileX, tileY, tileW, tileH, lvl)){
+        if(!collisionRect((float)ScaleUtils::toTiles(f.x), (float)ScaleUtils::toTiles(f.y), (float)ScaleUtils::toTiles(f.width), (float)ScaleUtils::toTiles(f.height), lvl)){
             e.Hbox = f;
         }
     }

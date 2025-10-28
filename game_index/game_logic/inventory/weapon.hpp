@@ -72,7 +72,7 @@ public:
     }
 
     // Draw (non-rotating). Melee uses this.
-    virtual void draw(Vector2 playerCenter, Vector2 /*aimWorld*/, float scale = 1.0f) const {
+    virtual void draw(Vector2 playerCenter, Vector2 mousePosition, float scale = 1.0f) const {
         if (sprite_.id == 0) return;
         Rectangle src = currentFrameSrc();
         if (src.width <= 0 || src.height <= 0) return;

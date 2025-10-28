@@ -10,7 +10,7 @@
 #include "../game_logic/inventory/melee_bindings.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
-#include "../include/global/scale_system.hpp"
+#include "../include/global/scale_utils.hpp"
 bool rolling;
 float Ox;
 float Oy;
@@ -98,7 +98,6 @@ void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float spee
 }
 void updateProjectiles(Level& lvl, float dt){
     if(bullets.empty()){projActive = false; return;}
-    const auto& si = scaleSys.info();
 
     for (auto& b : bullets){
         if (!b.alive) continue;
@@ -109,10 +108,10 @@ void updateProjectiles(Level& lvl, float dt){
 
         // 1) World collision (TILES)
         Rectangle brectTiles{
-            (float)toTiles(b.pos.x,            si),
-            (float)toTiles(b.pos.y,            si),
-            (float)toTiles(b.w * si.scale,     si),
-            (float)toTiles(b.h * si.scale,     si)
+            (float)ScaleUtils::toTiles(b.pos.x),
+            (float)ScaleUtils::toTiles(b.pos.y),
+            (float)ScaleUtils::toTiles(b.w),
+            (float)ScaleUtils::toTiles(b.h)
         };
         if (collisionRect(brectTiles.x, brectTiles.y,
                           brectTiles.width, brectTiles.height, lvl)) {
@@ -124,8 +123,8 @@ void updateProjectiles(Level& lvl, float dt){
         Rectangle brectPx{
             b.pos.x,
             b.pos.y,
-            b.w * si.scale,
-            b.h * si.scale
+            b.w,
+            b.h
         };
         if (!b.enemyOwner && b.alive) {
             item_sys::for_each_enemy([&](std::uint64_t id, Rectangle enemyAABB){
@@ -146,10 +145,9 @@ void updateProjectiles(Level& lvl, float dt){
     projActive = !bullets.empty();
 }
 
-void drawProjectiles(){
-    const auto& si = scaleSys.info();
+void  drawProjectiles(){
     for (const auto& b : bullets){
-        DrawRectangleV(b.pos, Vector2{ b.w * si.scale, b.h * si.scale }, RED);
+        DrawRectangleV(b.pos, Vector2{b.w, b.h}, RED);
     }
 }
 void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl){

@@ -16,7 +16,7 @@
 #include "../game_logic/inventory/sector_hit.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
-#include "../include/global/scale_system.hpp"
+#include "../include/global/scale_utils.hpp"
 // Gives access to player data.
 #include "../include/data/stats/player.hpp"
 // Saving and loading world data.
@@ -24,7 +24,6 @@
 // Weapon definitions.
 #include "items/items.hpp"
 void bindEnemyAdapter();
-ScaleSystem scaleSys;
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -62,7 +61,6 @@ const float ANIM_SPEED = 0.12f;
 int currentFrame = 0;
 float animTimer = 0.0f;
 Camera2D cam{};
-const int TILE = 16;
 void loadTileTextures(){
     const std::vector<std::pair<const char*, Texture2D*>> todo = {
         {"assets/graphics/level_graphics/tiles/walls/Top_Wall.png",         &tiles.WallUp},
@@ -127,13 +125,12 @@ bool wallBellow(float cx, float cy, Level& lvl){
 std::vector<Vector2> turtlesPos;
 std::vector<Vector2> genericPos;
 void drawLevel(const Level& lvl){
-    const auto& si = scaleSys.info();
+
     for(size_t y=0;y<lvl.rows.size();++y)
         for(size_t x=0;x<lvl.rows[y].size();++x){
-            int px = toPx(x, si);
-            int py = toPx(y, si);
-            int sz = (TILE * scaleSys.info().scale);
-            Rectangle mapTile = {(float)px, (float)py, (float)sz, (float)sz};
+            int px = ScaleUtils::toPx(x);
+            int py = ScaleUtils::toPx(y);
+            Rectangle mapTile = {(float)px, (float)py, (float)TILE_SIZE, (float)TILE_SIZE};
             Rectangle srcTile = {0, 0, 16, 16};
             switch(lvl.rows[y][x]){
                 case('1'): DrawTexturePro(tiles.WallUp, srcTile, mapTile, {0,0}, 0, WHITE); break;
@@ -153,11 +150,11 @@ void drawLevel(const Level& lvl){
 }
 void loadEnemies(Level& lvl){
     for(Vector2 e : genericPos){
-        Vector2 pos = {toPx(e.x, scaleSys.info()), toPx(e.y, scaleSys.info())};
+        Vector2 pos = {ScaleUtils::toPx(e.x), ScaleUtils::toPx(e.y)};
         spawnLogic(pos, 10, 0);
     }
     for(Vector2 t : turtlesPos){
-        Vector2 pos = {toPx(t.x, scaleSys.info()), toPx(t.y, scaleSys.info())};
+        Vector2 pos = {ScaleUtils::toPx(t.x), ScaleUtils::toPx(t.y)};
         spawnLogic(pos, 10, 1);
     }
 }
@@ -166,11 +163,6 @@ float pPixX;
 float pPixY;
 bool projActive;
 void inputEventHandler(Level& lvl, float dt){
-    /*TEMPORARY*/
-    int wheel = GetMouseWheelMove();
-    if(wheel > 0) scaleSys.nudgeZoom(+1);
-    else if(wheel < 0) scaleSys.nudgeZoom(-1);
-
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
@@ -241,8 +233,8 @@ void updateJson(float dt, Level& lvl){
     gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
     Delay = 10.f;
 }
-int pSizeW;
-int pSizeH;
+int pSizeW = 18;
+int pSizeH = 25;
 Rectangle src;
 Rectangle dst;
 Rectangle playerRect;
@@ -254,10 +246,8 @@ void gameLoop(Level& lvl){
     if(gPlayer.isDead()) return;// Do something cool
     mouseWorld = GetScreenToWorld2D(GetMousePosition(), cam);
     float dt = GetFrameTime();
-    scaleSys.update(lvl);
-    const auto& si = scaleSys.info();
-    playerPixCenter = {toPx(lvl.playerPos.x, si) + pSizeW/2,
-                       toPx(lvl.playerPos.y, si) + pSizeH/2};
+    playerPixCenter = {(float)ScaleUtils::toPx(lvl.playerPos.x) + pSizeW/2,
+                       (float)ScaleUtils::toPx(lvl.playerPos.y) + pSizeH/2};
     cam.target = playerPixCenter;
     cam.target.x = floorf(cam.target.x + 0.5f);
     cam.target.y = floorf(cam.target.y + 0.5f);
@@ -265,14 +255,10 @@ void gameLoop(Level& lvl){
     cam.offset.y = floorf(cam.offset.y + 0.5f);
     ClearBackground(BLACK);
     BeginMode2D(cam);
-    // draw player sprite (18×25 frame)
-    const int spriteW=18;
-    const int spriteH=25;
-    pSizeW = spriteW * scaleSys.info().scale;
-    pSizeH = spriteH * scaleSys.info().scale;
-    pPixX = toPx(lvl.playerPos.x, scaleSys.info()) + (scaleSys.info().tilePx - pSizeW)/2;
-    pPixY = toPx(lvl.playerPos.y, scaleSys.info()) + scaleSys.info().tilePx - pSizeH;
-    src = {currentFrame * (float)spriteW, 0.0f, (float)spriteW, (float)spriteH};
+
+    pPixX = ScaleUtils::toPx(lvl.playerPos.x);
+    pPixY = ScaleUtils::toPx(lvl.playerPos.y);
+    src = {currentFrame * (float)pSizeW, 0.0f, (float)pSizeW, (float)pSizeH};
     dst = {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
     // Used for collision and such:
     playerRect = {pPixX, pPixY, (float)pSizeW, (float)pSizeH};
@@ -291,7 +277,7 @@ void gameLoop(Level& lvl){
         Rectangle srcTile = { 0, 0, 16, 16 };
         for(int y = 0; y < (int)lvl.rows.size(); ++y){
             for(int x = 0; x < (int)lvl.rows[y].size(); ++x){
-                Rectangle mapTile = {toPx(x,si), toPx(y,si), si.tilePx, si.tilePx};
+                Rectangle mapTile = {ScaleUtils::toPx(x), ScaleUtils::toPx(y), TILE_SIZE, TILE_SIZE};
                 switch(lvl.rows[y][x]){
                     case '#': DrawTexturePro(tiles.WallFull, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
                     case '1': DrawTexturePro(tiles.WallUp, srcTile, mapTile, {0, 0}, 0.0f, WHITE); break;
@@ -312,10 +298,10 @@ void gameLoop(Level& lvl){
     drawProjectiles();
     // Draw equipped weapon (melee = no rotation; ranged = rotates in its override)
     if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
-        Weapon::sword.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+        Weapon::sword.draw(playerPixCenter, mouseWorld);
     } 
     else{
-        Weapon::blaster.draw(playerPixCenter, mouseWorld, scaleSys.info().scale);
+        Weapon::blaster.draw(playerPixCenter, mouseWorld);
     }
     updateRangedAttack(playerPixCenter, mouseWorld, 0, 0, 0, dt, lvl);
     EndMode2D();
@@ -327,7 +313,6 @@ void preLoadTasks(Level& lvl){
     lvl1.ID = 1;
     lvl2.ID = 2;
     lvl.readlvlData();
-    scaleSys.update(lvl);
     Weapon::loadTextures();
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
     cam.zoom = 1.f;

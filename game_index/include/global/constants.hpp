@@ -1,6 +1,5 @@
 #pragma once
 #include <raylib.h>
-#include "scale_system.hpp"
 #include "../data/stats/player.hpp"
 #include "../data/stats/world.hpp"
 constexpr int TILE_SIZE = 16;
@@ -13,8 +12,6 @@ extern float pPixX;
 extern float pPixY;
 extern Rectangle playerRect;
 
-// Scalesystem:
-extern ScaleSystem scaleSys;
 
 // Player data:
 inline Player gPlayer{};
