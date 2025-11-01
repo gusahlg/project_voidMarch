@@ -29,7 +29,9 @@ add_executable(void_march ${VM_SOURCES})
 target_include_directories(void_march
   PRIVATE
     "${PROJECT_SOURCE_DIR}/include"
-    "${PROJECT_SOURCE_DIR}/game_index"
+    "${PROJECT_SOURCE_DIR}/game_index/game_logic"
+    "${PROJECT_SOURCE_DIR}/game_index/game_logic/items"
+    "${PROJECT_SOURCE_DIR}/game_index/game_logic/systems/combat"
     "${PROJECT_SOURCE_DIR}/game_index/include"
 )
 

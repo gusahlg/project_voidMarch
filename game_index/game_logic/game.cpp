@@ -11,9 +11,8 @@
 #include "../include/game/ability_attributes.hpp"
 #include "../include/game/enemy_data.hpp"
 // Everything weapon/inventory related.
-#include "../game_logic/inventory/weapon.hpp"
-#include "../game_logic/inventory/melee_bindings.hpp"
-#include "../game_logic/inventory/sector_hit.hpp"
+#include "systems/inventory/weapon.hpp"
+#include "systems/math/ahl_math.hpp"
 // Essential systems used for scaling and communicating constants.
 #include "../include/global/constants.hpp"
 #include "../include/global/scale_utils.hpp"
@@ -23,7 +22,6 @@
 #include "../include/data/stats/world.hpp"
 // Weapon definitions.
 #include "items/items.hpp"
-void bindEnemyAdapter();
 struct TileSet{
     Texture2D WallUp;
     Texture2D WallDown;
@@ -41,10 +39,9 @@ struct TileSet{
     : WallUp(WallUp), WallDown(WallDown), WallUpLeft(WallUpLeft), WallUpRight(WallUpRight), WallDownLeft(WallDownLeft), 
       WallDownRight(WallDownRight), WallLeft(WallLeft), WallRight(WallRight), WallFull(WallFull), floor(floor) {}
 };
+Vector2 playerPixCenter;
 TileSet tiles{/*wall =*/ {}, /*floor =*/ {}, {}, {}, {}, {}, {}, {}, {}, {}};
 bool attacking = false;
-Vector2 mouseWorld;
-Vector2 playerPixCenter;
 Vector2 dir;
 float PLAYERWIDTH = 0.9;
 float PLAYERHEIGHT = 0.4;
@@ -166,7 +163,7 @@ void inputEventHandler(Level& lvl, float dt){
     bool moving = IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D);
     float const delay = 0.9f;
     float static rollTimer = 0.0f;
-    rollTimer += GetFrameTime();
+    rollTimer += dt;
     // Related to movement
     if(!rolling){
         Ox = lvl.playerPos.x;
@@ -174,7 +171,7 @@ void inputEventHandler(Level& lvl, float dt){
     }
     if(IsKeyPressed(KEY_SPACE) && rollTimer >= delay || rolling){
         updateRoll(lvl, dt);
-        animTimer += GetFrameTime();
+        animTimer += dt;
         if(animTimer >= ANIM_SPEED + 0.015f){
             animTimer = 0.0f;
             currentFrame = (currentFrame + 1) % (PLAYER_FRAMES + 1);
@@ -185,7 +182,7 @@ void inputEventHandler(Level& lvl, float dt){
         rollWalkSwitch = true;
     }
     else if(moving){
-        animTimer += GetFrameTime();
+        animTimer += dt;
         if(animTimer >= ANIM_SPEED){
             animTimer = 0.0f;
             currentFrame = (currentFrame + 1) % PLAYER_FRAMES;
@@ -196,34 +193,17 @@ void inputEventHandler(Level& lvl, float dt){
     else{
         currentFrame=0;animTimer=0.0f;
     }
-}
-/* Checks for if there's any attack input and if so executes
-appropriate actions */
-void attackInputHandler(Level& lvl, float dt){
-    // MELEE on LEFT click — hit once on click, then animate
-    if(!IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::sword.attackReady(dt)){
-        item_sys::start_melee_swing(playerPixCenter, mouseWorld,
-                                    Weapon::sword.range(), Weapon::sword.arcDegrees());
-        item_sys::resolve_melee_hits(Weapon::sword.damage());  // <-- hit once now
-        Weapon::sword.beginAttackAnim();
-        Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
-    }
-    if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Weapon::blaster.attackReady(dt)){
-        Vector2 dir = Vector2Subtract(mouseWorld, playerPixCenter);
-        float len2 = dir.x*dir.x + dir.y*dir.y;
-        if(len2 > 1e-8f){
-            float inv = 1.0f / sqrtf(len2);
-            dir = {dir.x*inv, dir.y*inv};
-        } 
-        else{
-            dir = {1.f, 0.f};
-        }
-        const float projW = 5.f, projH = 5.f, projSpeed = 1000.f;
-        spawnProjectile(playerPixCenter, dir, projW, projH, projSpeed,
-                        /*enemyOwner*/ false, Weapon::blaster.damage()); // <-- damage param (step 3)
 
-        Weapon::blaster.beginAttackAnim();
+/* TEMPORARY SOLUTION, FIX LATER ALIGATOR */
+    // Attacking logic:
+    if(IsKeyPressed(MOUSE_BUTTON_LEFT)){
+        Weapon::equipped = Weapon::WeaponSwitch::meleeToggle;
+        Weapon::sword.attack();
+    }
+
+    if(IsKeyPressed(MOUSE_BUTTON_LEFT) && IsKeyDown(MOUSE_BUTTON_RIGHT)){
         Weapon::equipped = Weapon::WeaponSwitch::rangedToggle;
+        Weapon::blaster.attack();
     }
 }
 void updateJson(float dt, Level& lvl){
@@ -265,7 +245,6 @@ void gameLoop(Level& lvl){
     drawLevel(lvl);
     enemyLogic(dt, lvl, playerPixCenter);
     inputEventHandler(lvl, dt);
-    attackInputHandler(lvl, dt);
     const Texture2D& ptex = rolling
         ? PlayerTexManager::instance().roll(currentDir)
         : PlayerTexManager::instance().walk(currentDir);
@@ -292,18 +271,15 @@ void gameLoop(Level& lvl){
             }
         }
     }
-    Weapon::sword.tickAnim(dt);
-    Weapon::blaster.tickAnim(dt);
-    updateProjectiles(lvl, dt);
-    drawProjectiles();
-    // Draw equipped weapon (melee = no rotation; ranged = rotates in its override)
-    if(Weapon::equipped == Weapon::WeaponSwitch::meleeToggle){
-        Weapon::sword.draw(playerPixCenter, mouseWorld);
+    if(Weapon::equipped == Weapon::WeaponSwitch::rangedToggle){
+        Weapon::blaster.draw();
+        Weapon::blaster.updateProjectiles(lvl, dt);
+        Weapon::blaster.tickAnim(dt);
     } 
     else{
-        Weapon::blaster.draw(playerPixCenter, mouseWorld);
+        Weapon::sword.draw();
+        Weapon::sword.tickAnim(dt); 
     }
-    updateRangedAttack(playerPixCenter, mouseWorld, 0, 0, 0, dt, lvl);
     EndMode2D();
     updateJson(dt, lvl);
 }
@@ -313,18 +289,17 @@ void preLoadTasks(Level& lvl){
     lvl1.ID = 1;
     lvl2.ID = 2;
     lvl.readlvlData();
-    Weapon::loadTextures();
     cam.offset = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
     cam.zoom = 1.f;
     cam.rotation = 0.0f;
     loadTileTextures();
+    Weapon::loadTextures();
     loadEnemies(lvl);
     PlayerTexManager::instance().loadWalkFor(currentRace);
     PlayerTexManager::instance().loadRollFor(currentRace);
-    bullets.reserve(50);
+    Combat::bullets.reserve(200);
     turtlesPos.reserve(50);
     genericPos.reserve(50);
-    bindEnemyAdapter();
     gWorld.saveWorldData(lvl.playerPos.x,lvl.playerPos.y,lvl.ID);
 }
 void loadLvl(){

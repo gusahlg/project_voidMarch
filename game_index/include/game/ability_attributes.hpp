@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <limits>
+#include <cmath> 
 #include <string_view>
 extern std::vector<Vector2> turtlesPos;
 extern std::vector<Vector2> genericPos;
@@ -65,33 +66,125 @@ public:
 private:
     std::string path;
 };
-struct projectile {
-    Vector2 pos;
-    Vector2 vel;
-    float w, h;
-    bool alive;
-    bool enemyOwner; // If true, it deals damage to player and has no collision for enemies.
-    int damage;
-    projectile(Vector2 p, Vector2 v, float w_, float h_, bool enemyOwner, int dmg)
-      : pos(p), vel(v), w(w_), h(h_), alive(true), enemyOwner(enemyOwner), damage(dmg) {}
+struct enemy{
+    int frames;
+    int currentFrame = 0;
+    float animDelay;
+    float animTimer = 0.f;
+    Rectangle Hbox;
+    int MAXHP;      // Maximum HP.
+    int HP;         // Actual HP, mutable.
+    float cooldown; // Attack cooldown duration
+    int range;    // Detection range
+    Texture2D tex;  // Enemy texture
+    enum dir : std::uint8_t{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight};
+    dir currentDir = Up;
+    enum state : std::uint8_t{Idle, Walking, Jumping};
+    state currentState = Idle;
+    enum class Type : std::uint8_t{generic, TurtleMaster, Bob}; //Expand for more variations
+    Type kind = Type::generic;
+    // Bellow depends on type.
+    float speed{};
+    void update(Vector2 playerPixCenter){
+        // System below is for movement and updating state.
+        Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
+        float distX = Emid.x < playerPixCenter.x ? playerPixCenter.x - Emid.x : Emid.x - playerPixCenter.x;
+        float distY = Emid.y < playerPixCenter.y ? playerPixCenter.y - Emid.y : Emid.y - playerPixCenter.y;
+        float dx = std::fabs(playerPixCenter.x - Emid.x);
+        float dy = std::fabs(playerPixCenter.y - Emid.y);
+        // Add in randomness and such for good pathfinding, current system is temporary
+        if(inRangeX && inRangeY){
+            currentState = state::Walking;
+        }
+        else currentState = state::Idle;
+        // Check if diagonals are faster, then left/right, up/down.
+        if(dx >= 1.0f && dy >= 1.0f){ 
+            bool right = Emid.x < playerPixCenter.x;
+            bool down  = Emid.y < playerPixCenter.y;
+            currentDir = right
+                        ? (down ? DownRight : UpRight)
+                        : (down ? DownLeft  : UpLeft);
+        }
+        else if(dx > dy){  
+            currentDir = (Emid.x < playerPixCenter.x) ? Right : Left;
+        }
+        else if(dy > 0.0f){
+            currentDir = (Emid.y < playerPixCenter.y) ? Down : Up;
+        }
+        else{
+            currentState = Idle;
+        }
+    }
+    // Determine if damage should be dealt to player.
+    bool playerInRange(Vector2 playerPixCenter){
+        Vector2 Emid = {Hbox.x + Hbox.width/2.0f, Hbox.y + Hbox.height/2.0f};
+        bool inRangeX = std::fabs(Emid.x - playerPixCenter.x) <= range;
+        bool inRangeY = std::fabs(Emid.y - playerPixCenter.y) <= range;
+        if(inRangeX && inRangeY) return true;
+        else return false;
+    }
+    void draw(){
+        switch(currentState){
+            case state::Walking:
+                animTimer += GetFrameTime();
+                if(animTimer > animDelay){
+                    currentFrame = (currentFrame + 1) % frames;
+                    animTimer = 0.f;
+                }
+                break;
+            case state::Idle:
+                animTimer = 0.0f;
+                currentFrame = 0;
+                break;
+            case state::Jumping:
+                //Cool things
+                break;
+        }
+        float frameW = (float)tex.width / frames; 
+        Rectangle src = {currentFrame * frameW, 0, frameW, (float)tex.height};
+        DrawTexturePro(tex, src, Hbox, {0,0}, 0, WHITE);
+    }
+    enemy(Vector2 pos, int hp, Type t)
+    : Hbox{}, MAXHP(hp), HP(hp), kind(t)
+{
+    const size_t idx = static_cast<size_t>(kind);
+    // Constant LUT 
+    static constexpr float   speedLUT      [] = {90.f, 20.f, 50.f};
+    static constexpr float   delayLUT      [] = {30.f, 40.f, 50.f};
+    static constexpr float   rangeTilesLUT [] = {5 * 16, 10 * 16, 3 * 16};
+    static constexpr float   animDelayLUT  [] = {0.1f, 0.25f, 5.f};
+    static constexpr int     framesLUT     [] = {3, 4, 5};
+    //Determined values from tables above
+    speed     = speedLUT[idx]; //Delta time is updated in the determineState function.
+    cooldown  = delayLUT[idx];
+    range     = rangeTilesLUT[idx];
+    animDelay = animDelayLUT[idx];
+    frames    = framesLUT[idx];
+
+    // Texture determination:
+    switch(idx){
+        case 0: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
+        case 1: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
+        case 2: tex = LoadTexture("assets/graphics/enemies/Turtlemaster.png"); break;
+    }
+    SetTextureFilter(tex, TEXTURE_FILTER_POINT);
+
+    // Hitbox calc
+    float frameW = (float)tex.width / frames;
+    Hbox = Rectangle{ pos.x, pos.y, frameW, (float)tex.height};
+}
 };
-extern std::vector<projectile> bullets;
 extern bool rolling;
 extern bool moving;
 extern float Ox;
 extern float Oy;
-extern bool attacking;
-extern Texture2D swordTex;
 extern float PLAYERWIDTH;
 extern const float SQRT2;
 extern float PLAYERHEIGHT;
 void updateRoll(Level& lvl, float dt);
-void drawProjectiles();
-void updateProjectiles(Level& lvl, float dt);
 bool collisionRect(float cx, float cy, float cw, float ch, Level& lvl);
-void updateRangedAttack(Vector2 pos, Vector2 dir, float projW, float projH, float projSpeed, float dt, Level& lvl);
-void spawnProjectile(Vector2 startpos, Vector2 dir, float w, float h, float speed, bool enemyOwner, int damage);
-extern bool projActive;
 enum Direction : std::uint8_t{
     Up,
     Down,
