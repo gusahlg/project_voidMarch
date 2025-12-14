@@ -1,47 +1,15 @@
-# ninja log v7
-21	55	7832872110010038	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-57	1093	7832872110370383	C:/Users/gusta/Desktop/The game/math_core/target/x86_64-pc-windows-gnu/release/libmath_core.a	38c1c5f793775bf
-1121	1916	7832872121013195	CMakeFiles/void_march.dir/game_index/main.cpp.obj	c27d4e09a184953e
-1108	1932	7832872120877931	CMakeFiles/void_march.dir/game_index/game_logic/items/items.cpp.obj	d54a1be0ab09d7df
-1105	1937	7832872120837919	CMakeFiles/void_march.dir/game_index/game_logic/inventory/melee_bindings.cpp.obj	9b5258d2e898e863
-1130	2236	7832872121098387	CMakeFiles/void_march.dir/game_index/screen_logic/level_select.cpp.obj	ef98ca6ca8d9646c
-1125	2540	7832872121048324	CMakeFiles/void_march.dir/game_index/screen_logic/home_screen.cpp.obj	80f865961e9980c4
-1134	2641	7832872121148580	CMakeFiles/void_march.dir/game_index/screen_logic/select.cpp.obj	98033c93f7f5fa44
-1112	4928	7832872120912958	CMakeFiles/void_march.dir/game_index/game_logic/on_screen.cpp.obj	2e9558a6aad423bf
-1100	4992	7832872120797744	CMakeFiles/void_march.dir/game_index/game_logic/game_inputs.cpp.obj	48601acdf751ffc0
-1116	5029	7832872120958069	CMakeFiles/void_march.dir/game_index/game_logic/player_event_handler.cpp.obj	dbef78f2a59097b4
-1094	5084	7832872120737736	CMakeFiles/void_march.dir/game_index/game_logic/enemy_logic.cpp.obj	2352667c381b4dbe
-1097	5844	7832872120767734	CMakeFiles/void_march.dir/game_index/game_logic/game.cpp.obj	52b904f9452ae4cd
-5845	6044	7832872168245226	void_march.exe	d192755d6f2f2b8f
-18	43	7832884678368254	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-77	751	7832884678957839	CMakeFiles/void_march.dir/game_index/main.cpp.obj	c27d4e09a184953e
-63	764	7832884678811564	CMakeFiles/void_march.dir/game_index/game_logic/items/items.cpp.obj	d54a1be0ab09d7df
-60	774	7832884678786528	CMakeFiles/void_march.dir/game_index/game_logic/inventory/melee_bindings.cpp.obj	9b5258d2e898e863
-85	1130	7832884679048667	CMakeFiles/void_march.dir/game_index/screen_logic/level_select.cpp.obj	ef98ca6ca8d9646c
-81	1357	7832884678997844	CMakeFiles/void_march.dir/game_index/screen_logic/home_screen.cpp.obj	80f865961e9980c4
-90	1447	7832884679088728	CMakeFiles/void_march.dir/game_index/screen_logic/select.cpp.obj	98033c93f7f5fa44
-67	3890	7832884678866847	CMakeFiles/void_march.dir/game_index/game_logic/on_screen.cpp.obj	2e9558a6aad423bf
-72	3935	7832884678911923	CMakeFiles/void_march.dir/game_index/game_logic/player_event_handler.cpp.obj	dbef78f2a59097b4
-56	3958	7832884678741402	CMakeFiles/void_march.dir/game_index/game_logic/game_inputs.cpp.obj	48601acdf751ffc0
-48	4071	7832884678668810	CMakeFiles/void_march.dir/game_index/game_logic/enemy_logic.cpp.obj	2352667c381b4dbe
-52	4765	7832884678708846	CMakeFiles/void_march.dir/game_index/game_logic/game.cpp.obj	52b904f9452ae4cd
-4765	4884	7832884725837625	void_march.exe	d192755d6f2f2b8f
-48	85	7833411253968803	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-113	1486	7833411254614450	CMakeFiles/void_march.dir/game_index/game_logic/items/items.cpp.obj	d54a1be0ab09d7df
-18	42	7833412297558909	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-13	41	7833414395286005	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-53	3628	7833414395685125	CMakeFiles/void_march.dir/game_index/game_logic/game_inputs.cpp.obj	48601acdf751ffc0
-57	3815	7833414395725186	CMakeFiles/void_march.dir/game_index/game_logic/on_screen.cpp.obj	2e9558a6aad423bf
-60	3816	7833414395760294	CMakeFiles/void_march.dir/game_index/game_logic/player_event_handler.cpp.obj	dbef78f2a59097b4
-46	3821	7833414395619425	CMakeFiles/void_march.dir/game_index/game_logic/enemy_logic.cpp.obj	2352667c381b4dbe
-49	4572	7833414395650003	CMakeFiles/void_march.dir/game_index/game_logic/game.cpp.obj	52b904f9452ae4cd
-4573	5013	7833414440888702	void_march.exe	d192755d6f2f2b8f
-35	67	7833421863801336	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-79	4172	7833421864241757	CMakeFiles/void_march.dir/game_index/game_logic/game_inputs.cpp.obj	48601acdf751ffc0
-71	4180	7833421864166329	CMakeFiles/void_march.dir/game_index/game_logic/enemy_logic.cpp.obj	2352667c381b4dbe
-75	4573	7833421864201595	CMakeFiles/void_march.dir/game_index/game_logic/game.cpp.obj	52b904f9452ae4cd
-4574	4879	7833421909188925	void_march.exe	d192755d6f2f2b8f
-36	63	7833426634729149	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
-69	935	7833426635057243	CMakeFiles/void_march.dir/game_index/game_logic/items/items.cpp.obj	d54a1be0ab09d7df
-936	1093	7833426643729884	void_march.exe	d192755d6f2f2b8f
-18	44	7833429820966089	C:/Users/gusta/Desktop/The game/build-windows/CMakeFiles/cmake.verify_globs	7492a87e23914b7
+# ninja log v5
+1	7	0	/home/dragondev22/dev/project_voidMarch/build-windows/CMakeFiles/cmake.verify_globs	fabe9b8134929e95
+8	1978	1765705508977499078	/home/dragondev22/dev/project_voidMarch/math_core/target/x86_64-unknown-linux-gnu/release/libmath_core.a	87dd1a02d52f7476
+1979	2693	1765705509695500504	CMakeFiles/void_march.dir/game_index/main.cpp.o	89caad017882767c
+1978	2729	1765705509726500565	CMakeFiles/void_march.dir/game_index/game_logic/items/items.cpp.o	3056ba6cb65563c5
+1978	2790	1765705509794500700	CMakeFiles/void_march.dir/game_index/game_logic/inventory/melee_bindings.cpp.o	a8d5720013bfcf7b
+1980	3047	1765705510052501213	CMakeFiles/void_march.dir/game_index/screen_logic/level_select.cpp.o	ccf39a0f10cb7f30
+1980	3280	1765705510284501676	CMakeFiles/void_march.dir/game_index/screen_logic/home_screen.cpp.o	2563dbef65d4588c
+2694	4129	1765705511134503372	CMakeFiles/void_march.dir/game_index/screen_logic/select.cpp.o	43adc881afe7b00
+1979	5988	1765705512993507101	CMakeFiles/void_march.dir/game_index/game_logic/player_event_handler.cpp.o	fb255b88964b8587
+1979	6037	1765705513042507199	CMakeFiles/void_march.dir/game_index/game_logic/on_screen.cpp.o	f34c658fc05cdf16
+1978	6061	1765705513066507248	CMakeFiles/void_march.dir/game_index/game_logic/game_inputs.cpp.o	57aabd6672776fa8
+1978	6294	1765705513298507716	CMakeFiles/void_march.dir/game_index/game_logic/enemy_logic.cpp.o	dffc40ae5116b0cf
+1978	6485	1765705513489508101	CMakeFiles/void_march.dir/game_index/game_logic/game.cpp.o	da5d3db7a46fb689
+6485	6577	1765705513581508287	void_march	3daacdac52362137

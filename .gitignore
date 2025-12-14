@@ -1,5 +1,6 @@
 ﻿# Build
 math_core/target/
+build-windows/
 /out/
 /bin/
 /obj/

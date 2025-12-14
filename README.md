@@ -52,3 +52,27 @@ project_voidMarch/
 ├── math_core/ # Rust-integrated math modules
 ├── assets/ # Art, sound, textures (LFS-tracked)
 └── build/ # Build output directory
+
+## How to Run
+### ***!MAKE SURE YOU ARE IN THE PROJECT DIRECTORY!***
+```bash
+cd path/to/project` such as `cd project_voidMarch
+```
+### Clear Build directory
+```bash
+rm -rf build-windows
+```
+### Build the binary with CMake
+```bash
+cmake -B build-windows -G Ninja
+cmake --build build-windows
+```
+### How to Run
+Windows:
+```bash
+./build-windows/void_march.exe
+```
+Linux:
+```bash
+./build-windows/void_march
+```
