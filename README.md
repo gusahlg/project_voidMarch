@@ -10,7 +10,7 @@ Set in a surreal, space-fueled fantasy world, Voidmarch fuses **real-time combat
 **Genre:** 2D Action / Strategy Hybrid  
 **Engine:** Raylib (C++)  
 **Languages:** C++17 / Rust (for math and performance-critical modules)  
-**Platforms:** Windows (MSYS2 + MinGW64), Linux (Fedora)  
+**Platforms:** Windows (MSYS2 + MinGW64), Linux (most should work)  
 
 In Voidmarch, players command unique races with distinct playstyles, weapons, and abilities — navigating intricate arenas, striking with precision, and evolving their strength through a dynamic scaling system.
 
@@ -54,22 +54,22 @@ project_voidMarch/
 ├── assets/ # Art, sound, textures (LFS-tracked)
 └── build-windows/ # Build output directory
 ```
-
-## How to Run
+---
+## ⚙️ How to Run
 ### ***!MAKE SURE YOU ARE IN THE PROJECT DIRECTORY!***
 ```bash
 cd path/to/project` such as `cd project_voidMarch
 ```
-### Clear Build directory
+### 🧹 Clear Build directory
 ```bash
 rm -rf build
 ```
-### Build the binary with CMake
+### 🛠️ Build the binary with CMake
 ```bash
 cmake -B build -G Ninja
 cmake --build build
 ```
-### How to Run
+### 🚀 How to Run
 Windows:
 ```bash
 ./build/void_march.exe
