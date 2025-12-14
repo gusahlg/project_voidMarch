@@ -15,7 +15,7 @@
 // The files' local ui manager:
 ui::Manager levelSelectManager;
 void levelSelectPreLoadTasks(float screenWidth, float screenHeight){
-    static Texture2D button = LoadTexture("assets/ui/screen_interface/buttons/blueButton.png");
+    static Texture2D button = LoadTexture("assets/UI/screen_interface/buttons/blueButton.png");
     const float btnX = screenWidth/2.f;
     const float btnY = screenHeight/2.f;
     levelSelectManager.emplaceButton(Vector2{btnX,btnY},button,[]{currentScreen=screen::Game;});
