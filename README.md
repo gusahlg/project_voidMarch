@@ -42,6 +42,7 @@ Voidmarch emphasizes **modularity** and **clean separation of logic**, ensuring 
 | **Math Core (Rust)** | Optimized math module written in Rust and linked via FFI. |
 
 ### 📁 Folder Structure
+```
 project_voidMarch/
 │
 ├── CMakeLists.txt
@@ -51,7 +52,8 @@ project_voidMarch/
 ├── include/ # Global headers and constants
 ├── math_core/ # Rust-integrated math modules
 ├── assets/ # Art, sound, textures (LFS-tracked)
-└── build/ # Build output directory
+└── build-windows/ # Build output directory
+```
 
 ## How to Run
 ### ***!MAKE SURE YOU ARE IN THE PROJECT DIRECTORY!***
@@ -60,19 +62,19 @@ cd path/to/project` such as `cd project_voidMarch
 ```
 ### Clear Build directory
 ```bash
-rm -rf build-windows
+rm -rf build
 ```
 ### Build the binary with CMake
 ```bash
-cmake -B build-windows -G Ninja
-cmake --build build-windows
+cmake -B build -G Ninja
+cmake --build build
 ```
 ### How to Run
 Windows:
 ```bash
-./build-windows/void_march.exe
+./build/void_march.exe
 ```
 Linux:
 ```bash
-./build-windows/void_march
+./build/void_march
 ```
