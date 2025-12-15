@@ -18,7 +18,7 @@ Prof currentProf;
 bool raceSelect=false;
 bool profSelect=false;
 void selectPreLoadTasks(float screenWidth, float screenHeight){
-    static Texture2D button = LoadTexture("assets/ui/screen_interface/buttons/blueButton.png");
+    static Texture2D button = LoadTexture("assets/UI/screen_interface/buttons/blueButton.png");
     // Race select buttons
     selectManager.emplaceButton(Vector2{0, 0},button,[]{currentRace = Race::Spacelizard;raceSelect=true;});
     selectManager.emplaceButton(Vector2{50, 0},button,[]{currentRace = Race::Voidcrawler;raceSelect=true;});
